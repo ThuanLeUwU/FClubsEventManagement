@@ -5,12 +5,12 @@
   "version": "2.1.1",
   "private": false,
   "scripts": {
-    "dev": "node",
-    "build": "node build",
-    "start": "node start",
-    "export": "node export",
-    "lint": "node lint",
-    "lint-fix": "node lint --fix"
+    "dev": "next",
+    "build": "next build",
+    "start": "next start",
+    "export": "next export",
+    "lint": "next lint",
+    "lint-fix": "next lint --fix"
   },
   "dependencies": {
     "@emotion/cache": "11.10.3",

@@ -6,8 +6,12 @@ import {
   CardActions,
   CardContent,
   Divider,
+  FormControl,
+  Input,
   Typography
 } from '@mui/material';
+import axios from 'axios';
+import { useState } from 'react';
 
 const user = {
   avatar: '/static/images/avatars/avatar_6.png',
@@ -18,7 +22,31 @@ const user = {
   timezone: 'GTM-7'
 };
 
+// const [selectedFile, setSelectedFile] = useState(null);
+
+  // const onFileChange = (event) => {
+  //   setSelectedFile(event.target.files[0]);
+  // };
+
+  // const onFileUpload = () => {
+  //   const formData = new FormData();
+  //   formData.append('file', selectedFile);
+
+  //   axios.post('/api/upload', formData, {
+  //     headers: {
+  //       'Content-Type': 'multipart/form-data'
+  //     }
+  //   }).then((response) => {
+  //     console.log(response);
+  //   });
+  // };
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  
+
 export const AccountProfile = (props) => (
+  
+
   <Card {...props}>
     <CardContent>
       <Box
@@ -59,12 +87,18 @@ export const AccountProfile = (props) => (
     </CardContent>
     <Divider />
     <CardActions>
+      {/* <FormControl onFileUpload={handleSubmit}>
+        <Input type='file' 
+        onChange={handleFileChange}/>
+        <Button type='submit'>Upload</Button>
+      </FormControl> */}
       <Button
         color="primary"
         fullWidth
         variant="text"
-      >
-        <input type="file">Upload File</input>
+        href='/upload'
+      > 
+        Upload File       
       </Button>
     </CardActions>
   </Card>

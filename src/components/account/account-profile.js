@@ -14,7 +14,7 @@ const user = {
   city: 'Los Angeles',
   country: 'USA',
   jobTitle: 'Senior Developer',
-  name: 'Katarina Smith',
+  name: 'hahahaa',
   timezone: 'GTM-7'
 };
 
@@ -64,7 +64,7 @@ export const AccountProfile = (props) => (
         fullWidth
         variant="text"
       >
-        Upload picture
+        <input type="file">Upload File</input>
       </Button>
     </CardActions>
   </Card>

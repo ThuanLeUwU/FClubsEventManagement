@@ -8,7 +8,7 @@ import { Bell as BellIcon } from '../icons/bell';
 import { UserCircle as UserCircleIcon } from '../icons/user-circle';
 import { Users as UsersIcon } from '../icons/users';
 import { AccountPopover } from './account-popover';
-
+import { authFirebase } from '../firebase/firebase';
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   boxShadow: theme.shadows[3]
@@ -81,13 +81,14 @@ export const DashboardNavbar = (props) => {
               width: 40,
               ml: 1
             }}
-            src="/static/images/avatars/avatar_1.png"
+            src={authFirebase.currentUser.photoURL}
           >
             <UserCircleIcon fontSize="small" />
           </Avatar>
         </Toolbar>
       </DashboardNavbarRoot>
       <AccountPopover
+        username={authFirebase.currentUser.displayName}
         anchorEl={settingsRef.current}
         open={openAccountPopover}
         onClose={() => setOpenAccountPopover(false)}

@@ -7,6 +7,8 @@ import { Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Facebook as FacebookIcon } from '../icons/facebook';
 import { Google as GoogleIcon } from '../icons/google';
+import { useAuthContext } from '../contexts/auth-context';
+import { authFirebase } from '../firebase/firebase';
 
 const Login = () => {
   const formik = useFormik({
@@ -32,6 +34,20 @@ const Login = () => {
     }
   });
 
+  const {signInWithGoogle, user} = useAuthContext();
+  const hanldeWithGoogle = async () => {
+    try {
+       await signInWithGoogle();
+       if(authFirebase){
+        console.log("SignIn" , authFirebase);
+        Router
+        .push('/')
+        .catch(console.error);
+       }
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <>
       <Head>
@@ -47,7 +63,7 @@ const Login = () => {
         }}
       >
         <Container maxWidth="sm">
-          <NextLink
+          {/* <NextLink
             href="/"
             passHref
           >
@@ -57,7 +73,7 @@ const Login = () => {
             >
               Dashboard
             </Button>
-          </NextLink>
+          </NextLink> */}
           <form onSubmit={formik.handleSubmit}>
             <Box sx={{ my: 3 }}>
               <Typography
@@ -87,7 +103,7 @@ const Login = () => {
                   color="info"
                   fullWidth
                   startIcon={<FacebookIcon />}
-                  onClick={() => formik.handleSubmit()}
+                  // onClick={() => formik.handleSubmit()}
                   size="large"
                   variant="contained"
                 >
@@ -102,7 +118,7 @@ const Login = () => {
                 <Button
                   color="error"
                   fullWidth
-                  onClick={() => formik.handleSubmit()}
+                  onClick={hanldeWithGoogle}
                   size="large"
                   startIcon={<GoogleIcon />}
                   variant="contained"

@@ -31,6 +31,7 @@
     "cookies": "^0.8.0",
     "cookies-next": "^2.1.1",
     "date-fns": "2.29.3",
+    "firebase": "^9.17.1",
     "formik": "2.2.9",
     "next": "12.3.0",
     "nprogress": "0.2.0",

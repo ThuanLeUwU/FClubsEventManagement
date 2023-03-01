@@ -48,9 +48,9 @@ const items = [
   //   title: 'Login'
   // },
   // {
-  //   href: '/register',
+  //   href: '/notification',
   //   icon: (<UserAddIcon fontSize="small" />),
-  //   title: 'Register'
+  //   title: 'Notification'
   // },
   {
     href: '/404',

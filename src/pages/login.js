@@ -9,6 +9,7 @@ import { Facebook as FacebookIcon } from '../icons/facebook';
 import { Google as GoogleIcon } from '../icons/google';
 import { useAuthContext } from '../contexts/auth-context';
 import { authFirebase } from '../firebase/firebase';
+// import { messaging } from '../firebase/firebaseMessage';
 
 const Login = () => {
   const formik = useFormik({
@@ -43,6 +44,7 @@ const Login = () => {
         Router
         .push('/')
         .catch(console.error);
+        console.log("Token",messaging);
        }
     } catch (error) {
       console.log(error);

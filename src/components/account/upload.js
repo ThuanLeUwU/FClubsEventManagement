@@ -25,7 +25,7 @@ function ImageUpload() {
     formData.append("file", imageDataUrl);
     try {
       const response = await axios.post(
-        "https://node-js-fpt-wallet.herokuapp.com/firebase-services/images",
+        "https://event-project.herokuapp.com/images",
         formData
         // headers: {
         //   'content-type': 'multipart/form-data'
@@ -43,7 +43,7 @@ function ImageUpload() {
     <div>
       <input type="file" 
       onChange={handleImageChange} />
-      {imageDataUrl && <Image 
+      {imageDataUrl && <img 
       width={200}
       src={imageDataUrl}/>}
 

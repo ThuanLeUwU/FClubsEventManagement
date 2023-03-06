@@ -13,8 +13,8 @@ import { authFirebase } from '../firebase/firebase';
 const Login = () => {
   const formik = useFormik({
     initialValues: {
-      email: 'demo@devias.io',
-      password: 'Password123'
+      email: '',
+      password: ''
     },
     validationSchema: Yup.object({
       email: Yup
@@ -39,7 +39,6 @@ const Login = () => {
     try {
        await signInWithGoogle();
        if(authFirebase){
-        console.log("SignIn" , authFirebase);
         Router
         .push('/')
         .catch(console.error);
@@ -51,7 +50,7 @@ const Login = () => {
   return (
     <>
       <Head>
-        <title>Login | Material Kit</title>
+        <title>Login</title>
       </Head>
       <Box
         component="main"

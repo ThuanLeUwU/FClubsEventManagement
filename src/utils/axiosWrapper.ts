@@ -1,4 +1,4 @@
-import { message } from 'antd'
+
 import axios from 'axios'
 import { deleteCookie, getCookie } from 'cookies-next'
 import router from 'next/router'
@@ -26,7 +26,7 @@ axiosWrapper.interceptors.response.use(
   (error) => {
     console.log({ error })
     if (error.response.status === 401) {
-      message.error('Your session has expired!')
+
       deleteCookie('accessToken')
       router.push('/')
     } else {

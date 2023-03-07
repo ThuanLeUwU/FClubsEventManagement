@@ -43,16 +43,16 @@ const Page = () => {
         'Authorization': 'Bearer ' + getCookie('accessToken')
       }
       try {
-        const response = await axios.get(`https://event-project.herokuapp.com/api/campus`, {
-          headers
-        })
-
-        // const response = await axios(`https://event-project.herokuapp.com/api/club/1`
-        // ).then(response => {
-        //   setClubs(response?.data)
-        // }).catch(error => {
-        //   console.log(error);
+        // const response = await axios.get(`https://event-project.herokuapp.com/api/campus`, {
+        //   headers
         // })
+
+        const response = await axios(`https://event-project.herokuapp.com/api/club/1`
+        ).then(response => {
+          setClubs(response?.data)
+        }).catch(error => {
+          console.log(error);
+        })
 
         setCampus(response?.data?.data)
       } catch (error) {

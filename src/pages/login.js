@@ -38,7 +38,7 @@ const Login = () => {
   const hanldeWithGoogle = async () => {
     try {
        await signInWithGoogle();
-       console.log(authFirebase.currentUser.accessToken);
+       
        if(authFirebase){
         Router
         .push('/')

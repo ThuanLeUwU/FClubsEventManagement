@@ -1,0 +1,240 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
+
+.tournament_section {
+  background: #120f54;
+  width: auto;
+  height: min-content;
+  color: aliceblue;
+//   border: 2px solid red;
+  border-radius: 15px;
+}
+
+.single_tournament {
+//   background: #0d3f74;
+  border-radius: 10px;
+//   box-shadow: 0px 0px 20px 0px rgb(0 0 0 / 10%);
+  display: block;
+  margin-bottom: 110px;
+  margin-top: 50px;
+  //   width: 100%;
+  justify-content: center;
+  
+}
+
+.left_area {
+  padding: 40px 60px;
+}
+
+.single_play {
+  margin-top: -100px;
+  border-radius: 10px;
+  box-shadow: inset 0px 0px 20px 2px #bfc3f381;
+  opacity: 1;
+  text-align: center;
+  //   width: 255px;
+  padding: 20px 20px;
+  transition: all 0.3s ease-in;
+  &:hover {
+    // .single_play{
+    transform: translateY(-20px);
+
+    // }
+  }
+  @media screen and (min-width: 766px) {
+    width: 255px;
+    height: min-content;
+    transition: all 2s ease-in-out;
+    transform: translateY(-20px);
+  }
+}
+
+.content {
+  padding-top: 20px;
+}
+
+.tournament_btn {
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 20px;
+  color: white;
+  padding: 12px 35px;
+  border-radius: 50px;
+  box-shadow: 0px 0px 20px 2px #bfc3f383;
+  transition: all 0.3s ease-in;
+  display: inline-block;
+  text-decoration: none;
+  &:hover {
+    box-shadow: inset 0px 0px 20px 2px #bfc3f381;
+  }
+}
+
+.people_playing {
+  display: block;
+  margin-top: 30px;
+  color: #cfcffd;
+  font-size: 16px;
+  line-height: 26px;
+  padding-bottom: 8px;
+}
+
+.players_list {
+  padding-left: 10px;
+}
+
+.players {
+  display: inline-block;
+  margin-left: -10px;
+}
+
+.more_players {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  display: inline-block;
+  border-radius: 50%;
+  box-shadow: inset 0px 0px 7px 3px #9a13d2;
+  font-size: 10px;
+  background: #300983;
+}
+
+.right_area {
+  padding: 40px 20px 0px;
+  @media screen and (max-width: 380px) {
+    padding: 40px 10px 0px;
+  }
+}
+
+.right_top {
+  border-bottom: 1px solid #282b6a;
+  padding-bottom: 15px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.reward {
+  padding-top: 0px;
+  color: #00a2ff;
+}
+
+.reward_span {
+  width: 1px;
+  height: 20px;
+  background: #6360c0;
+  display: inline-block;
+  position: relative;
+  top: 5px;
+  margin: 0px 15px;
+}
+
+.right_bottom {
+  // display: flex;
+//   padding-top: 50px;
+  text-align: center;
+  @media screen and (min-width: 766px) {
+    display: flex;
+  }
+}
+.rl_bottom {
+  text-align: center;
+}
+
+.title {
+  font-weight: 400;
+//   font-size: 14px;
+  color: #068be4;
+  text-shadow: 0px 0px 75px #068be4, 0px 0px 7px #068be4, 0px 0px 7px #068be4;
+  margin-bottom: 10px;
+  display: inline-block;
+  text-align: start;
+}
+
+.time_counter {
+    margin-top: 20px;
+  display: flex;
+  font-size: 24px;
+  color: #fff;
+  justify-content: center;
+  position: relative;
+  z-index: 3;
+  gap: 5px;
+  flex-direction: column;
+  font-family: "Montserrat";
+  text-align: start;
+}
+
+.time {
+    font-weight: 600;
+      font-size: 20px;
+      color: #068be4;
+    //   text-shadow: 0px 0px 75px #068be4, 0px 0px 7px #068be4, 0px 0px 7px #068be4;
+      margin-bottom: 10px;
+      display: inline-block;
+      text-align: start;
+}
+
+.time_image {
+  margin-top: -50px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.prize {
+  color: #00a2ff;
+  font-size: 24px;
+  line-height: 34px;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-shadow: 0px 0px 75px #068be4, 0px 0px 7px #068be4;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.prize_money {
+  margin-top: 5px;
+  margin-bottom: 16px;
+  display: inline-block;
+  font-size: 60px;
+  line-height: 70px;
+  font-weight: 700;
+  color: #261855;
+  text-shadow: 0px 0px 18px rgb(164 17 220 / 99%), 2px 0px 0px #fe77ff, 0px 2px 0px #fe77ff,
+    -2px 0px 0px #fe77ff, 0px -2px 0px #fe77ff;
+}
+
+.time_line {
+  position: relative;
+}
+.time_line h6 h3 {
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 700;
+  color: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  margin-top: 0px;
+}
+.time_line h6 {
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media (min-width: 992px) {
+  .single_tournament {
+    display: flex;
+  }
+}
+
+.image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.container {
+    // height: 400px;
+}

@@ -34,22 +34,21 @@ const Page = () => {
   const [campus, setCampus] = useState();
   const [selected, setSelected] = useState(null);
   const { user } = useAuthContext();
+
   useEffect(() => {
-    console.log(getCookie('accessToken'));
+  
     const fetchData = async () => {
       const headers = {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
         'Authorization': 'Bearer ' + getCookie('accessToken')
       }
       try {
-        // const response = await axios.get(`https://event-project.herokuapp.com/api/campus`, {
-        //   headers
-        // })
+        const response = await axios.get(`https://event-project.herokuapp.com/api/campus`, {
+          headers
+        }
 
-        const response = await axios(`https://event-project.herokuapp.com/api/club/1`
+        // const response = await axios(`https://event-project.herokuapp.com/api/club/1`
         ).then(response => {
-          setClubs(response?.data)
+          setCampus(response?.data)
         }).catch(error => {
           console.log(error);
         })
@@ -78,6 +77,7 @@ const Page = () => {
   const handleJoin = (event) =>{
 
   }
+  
   return (
     <>
       <Head>
@@ -148,7 +148,7 @@ const Page = () => {
                           </TableCell>
                           <TableCell>
                             
-                           {format(date, 'dd/MM/yyyy')}
+                           {/* {format(date, 'dd/MM/yyyy')} */}
                            
                           </TableCell>
                           <TableCell sx={{textAlign: 'center'}}>

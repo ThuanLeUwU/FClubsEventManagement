@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { authFirebase } from '../firebase/firebase';
 import axios from 'axios';
-
+import { setCookie, deleteCookie } from 'cookies-next';
+import axiosWrapper from '../utils/axiosWrapper';
 
 export const AuthContext = createContext();
 
@@ -33,12 +34,12 @@ export const AuthProvider = (props) => {
       const response = await axios.post(
         'https://event-project.herokuapp.com/api/login', condition
       )
-      // setCookie('accessToken', response?.data?.access_token)
 
+      setCookie('accessToken', response?.data?.access_token)
       setUser(response?.data?.data)
      
     } catch (error) {
-      // deleteCookie('accessToken')
+      deleteCookie('accessToken')
       console.log(error);
       // if(error.code == "ERR_BAD_REQUEST"){
       //   alert("Lỗi Đăng Nhập")

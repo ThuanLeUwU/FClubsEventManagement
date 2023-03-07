@@ -24,9 +24,9 @@ const items = [
     title: 'Dashboard'
   },
   {
-    href: '/customers',
+    href: '/clubs',
     icon: (<UsersIcon fontSize="small" />),
-    title: 'Customers'
+    title: 'Clubs'
   },
   {
     href: '/adminpage',
@@ -37,53 +37,11 @@ const items = [
     href: '/account',
     icon: (<UserIcon fontSize="small" />),
     title: 'Account'
-  },
-  {
-    href: '/settings',
-    icon: (<CogIcon fontSize="small" />),
-    title: 'Settings'
-  },
-  {
-    href: '/404',
-    icon: (<XCircleIcon fontSize="small" />),
-    title: 'Error'
-  },
-  
+  }
 ];
-
-
-
-const items2 = [
-  {
-    href: '/',
-    icon: (<ChartBarIcon fontSize="small" />),
-    title: 'Dashboard'
-  },
-  {
-    href: '/customers',
-    icon: (<UsersIcon fontSize="small" />),
-    title: 'Customers'
-  },
-  {
-    href: '/products',
-    icon: (<ShoppingBagIcon fontSize="small" />),
-    title: 'Products'
-  },
-  {
-    href: '/account',
-    icon: (<UserIcon fontSize="small" />),
-    title: 'Account'
-  },
-  {
-    href: '/settings',
-    icon: (<CogIcon fontSize="small" />),
-    title: 'Settings'
-  },
-];
-
 
 export const DashboardSidebar = (props) => {
-  const {user} = useAuthContext();
+  const { user } = useAuthContext();
   const { open, onClose } = props;
   const router = useRouter();
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'), {
@@ -137,38 +95,34 @@ export const DashboardSidebar = (props) => {
             my: 3
           }}
         />
-        
-        {user.role == "admin"? (
-        <>   <Box sx={{ flexGrow: 1 }}>
-        {items.map((item) => (
-          <> 
-          
-          <NavItem
-            key={item.title}
-            icon={item.icon}
-            href={item.href}
-            title={item.title}
-          />
-          </>
-        ))}
-      </Box>
-      <Divider sx={{ borderColor: '#2D3748' }} />
-     </>
-        ) : (
-        <>   <Box sx={{ flexGrow: 1 }}>
-        {items2.map((item) => (
-          <NavItem
-            key={item.title}
-            icon={item.icon}
-            href={item.href}
-            title={item.title}
-          />
-        ))}
-      </Box>
-      <Divider sx={{ borderColor: '#2D3748' }} />
-     </>
-        )}
-     
+
+
+        <Box sx={{ flexGrow: 1 }}>
+          {items.map((item,index) => (
+            <div key={index}>
+              {item.title == 'Admin ' ? (
+                <>
+                  {user.role == 'admin' ? (
+                    <NavItem
+                      key={item.title}
+                      icon={item.icon}
+                      href={item.href}
+                      title={item.title}
+                    />
+                  ) : (<></>)}
+                </>
+              ) : (
+                <NavItem
+                  key={item.title}
+                  icon={item.icon}
+                  href={item.href}
+                  title={item.title}
+                />)}
+
+            </div>
+          ))}
+        </Box>
+        <Divider sx={{ borderColor: '#2D3748' }} />
       </Box>
     </>
   );

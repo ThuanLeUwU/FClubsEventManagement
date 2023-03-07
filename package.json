@@ -23,6 +23,7 @@
     "@mui/material": "5.10.5",
     "@mui/system": "5.10.5",
     "@mui/x-date-pickers": "5.0.1",
+    "@sentry/nextjs": "^7.41.0",
     "@types/react": "^18.0.28",
     "@zalter/identity-js": "1.2.1",
     "antd": "^5.2.1",

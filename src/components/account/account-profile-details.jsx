@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -10,30 +10,49 @@ import {
   TextField
 } from '@mui/material';
 
-const states = [
-  {
-    value: 'alabama',
-    label: 'Alabama'
-  },
-  {
-    value: 'new-york',
-    label: 'New York'
-  },
-  {
-    value: 'san-francisco',
-    label: 'San Francisco'
-  }
-];
+import axios from 'axios';
+// const states = [
+//   {
+//     value: 'alabama',
+//     label: 'Alabama'
+//   },
+//   {
+//     value: 'new-york',
+//     label: 'New York'
+//   },
+//   {
+//     value: 'san-francisco',
+//     label: 'San Francisco'
+//   }
+// ];
 
-export const AccountProfileDetails = (props) => {
-  const [values, setValues] = useState({
-    firstName: 'Katarina',
-    lastName: 'Smith',
-    email: 'demo@devias.io',
-    phone: '',
-    state: 'Alabama',
-    country: 'USA'
-  });
+
+export const AccountProfileDetails = ({userInf}) => {
+ 
+  console.log('ìnor',userInf);
+  // const [values, setValues] = useState({
+  //   firstName: 'Katarina',
+  //   lastName: 'Smith',
+  //   email: 'demo@devias.io',
+  //   phone: '',
+  //   state: 'Alabama',
+  //   country: 'USA'
+  // });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("https://event-project.herokuapp.com/api/campus")
+        .then(response =>{
+          console.log(response);
+        })
+        
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData()
+  }, [])
 
   const handleChange = (event) => {
     setValues({
@@ -46,139 +65,123 @@ export const AccountProfileDetails = (props) => {
     <form
       autoComplete="off"
       noValidate
-      {...props}
-    >
+    >   
       <Card>
-        <CardHeader
-          subheader="The information can be edited"
-          title="Profile"
-        />
-        <Divider />
-        <CardContent>
-          <Grid
-            container
-            spacing={3}
-          >
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                helperText="Please specify the first name"
-                label="First name"
-                name="firstName"
-                onChange={handleChange}
-                required
-                value={values.firstName}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Last name"
-                name="lastName"
-                onChange={handleChange}
-                required
-                value={values.lastName}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Email Address"
-                name="email"
-                onChange={handleChange}
-                required
-                value={values.email}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Phone Number"
-                name="phone"
-                onChange={handleChange}
-                type="number"
-                value={values.phone}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Country"
-                name="country"
-                onChange={handleChange}
-                required
-                value={values.country}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Select State"
-                name="state"
-                onChange={handleChange}
-                required
-                select
-                SelectProps={{ native: true }}
-                value={values.state}
-                variant="outlined"
-              >
-                {states.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
-            </Grid>
-          </Grid>
-        </CardContent>
-        <Divider />
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            p: 2
-          }}
+      <CardHeader
+        subheader="The information can be edited"
+        title="Profile"
+      />
+      <Divider />
+      <CardContent>
+        <Grid
+          container
+          spacing={3}
         >
-          <Button
-            color="primary"
-            variant="contained"
+          <Grid
+            item
+            xs={12}
           >
-            Save details
-          </Button>
-        </Box>
-      </Card>
+            <TextField
+              fullWidth
+              helperText="Please specify the full name"
+              label="Full name"
+              onChange={handleChange}
+              required
+              value={userInf.name}
+              variant="outlined"
+            />
+          </Grid>
+         
+       
+          <Grid
+            item
+            md={6}
+            xs={12}
+          >
+            <TextField
+              fullWidth
+              label="Email Address"
+              name="email"
+              onChange={handleChange}
+              required
+              value={userInf.email}
+              variant="outlined"
+            />
+          </Grid>
+          <Grid
+            item
+            md={6}
+            xs={12}
+          >
+            <TextField
+              fullWidth
+              label="Phone Number"
+              name="phone"
+              onChange={handleChange}
+              type="number"
+              value={userInf.phone}
+              variant="outlined"
+            />
+          </Grid>
+          <Grid
+            item
+            md={6}
+            xs={12}
+          >
+            <TextField
+              fullWidth
+              label="Address"
+              name="address"
+              required
+              value={userInf.address}
+              variant="outlined"
+            />
+          </Grid>
+          <Grid
+            item
+            md={6}
+            xs={12}
+          >
+            {/* <TextField
+              fullWidth
+              label="Select State"
+              name="state"
+              onChange={handleChange}
+              required
+              select
+              SelectProps={{ native: true }}
+              value={values.state}
+              variant="outlined"
+            >
+              {states.map((option) => (
+                <option
+                  key={option.value}
+                  value={option.value}
+                >
+                  {option.label}
+                </option>
+              ))}
+            </TextField> */}
+          </Grid>
+        </Grid>
+      </CardContent>
+      <Divider />
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          p: 2
+        }}
+      >
+        <Button
+          color="primary"
+          variant="contained"
+        >
+          Save details
+        </Button>
+      </Box>
+    </Card>
+      
     </form>
   );
 };

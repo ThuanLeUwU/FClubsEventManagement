@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { useState } from 'react';
-
+import { authFirebase } from '../../firebase/firebase';
 const user = {
   avatar: '/static/images/avatars/avatar_6.png',
   city: 'Los Angeles',
@@ -44,10 +44,9 @@ const user = {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   
 
-export const AccountProfile = (props) => (
-  
+export const AccountProfile = ({user}) => (
 
-  <Card {...props}>
+  <Card>
     <CardContent>
       <Box
         sx={{
@@ -57,7 +56,7 @@ export const AccountProfile = (props) => (
         }}
       >
         <Avatar
-          src={user.avatar}
+          src={authFirebase.currentUser.photoURL}
           sx={{
             height: 64,
             mb: 2,
@@ -75,7 +74,7 @@ export const AccountProfile = (props) => (
           color="textSecondary"
           variant="body2"
         >
-          {`${user.city} ${user.country}`}
+          {`${user.role}`}
         </Typography>
         <Typography
           color="textSecondary"
@@ -85,21 +84,20 @@ export const AccountProfile = (props) => (
         </Typography>
       </Box>
     </CardContent>
-    <Divider />
     <CardActions>
       {/* <FormControl onFileUpload={handleSubmit}>
         <Input type='file' 
         onChange={handleFileChange}/>
         <Button type='submit'>Upload</Button>
       </FormControl> */}
-      <Button
+      {/* <Button
         color="primary"
         fullWidth
         variant="text"
         href='/upload'
       > 
         Upload File       
-      </Button>
+      </Button> */}
     </CardActions>
   </Card>
 );

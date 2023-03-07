@@ -8,7 +8,7 @@ import {useEffect, useState} from 'react';
 import axios from 'axios';
 import { async } from '@firebase/util';
 import axiosWrapper from '../utils/axiosWrapper';
-import { head } from 'lodash';
+import { get, head } from 'lodash';
 import { useAuthContext } from '../contexts/auth-context';
 import { getCookie } from 'cookies-next';
 import { authFirebase } from '../firebase/firebase';
@@ -16,12 +16,17 @@ const Page = () => {
   const [club,setClubs] = useState();
   const [campus,setCampus] = useState();
   const [selected, setSelected] = useState(null);
+  // const {user} = useAuthContext();
 
   useEffect(() =>  {
     const fetchData = async ()=>{
+    
+    const header = {
+      'Authorization' : "Bearer " + authFirebase.currentUser.accessToken
+    }
       try { 
-        const response = await axios(`https://event-project.herokuapp.com/api/event/join/1`,
-       
+        const response = await axios(`https://event-project.herokuapp.com/api/campus`,
+       header
    
         ).then(response =>{
          console.log(response);

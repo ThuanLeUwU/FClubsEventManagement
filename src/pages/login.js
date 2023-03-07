@@ -39,12 +39,12 @@ const Login = () => {
   const hanldeWithGoogle = async () => {
     try {
        await signInWithGoogle();
-       console.log(authFirebase.currentUser.accessToken);
+       console.log(authFirebase.currentUser);
        if(authFirebase){
         Router
         .push('/')
         .catch(console.error);
-        console.log("Token",messaging);
+        // console.log("Token",messaging);
        }
     } catch (error) {
       console.log(error);

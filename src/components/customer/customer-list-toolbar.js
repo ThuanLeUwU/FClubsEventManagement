@@ -46,9 +46,12 @@ export const CustomerListToolbar = (props) => {
         </Typography>
         <Box sx={{ m: 1, paddingRight: '10px' }}>
           <FormControl>
-            <Select value={selectedOption} defaultValue={1} onChange={handleChange}>
+            <Select value={selectedOption} 
+            defaultValue={1} 
+            onChange={handleChange}>
               {options.map(option => (
-                <MenuItem key={option.value} value={option.value}>
+                <MenuItem key={option.value} 
+                value={option.value}>
                   {option.label}
                 </MenuItem>
               ))}

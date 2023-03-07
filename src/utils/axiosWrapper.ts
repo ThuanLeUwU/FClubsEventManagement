@@ -1,12 +1,15 @@
 import axios from 'axios'
 import { deleteCookie, getCookie } from 'cookies-next'
 import router from 'next/router'
+import { authFirebase } from '../firebase/firebase'
 
 const defaultOptions = {
+  
   baseURL: 'https://event-project.herokuapp.com/api/',
   headers: {
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*'
+    'Access-Control-Allow-Origin': '*',
+    // 'Authorization' : 'Bearer ',
   },
 }
 

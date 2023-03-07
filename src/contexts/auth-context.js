@@ -26,6 +26,7 @@ export const AuthProvider = (props) => {
   const  checkUserLogin = async () => {
     try {
       const token = authFirebase.currentUser.accessToken;
+      console.log('toekn',token);
       const condition = {
         token: token,
         role: 'members'

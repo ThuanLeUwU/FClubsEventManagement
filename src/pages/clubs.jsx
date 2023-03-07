@@ -1,3 +1,4 @@
+
 import Head from 'next/head';
 import { Box, Container } from '@mui/material';
 import { CustomerListResults } from '../components/customer/customer-list-results';

@@ -89,15 +89,15 @@ export const AccountProfile = ({user}) => (
         <Input type='file' 
         onChange={handleFileChange}/>
         <Button type='submit'>Upload</Button>
-      </FormControl> */}
-      {/* <Button
+      </FormControl>  */}
+       <Button
         color="primary"
         fullWidth
         variant="text"
         href='/upload'
       > 
         Upload File       
-      </Button> */}
+      </Button>
     </CardActions>
   </Card>
 );

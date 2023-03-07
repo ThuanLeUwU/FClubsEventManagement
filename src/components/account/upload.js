@@ -1,89 +1,51 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { Button, FormControl, Input } from '@mui/material';
+import React, { useState } from "react";
+import axios from "axios";
+import { Button, FormControl, Input } from "@mui/material";
+import { Image } from "antd";
 
-// function UploadImage() {
-//   const [file, setFile] = useState();
 
-//   const handleFileChange = (event) => {
-//     setFile(event.target.files[0]);
-//     // console.log(event.target.files[0])
-//     // 
-    
-//   }
-
-//   const handleSubmit = async (event) => {
-//     // event.preventDefault();
-//     //console.log("hahaa")
-
-//     const formData = new FormData();
-//     formData.append('image', file);
-
-//     try {
-//       const response = await axios.post('/api/upload', formData, {
-//         headers: {
-//           'Content-Type': 'multipart/form-data'
-//         }
-//       });
-
-//       console.log(response.data);
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   }
-
-//   return (
-//     <FormControl onSubmit={handleSubmit}>
-//       <Input type="file" 
-//       onChange={handleFileChange} />
-//       <Button 
-//       type="submit" 
-//       href="/account"
-//       >Upload</Button>
-//     </FormControl>
-//   );
-// }
 
 function ImageUpload() {
-  const [imageDataUrl, setImageDataUrl] = useState('');
+  const [imageDataUrl, setImageDataUrl] = useState();
 
   function handleImageChange(event) {
-    // const selectedFile = event.target.files[0];
-    // console.log(selectedFile);
     // const reader = new FileReader();
-    // reader.onload = () => {
+    // reader.readAsDataURL(event.target.files[0]);
+    // reader.onloadend = () => {
     //   setImageDataUrl(reader.result);
     // };
-    // reader.readAsDataURL(selectedFile);
-    setImageDataUrl(event.target.files[0])
-    console.log(event.target.files[0])
+    // reader.readAsDataURL(event.target.files[0]);
+    setImageDataUrl(event.target.files[0]);
+    console.log(event.target.files[0]);
   }
-  
-  const handleSubmit =  async () => {
-    console.log("File", imageDataUrl)
+
+  const handleSubmit = async () => {
+    console.log("File", imageDataUrl);
     const formData = new FormData();
-    formData.append("file", imageDataUrl)
-    // console.log(imageDataUrl)
+    formData.append("file", imageDataUrl);
     try {
-              const response = await axios.post('https://node-js-fpt-wallet.herokuapp.com/api-docs/postFile', formData, {
-                headers: {
-                  'Content-Type': 'multipart/form-data'
-                }
-              });
-        
-              console.log(response.data);
-              console.log("abc")
-            } catch (error) {
-              console.error(error);
-            }
-  }
+      const response = await axios.post(
+        "https://event-project.herokuapp.com/images",
+        formData
+        // headers: {
+        //   'content-type': 'multipart/form-data'
+        // }
+      );
+
+      console.log("Response: ", response);
+      console.log("abc");
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div>
       <input type="file" 
       onChange={handleImageChange} />
-      {imageDataUrl && <img src={imageDataUrl} 
-      alt="Uploaded image" />}
+      {imageDataUrl && <img 
+      width={200}
+      src={imageDataUrl}/>}
 
       <button onClick={handleSubmit}>submit</button>
     </div>

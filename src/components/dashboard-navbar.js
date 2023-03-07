@@ -62,7 +62,8 @@ export const DashboardNavbar = (props) => {
             </IconButton>
           </Tooltip>
           <Tooltip title="Notifications">
-            <IconButton sx={{ ml: 1 }}>
+            <IconButton sx={{ ml: 1 }} 
+            href='/notification'>
               <Badge
                 badgeContent={4}
                 color="primary"

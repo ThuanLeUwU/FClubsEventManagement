@@ -9,6 +9,7 @@ import { AuthConsumer, AuthProvider } from '../contexts/auth-context';
 import { createEmotionCache } from '../utils/create-emotion-cache';
 import { registerChartJs } from '../utils/register-chart-js';
 import { theme } from '../theme';
+// import FCMMessage from '../components/fcmmessage';
 registerChartJs();
 
 const clientSideEmotionCache = createEmotionCache();
@@ -28,6 +29,7 @@ const App = (props) => {
           name="viewport"
           content="initial-scale=1, width=device-width"
         />
+        {/* <FCMMessage/> */}
       </Head>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <ThemeProvider theme={theme}>
@@ -37,7 +39,7 @@ const App = (props) => {
               {
                 (auth) => auth.isLoading
                   ? <Fragment />
-                  : getLayout(<Component {...pageProps} />)
+                  : getLayout(<Component {...pageProps} />)                 
               }
             </AuthConsumer>
           </AuthProvider>

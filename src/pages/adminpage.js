@@ -108,11 +108,11 @@ const Page = () => (
   );
   
   
-//   Page.getLayout = (page) => (
-//     <DashboardLayout>
-//       {page}
-//     </DashboardLayout>
-//   );
+  Page.getLayout = (page) => (
+    <DashboardLayout>
+      {page}
+    </DashboardLayout>
+  );
   
-//   export default Page;
+  export default Page;
   

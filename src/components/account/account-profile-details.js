@@ -39,20 +39,7 @@ export const AccountProfileDetails = ({userInf}) => {
   //   country: 'USA'
   // });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("https://event-project.herokuapp.com/api/campus")
-        .then(response =>{
-          console.log(response);
-        })
-        
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchData()
-  }, [])
+ 
 
   const handleChange = (event) => {
     setValues({

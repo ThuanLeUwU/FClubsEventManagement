@@ -3,8 +3,6 @@ import axios from "axios";
 import { Button, FormControl, Input } from "@mui/material";
 import { Image } from "antd";
 
-
-
 function ImageUpload() {
   const [imageDataUrl, setImageDataUrl] = useState();
 
@@ -24,12 +22,27 @@ function ImageUpload() {
     const formData = new FormData();
     formData.append("file", imageDataUrl);
     try {
-      const response = await axios.post(
-        "https://event-project.herokuapp.com/images",
-        formData
+      // axios
+      //   .get("https://event-project.herokuapp.com/images", {
+      //     withCredentials: true,
+      //     headers: {
+      //       "Access-Control-Allow-Origin": "*",
+      //       "Content-Type": "application/json",
+      //     },
+      //   })
+      //   .then((response) => {
+      //     console.log(response.data);
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
+
+      const response = await axios.post("https://event-project.herokuapp.com/images", formData
+        // withCredentials: true,
         // headers: {
-        //   'content-type': 'multipart/form-data'
-        // }
+        //   // "Access-Control-Allow-Origin": "*",
+        //   "Content-Type": "application/json",
+        // },
       );
 
       console.log("Response: ", response);
@@ -43,9 +56,8 @@ function ImageUpload() {
     <div>
       <input type="file" 
       onChange={handleImageChange} />
-      {imageDataUrl && <img 
-      width={200}
-      src={imageDataUrl}/>}
+      {imageDataUrl && <img width={200} 
+      src={imageDataUrl} />}
 
       <button onClick={handleSubmit}>submit</button>
     </div>

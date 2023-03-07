@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { Box, Container, Grid } from '@mui/material';
-import { Budget } from '../components/dashboard/budget';
+import {Events } from '../components/dashboard/events';
 import { LatestOrders } from '../components/dashboard/latest-orders';
 import { LatestProducts } from '../components/dashboard/latest-products';
 import { Sales } from '../components/dashboard/sales';
@@ -26,6 +26,9 @@ const Page = () => (
       }}
     >
       <Container maxWidth={false}>
+        <Events />
+      </Container>
+      {/* <Container maxWidth={false}>
         <Grid
           container
           spacing={3}
@@ -103,7 +106,7 @@ const Page = () => (
             <LatestOrders />
           </Grid>
         </Grid>
-      </Container>
+      </Container> */}
     </Box>
   </>
 );

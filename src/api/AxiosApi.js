@@ -9,6 +9,7 @@ const defaultOptions = {
   },
 }
 
+
 const axiosWrapper = axios.create(defaultOptions)
 
 // Set the AUTH token for any request

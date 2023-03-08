@@ -59,61 +59,17 @@ export const CustomerListResults = ({ club, ...rest }) => {
                 </TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
-              {club.slice(0, limit).map((customer) => (
-                <TableRow
-                  hover
-                  key={customer.id}
-                  selected={selectedCustomerIds.indexOf(customer.id) !== -1}
-                >
-                  <TableCell>
-                    <Box
-                      sx={{
-                        alignItems: 'center',
-                        display: 'flex'
-                      }}
-                    >
-                      <Avatar
-                        src={club.avatarUrl}
-                        sx={{ mr: 2 }}
-                      >
-                        {getInitials(club.name)}
-                      </Avatar>
-                      <Typography
-                        color="textPrimary"
-                        variant="body1"
-                      >
-                        {club.name}
-                      </Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell>
-                    {club.email}
-                  </TableCell>
-                  <TableCell>
-                    {`${club.address.city}, ${club.address.state}, ${club.address.country}`}
-                  </TableCell>
-                  <TableCell>
-                    {club.phone}
-                  </TableCell>
-                  <TableCell>
-                    {format(club.createdAt, 'dd/MM/yyyy')}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
           </Table>
         </Box>
       </PerfectScrollbar>
-      <TablePagination
+      {/* <TablePagination
         component="div"
-        count={club.length}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}
         rowsPerPage={limit}
         rowsPerPageOptions={[5, 10, 25]}
-      />
+      /> */}
     </Card>
   );
 };

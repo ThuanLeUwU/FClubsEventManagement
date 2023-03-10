@@ -5,13 +5,14 @@ import { authFirebase } from '../firebase/firebase';
 import axios from 'axios';
 import { setCookie, deleteCookie } from 'cookies-next';
 import axiosWrapper from '../utils/axiosWrapper';
+import { async } from '@firebase/util';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = (props) => {
   const { children } = props;
-  
- 
+
+
   const [user, setUser] = useState()
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(authFirebase, (currentUser) => {
@@ -23,22 +24,22 @@ export const AuthProvider = (props) => {
   }, [])
 
 
-  const  checkUserLogin = async () => {
+  const checkUserLogin = async () => {
     try {
       const token = authFirebase.currentUser.accessToken;
-      console.log('toekn',token);
+      // console.log('toekn', token);
       const condition = {
         token: token,
         role: 'members'
       }
-    
+
       const response = await axios.post(
         'https://event-project.herokuapp.com/api/login', condition
       )
-
+    
       setCookie('accessToken', response?.data?.access_token)
       setUser(response?.data?.data)
-     
+
     } catch (error) {
       deleteCookie('accessToken')
       console.log(error);

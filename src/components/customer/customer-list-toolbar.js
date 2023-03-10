@@ -15,7 +15,8 @@ import {
 import { Search as SearchIcon } from '../../icons/search';
 
 
-export const CustomerListToolbar = (props) => {
+export const CustomerListToolbar = ({campus,setCampus}) => {
+  console.log(campus);
   const options = [
     { label: 'Xavalo',value: 1 },
     { label: 'Hola', value: 2 },
@@ -28,7 +29,7 @@ export const CustomerListToolbar = (props) => {
 
   
   return (
-    <Box {...props}>
+    <Box >
       <Box
         sx={{
           alignItems: 'center',

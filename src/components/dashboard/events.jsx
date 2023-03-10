@@ -1,7 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import EventStyles from "./styles/event.module.scss";
+import { format, parseISO } from 'date-fns';
+import { async } from "@firebase/util";
+import axios from "axios";
+export const Events = ({ event }) => {
+  console.log('event', event);
+  if (event.start_date == null) {
+    event.start_date == "2023-02-22T00:00:00.000Z"
+  }
+  const startDate = parseISO(event.start_date);
+  if (event.end_date == null) {
+    event.end_date == "2023-02-25T00:00:00.000Z"
+  }
+  const endDate = parseISO(event.end_date);
+  const [joinEventList, setJohnEventList] = useState([]);
 
-export const Events = () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      //sai API
+      const responseAllStudentJoinThisEvent = await axios.get(`https://event-project.herokuapp.com/api/event/join/${event.event_id}`)
+      setJohnEventList(responseAllStudentJoinThisEvent?.data);
+    }
+    fetchData();
+  }, [])
+
+  const handleClick = () => {
+  
+  }
+
+  console.log('join', joinEventList);
   return (
     <section className={`${EventStyles.tournament_section}`}>
       <div className={`${EventStyles.container}`}>
@@ -13,18 +40,29 @@ export const Events = () => {
               <div className="image">
                 <img
                   className={`${EventStyles.image}`}
-                  src="https://storage.googleapis.com/f-club-management.appspot.com/333117606_5953295791414127_4729393989328206991_n.jpg?GoogleAccessId=firebase-adminsdk-601p4%40f-club-management.iam.gserviceaccount.com&Expires=1893456000&Signature=f0Yq8wRigTPbDEBX9CaKS0ykQfRDwRksNS%2BKLepSc8AxfWXJKrFow%2BDLO%2FFoWQsox5HOiNBu2bYaR7hHbrTCAlQF1b4bBoa2%2BaJUsYk2B4%2Fd0OKZqotpiyYYWynbKA%2BzhrVYnmQowAC0i2jpmzNjEfENdiOPFJakuA1haGpVtUs9NO9xOILUuc6iu6ic9iU%2BrSjENBaB1vEhvH1hBNGWJGTJ9rm2qsmeOPlKBY9dSlC7w9y4yWYMumh9roDf2e7xZirVmI4SPFim%2BwHwbz7Hqlp0gjkOPf6G4HC6IwKb0xJJA2%2FV55mgobZN3rpaqhvi9nvxruvilKT8TlpnnQhC4g%3D%3D"
+                  src={`${event.img}`}
                   alt=""
                 />
               </div>
               <div className={`${EventStyles.content}`}>
-                <a
-                  // style="text-decoration: none"
-                  href="#"
-                  className={`${EventStyles.tournament_btn}`}
-                >
-                  JOIN EVENT
-                </a>
+                {joinEventList.find(thisEvent => thisEvent.event_id === event.event_id ) == false ? (
+                  <a
+                    // style="text-decoration: none"
+                    onClick={handleClick}
+                    className={`${EventStyles.tournament_btn}`}
+                  >
+                    JOINED
+                  </a>
+                ) : (
+                  <a
+                    // style="text-decoration: none"
+                    onClick={handleClick}
+                    className={`${EventStyles.tournament_btn}`}
+                  >
+                    JOIN EVENT
+                  </a>
+                )}
+
               </div>
             </div>
             {/* <h4 className={`${EventStyles.people_playing}`}>
@@ -58,11 +96,15 @@ export const Events = () => {
           </div>
           <div className={`${EventStyles.right_area}`}>
             <div className={`${EventStyles.right_top}`}>
-              <h1>Campus Tour - Trường Đại Học FPT </h1>
+              <h1>Event : {`${event.event_name}`} </h1>
               <div className={`${EventStyles.reward}`}>
-                {/* <span className={`${EventStyles.reward_span}`}></span> */}
-                Vietnamese Students&rsquo; Association of FPT University
-                
+                Clubs: {`${event.club_name}`}
+              </div>
+              <div className={`${EventStyles.reward}`}>
+                Organizer:  {`${event.student_name}`}
+              </div>
+              <div className={`${EventStyles.reward}`}>
+                Mail Contact:  {`${event.email}`}
               </div>
             </div>
             <div className={`${EventStyles.right_bottom}`}>
@@ -72,10 +114,17 @@ export const Events = () => {
                   {/* <i className="far fa-clock"></i>
                   <div data-countdown="2021/12/15"> */}
                   <h4>Timeline:</h4>
-                  <span className={`${EventStyles.time}`}>From: 7h30, 2023-02-25</span>
-                  <span className={`${EventStyles.time}`}>To: 17h00, 2023-02-25</span>
+
+                  {/* <span className={`${EventStyles.time}`}>Check-in: {format(startDate, 'HH:mm:ss, dd/MM/yyyy')}</span>
+                  <span className={`${EventStyles.time}`}>Check-out: {format(endDate, 'HH:mm:ss, dd/MM/yyyy')}</span>  */}
                   <h4>Location:</h4>
-                  <span className={`${EventStyles.time}`}>Block E2a-7, D1 Street, Long Thanh My Avenue, Thu Duc City, Ho Chi Minh City</span>
+                  <span className={`${EventStyles.time}`}>{`${event.location}`}</span>
+                  {event.description ? (
+                    <>
+                      <h4>Description:</h4>
+                      <span className={`${EventStyles.time}`}>{`${event.description}`}</span>
+                    </>
+                  ) : (<></>)}
                   {/* </div> */}
                 </div>
                 {/* <img src="" 

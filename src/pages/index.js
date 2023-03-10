@@ -45,11 +45,9 @@ const Page = () => {
          
           {events.map(event => (
             
-            <Card sx={{borderRadius: '20px', marginBottom: '10px'}} key={event.event_id}>
+            <div  key={event.event_id}>
               <Events event={event} />
-            </Card>
-          
-      
+            </div>
           ))}
            
         </Container>

@@ -4,9 +4,9 @@ import { format, parseISO } from 'date-fns';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { CustomerListToolbar } from '../components/customer/customer-list-toolbar';
-import { DashboardLayout } from '../components/dashboard-layout';
-import { useAuthContext } from '../contexts/auth-context';
+import { CustomerListToolbar } from '../../components/customer/customer-list-toolbar';
+import { DashboardLayout } from '../../components/dashboard-layout';
+import { useAuthContext } from '../../contexts/auth-context';
 import {
   Box,
   Card,
@@ -21,18 +21,21 @@ import {
   Container,
   TableCell,
   TableHead, TableRow,
-  SvgIcon, Typography, Select
+  SvgIcon, Typography, Select, Breadcrumbs
 } from '@mui/material';
 
 
-import { Search } from '../icons/search';
+import { Search } from '../../icons/search';
 
 import { Button } from 'antd';
+import { async } from '@firebase/util';
+import Link from 'next/link';
 const Page = () => {
   const { user } = useAuthContext();
   const [selected, setSelected] = useState(user.campus);
   const [club, setClubs] = useState();
-  const [campus, setCampus] = useState()
+  const [campus, setCampus] = useState();
+  const [allClubThatUserJoin, setAllClubThatUserJoin] = useState([]);
   useEffect(() => {
 
     const fetchData = async () => {
@@ -44,8 +47,13 @@ const Page = () => {
         const responseAllCampus = await axios.get(`https://event-project.herokuapp.com/api/campus`, {
           headers
         })
-        
         setCampus(responseAllCampus?.data)
+        if (user.role == 'members') {
+          const responseGetAllClubThatUserJoin = await axios.get(`https://event-project.herokuapp.com/api/club/student/${user.id}`)
+          console.log('All Club', responseGetAllClubThatUserJoin);
+          setAllClubThatUserJoin(responseGetAllClubThatUserJoin?.data)
+        }
+
       } catch (error) {
         console.log(error);
       }
@@ -65,28 +73,22 @@ const Page = () => {
   }, [selected])
 
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
-  const [limit, setLimit] = useState(10);
-  const [page, setPage] = useState(0);
 
-  const handleLimitChange = (event) => {
-    setLimit(event.target.value);
-  };
-
-  const handlePageChange = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleJoin = (event) => {
-
-  }
-
+  // const handleJoin = async (event) => {
+  //   console.log('join');
+  //   try {
+  //     const response = axios.get(`https://event-project.herokuapp.com/api/club/student/${1}`)
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
   const handleChange = (event) => {
     setSelected(event.target.value);
   }
-  if(campus == undefined || club == undefined ) {
+  if (campus == undefined || club == undefined) {
     return (
-      <div style={{display:'flex', alignItems:'center', justifyContent: 'center', height: '100%'}}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
         <h1>Loading...</h1>
       </div>
     )
@@ -98,6 +100,7 @@ const Page = () => {
           Clubs
         </title>
       </Head>
+
       <Box
         component="main"
         sx={{
@@ -183,7 +186,11 @@ const Page = () => {
                         <TableCell>
                           Total Members
                         </TableCell>
-                        {user.role == 'admin' ? (<></>) : (
+                        {user.role == 'admin' ? (
+                          <TableCell>
+                            Information
+                          </TableCell>
+                        ) : (
                           <TableCell>
                             Status
                           </TableCell>)}
@@ -194,7 +201,7 @@ const Page = () => {
                         const date = parseISO(club.established_date)
                         return (
                           <TableRow
-                          
+
                             hover
                             key={club.name}
                             selected={selectedCustomerIds.indexOf(club.id) !== -1}
@@ -225,11 +232,35 @@ const Page = () => {
                             <TableCell sx={{ textAlign: 'center' }}>
                               {club.totalMembers}
                             </TableCell>
-                            {user.role == 'admin' ? (<></>) : (
+
+                            {user.role == 'admin' ? (
                               <TableCell>
-                                <Button onClick={handleJoin()}>
-                                  Join
-                                </Button>
+                                <Link href={`clubs/${club.club_id}`} passHref>
+                                  <Button >
+                                    More
+                                  </Button>
+                                </Link>
+                              </TableCell>
+                            ) : (
+                              <TableCell>
+                                {club.campus_id == user.campus ? (
+                                  <>
+                                    {allClubThatUserJoin.find(thisClub => thisClub.club_id === club.club_id) ? (
+                                      <Button disabled>
+                                        Joined
+                                      </Button>
+                                    ) : (
+                                      <Button>
+                                        Join
+                                      </Button>
+                                    )}
+                                  </>
+                                ) : (
+                                  <Button disabled>
+                                    CAN'T Join
+                                  </Button>
+                                )}
+
                               </TableCell>)}
                           </TableRow>
 
@@ -239,21 +270,13 @@ const Page = () => {
                   </Table>
                 </Box>
               </PerfectScrollbar>
-              {/* <TablePagination
-                component="div"
-                count={club.length}
-                onPageChange={handlePageChange}
-                onRowsPerPageChange={handleLimitChange}
-                page={page}
-                rowsPerPage={limit}
-                rowsPerPageOptions={[5, 10, 25]}
-              /> */}
             </Card>
           </Box>
         </Container>
       </Box>
     </>)
 };
+
 
 Page.getLayout = (page) => (
   <DashboardLayout>

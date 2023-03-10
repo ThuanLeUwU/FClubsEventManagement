@@ -21,7 +21,7 @@ const items = [
   {
     href: '/',
     icon: (<ChartBarIcon fontSize="small" />),
-    title: 'Dashboard'
+    title: 'Events'
   },
   {
     href: '/clubs',

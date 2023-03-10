@@ -3,7 +3,7 @@ import axios from "axios";
 import { Button, FormControl, Input } from "@mui/material";
 import { Image } from "antd";
 
-function ImageUpload() {
+export const ImageUpload = () => {
   const [imageDataUrl, setImageDataUrl] = useState();
 
   function handleImageChange(event) {
@@ -37,7 +37,9 @@ function ImageUpload() {
       //     console.log(error);
       //   });
 
-      const response = await axios.post("https://event-project.herokuapp.com/images", formData
+      const response = await axios.post(
+        "https://event-project.herokuapp.com/images",
+        formData
         // withCredentials: true,
         // headers: {
         //   // "Access-Control-Allow-Origin": "*",
@@ -56,12 +58,17 @@ function ImageUpload() {
     <div>
       <input type="file" 
       onChange={handleImageChange} />
-      {imageDataUrl && <img width={200} 
-      src={imageDataUrl} />}
-
+{/*       
+      <div>
+        <figure class="image" 
+        style="width: 128px; height: 192px;"> */}
+          {imageDataUrl && <img width={200} 
+          src={imageDataUrl} />}
+        {/* </figure>
+      </div> */}
       <button onClick={handleSubmit}>submit</button>
     </div>
   );
 }
 
-export default ImageUpload;
+// export default ImageUpload;

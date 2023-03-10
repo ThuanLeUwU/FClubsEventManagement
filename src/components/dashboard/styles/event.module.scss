@@ -157,7 +157,7 @@
   color: #fff;
   justify-content: center;
   position: relative;
-  z-index: 3;
+  // z-index: 3;
   gap: 5px;
   flex-direction: column;
   font-family: "Montserrat";
@@ -170,7 +170,7 @@
       color: #068be4;
     //   text-shadow: 0px 0px 75px #068be4, 0px 0px 7px #068be4, 0px 0px 7px #068be4;
       margin-bottom: 10px;
-      display: inline-block;
+      // display: inline-block;
       text-align: start;
 }
 
@@ -237,4 +237,35 @@
 
 .container {
     // height: 400px;
+}
+
+.create_event{
+  
+}
+
+.modal_button {
+  justify-content: flex-end;
+  display: flex;
+  
+}
+
+.modal_button_content {
+  font-size: 30px;
+}
+
+.modal{
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  // background-color: rgba(0,0,0,0.3);
+}
+
+.modal_content {
+  width: 300px;
+  height: 300px;
+  margin: auto;
+  
 }

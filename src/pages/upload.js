@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { Box, Container, Grid, Typography } from '@mui/material';
 import { DashboardLayout } from '../components/dashboard-layout';
 import UploadImage from '../components/account/upload';
-import ImageUpload from '../components/account/upload';
+import {ImageUpload} from '../components/account/upload';
 
 const Page = () => (
   <>

@@ -29,7 +29,7 @@ import axios from 'axios';
 
 export const AccountProfileDetails = ({userInf}) => {
  
-  console.log('ìnor',userInf);
+  console.log('ifnor',userInf);
   // const [values, setValues] = useState({
   //   firstName: 'Katarina',
   //   lastName: 'Smith',

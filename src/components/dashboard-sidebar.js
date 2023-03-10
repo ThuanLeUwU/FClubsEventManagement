@@ -37,6 +37,11 @@ const items = [
     href: '/account',
     icon: (<UserIcon fontSize="small" />),
     title: 'Account'
+  },
+  {
+    href: '/upload',
+    icon: (<UserIcon fontSize="small" />),
+    title: 'Upload'
   }
 ];
 

@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -10,34 +9,10 @@ import {
   TextField
 } from '@mui/material';
 
-import axios from 'axios';
-// const states = [
-//   {
-//     value: 'alabama',
-//     label: 'Alabama'
-//   },
-//   {
-//     value: 'new-york',
-//     label: 'New York'
-//   },
-//   {
-//     value: 'san-francisco',
-//     label: 'San Francisco'
-//   }
-// ];
-
 
 export const AccountProfileDetails = ({userInf}) => {
  
-  console.log('ìnor',userInf);
-  // const [values, setValues] = useState({
-  //   firstName: 'Katarina',
-  //   lastName: 'Smith',
-  //   email: 'demo@devias.io',
-  //   phone: '',
-  //   state: 'Alabama',
-  //   country: 'USA'
-  // });
+
 
  
 

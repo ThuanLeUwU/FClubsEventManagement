@@ -46,7 +46,7 @@ const user = {
   
 
 export const AccountProfile = ({userInf}) => {
-  console.log('log2',userInf);
+ 
   const router = useRouter();
   const upload = () => {
     router.replace({

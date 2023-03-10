@@ -5,22 +5,30 @@ import { async } from "@firebase/util";
 import axios from "axios";
 export const Events = ({ event }) => {
   console.log('event', event);
+  if (event.start_date == null) {
+    event.start_date == "2023-02-22T00:00:00.000Z"
+  }
   const startDate = parseISO(event.start_date);
+  if (event.end_date == null) {
+    event.end_date == "2023-02-25T00:00:00.000Z"
+  }
   const endDate = parseISO(event.end_date);
-  const [organizer, setOrganizer] = useState(null)
   const [joinEventList, setJohnEventList] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const responseJoinEvent = await axios.get('')
-      setJohnEventList(responseJoinEvent);
+      //sai API
+      const responseAllStudentJoinThisEvent = await axios.get(`https://event-project.herokuapp.com/api/event/join/${event.event_id}`)
+      setJohnEventList(responseAllStudentJoinThisEvent?.data);
     }
     fetchData();
   }, [])
 
-  const handleClick = () =>{
-    route
+  const handleClick = () => {
+  
   }
+
+  console.log('join', joinEventList);
   return (
     <section className={`${EventStyles.tournament_section}`}>
       <div className={`${EventStyles.container}`}>
@@ -37,19 +45,24 @@ export const Events = ({ event }) => {
                 />
               </div>
               <div className={`${EventStyles.content}`}>
-                {joinEventList.filter(thisEvent => thisEvent.event_id === event.event_id) > 0 ? (
-                <>
-                </>
-                ): (
-                <a
-                  // style="text-decoration: none"
-                  onClick={handleClick}
-                  className={`${EventStyles.tournament_btn}`}
-                >
-                  JOIN EVENT
-                </a>
-                ) }
-               
+                {joinEventList.find(thisEvent => thisEvent.event_id === event.event_id ) == false ? (
+                  <a
+                    // style="text-decoration: none"
+                    onClick={handleClick}
+                    className={`${EventStyles.tournament_btn}`}
+                  >
+                    JOINED
+                  </a>
+                ) : (
+                  <a
+                    // style="text-decoration: none"
+                    onClick={handleClick}
+                    className={`${EventStyles.tournament_btn}`}
+                  >
+                    JOIN EVENT
+                  </a>
+                )}
+
               </div>
             </div>
             {/* <h4 className={`${EventStyles.people_playing}`}>
@@ -88,7 +101,7 @@ export const Events = ({ event }) => {
                 Clubs: {`${event.club_name}`}
               </div>
               <div className={`${EventStyles.reward}`}>
-                Organizer:
+                Organizer:  {`${event.student_name}`}
               </div>
               <div className={`${EventStyles.reward}`}>
                 Mail Contact:  {`${event.email}`}
@@ -102,8 +115,8 @@ export const Events = ({ event }) => {
                   <div data-countdown="2021/12/15"> */}
                   <h4>Timeline:</h4>
 
-                  <span className={`${EventStyles.time}`}>Check-in: {format(startDate, 'HH:mm:ss, dd/MM/yyyy')}</span>
-                  <span className={`${EventStyles.time}`}>Check-out: {format(endDate, 'HH:mm:ss, dd/MM/yyyy')}</span>
+                  {/* <span className={`${EventStyles.time}`}>Check-in: {format(startDate, 'HH:mm:ss, dd/MM/yyyy')}</span>
+                  <span className={`${EventStyles.time}`}>Check-out: {format(endDate, 'HH:mm:ss, dd/MM/yyyy')}</span>  */}
                   <h4>Location:</h4>
                   <span className={`${EventStyles.time}`}>{`${event.location}`}</span>
                   {event.description ? (

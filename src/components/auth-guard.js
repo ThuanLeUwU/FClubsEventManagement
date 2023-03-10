@@ -4,7 +4,7 @@ import Login from '../pages/login';
 
 export const AuthGuard = (props) => {
   const { children } = props;
-  const { isAuthenticated } = useAuthContext();
+  // const { isAuthenticated } = useAuthContext();
   const {user} = useAuthContext();
 
   return user ? children : ( 

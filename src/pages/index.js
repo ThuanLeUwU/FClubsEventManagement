@@ -14,7 +14,9 @@ const Page = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const responseEvent = await axios(`https://event-project.herokuapp.com/api/event/${user.campus}?status=1`)
+        // const responseEvent = await axios(`https://event-project.herokuapp.com/api/event/${user.campus}?status=0`)
+        const responseEvent = await axios(`https://event-project.herokuapp.com/api/event/1?status=0`)
+        
         setEvents(responseEvent?.data)
 
       } catch (error) {

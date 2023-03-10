@@ -13,6 +13,7 @@ import {
 import axios from 'axios';
 import { useState } from 'react';
 import { authFirebase } from '../../firebase/firebase';
+import { useRouter } from 'next/router';
 const user = {
   avatar: '/static/images/avatars/avatar_6.png',
   city: 'Los Angeles',
@@ -44,60 +45,72 @@ const user = {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   
 
-export const AccountProfile = ({user}) => (
-
-  <Card>
-    <CardContent>
-      <Box
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'column'
-        }}
-      >
-        <Avatar
-          src={authFirebase.currentUser.photoURL}
+export const AccountProfile = ({userInf}) => {
+  console.log('log2',userInf);
+  const router = useRouter();
+  const upload = () => {
+    router.replace({
+              pathname: '/upload',
+            })
+            .catch(console.error);
+  }
+  return(
+   
+    <Card>
+      <CardContent>
+        <Box
           sx={{
-            height: 64,
-            mb: 2,
-            width: 64
+            alignItems: 'center',
+            display: 'flex',
+            flexDirection: 'column'
           }}
-        />
-        <Typography
-          color="textPrimary"
-          gutterBottom
-          variant="h5"
         >
-          {user.name}
-        </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body2"
-        >
-          {`${user.role}`}
-        </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body2"
-        >
-          {user.timezone}
-        </Typography>
-      </Box>
-    </CardContent>
-    <CardActions>
-      {/* <FormControl onFileUpload={handleSubmit}>
-        <Input type='file' 
-        onChange={handleFileChange}/>
-        <Button type='submit'>Upload</Button>
-      </FormControl>  */}
-       <Button
-        color="primary"
-        fullWidth
-        variant="text"
-        href='/upload'
-      > 
-        Upload File       
-      </Button>
-    </CardActions>
-  </Card>
-);
+          <Avatar
+            src={authFirebase.currentUser.photoURL}
+            sx={{
+              height: 64,
+              mb: 2,
+              width: 64
+            }}
+          />
+          <Typography
+            color="textPrimary"
+            gutterBottom
+            variant="h5"
+          >
+            {userInf.name}
+          </Typography>
+          <Typography
+            color="textSecondary"
+            variant="body2"
+          >
+            {`${userInf.role}`}
+          </Typography>
+          <Typography
+            color="textSecondary"
+            variant="body2"
+          >
+            {userInf.timezone}
+          </Typography>
+        </Box>
+      </CardContent>
+      <CardActions>
+        {/* <FormControl onFileUpload={handleSubmit}>
+          <Input type='file' 
+          onChange={handleFileChange}/>
+          <Button type='submit'>Upload</Button>
+        </FormControl>  */}
+         <Button
+          color="primary"
+          fullWidth
+          variant="text"
+          onClick={upload}
+        > 
+          Upload File       
+        </Button>
+      </CardActions>
+    </Card>
+  );
+}
+
+ 

@@ -9,76 +9,79 @@ import axios from 'axios';
 
 const Page = () => {
   const { user } = useAuthContext();
-  const [userInf, setUserInf] = useState([]);
+  const [userInf, setUserInf] = useState();
 
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios(`https://event-project.herokuapp.com/api/student/${user.id}`)
         setUserInf(response?.data)
+       
       } catch (error) {
         console.log(error);
-      }
+      } 
     }
+
     fetchData()
   }, [])
 
+  
+  if(userInf == undefined){
+    return (
+      <div style={{display:'flex', alignItems:'center', justifyContent: 'center', height: '100%'}}>
+        <h1>Loading...</h1>
+      </div>
+    )
+  } 
   return (
     <>
-      {userInf.map(user => {
-        return (
-          <div key={user.name}>
-            <Head>
-              <title>
-                Account
-              </title>
-            </Head>
-            <Box
-              component="main"
-              sx={{
-                flexGrow: 1,
-                py: 8
-              }}
+      <Head>
+        <title>
+          Account
+        </title>
+      </Head>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          py: 8
+        }}
+      >
+        <Container maxWidth="lg">
+          <Typography
+            sx={{ mb: 3 }}
+            variant="h4"
+          >
+            Account
+          </Typography>
+          <Grid
+            container
+            spacing={3}
+          >
+            <Grid
+              item
+              lg={4}
+              md={6}
+              xs={12}
             >
-              <Container maxWidth="lg">
-                <Typography
-                  sx={{ mb: 3 }}
-                  variant="h4"
-                >
-                  Account
-                </Typography>
-                <Grid
-                  container
-                  spacing={3}
-                >
-                  <Grid
-                    item
-                    lg={4}
-                    md={6}
-                    xs={12}
-                  >
-                    <AccountProfile user={user} />
-                  </Grid>
-                  <Grid
-                    item
-                    lg={8}
-                    md={6}
-                    xs={12}
-                  >
-                    <AccountProfileDetails userInf={user} />
-                  </Grid>
-                </Grid>
-              </Container>
-            </Box>
-          </div>
-        )
-      })}
 
-
-
+              {userInf ? (<></>) : (<></>)}
+              <AccountProfile userInf={userInf} />
+            </Grid>
+            <Grid
+              item
+              lg={8}
+              md={6}
+              xs={12}
+            >
+              <AccountProfileDetails userInf={userInf} />
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
     </>
-  )
+  );
 };
 
 Page.getLayout = (page) => (

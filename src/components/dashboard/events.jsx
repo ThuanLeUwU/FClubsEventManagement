@@ -3,32 +3,57 @@ import EventStyles from "./styles/event.module.scss";
 import { format, parseISO } from 'date-fns';
 import { async } from "@firebase/util";
 import axios from "axios";
+import { useAuthContext } from "../../contexts/auth-context";
+import { color } from "@mui/system";
 export const Events = ({ event }) => {
   console.log('event', event);
-  if (event.start_date == null) {
-    event.start_date == "2023-02-22T00:00:00.000Z"
-  }
   const startDate = parseISO(event.start_date);
-  if (event.end_date == null) {
-    event.end_date == "2023-02-25T00:00:00.000Z"
-  }
   const endDate = parseISO(event.end_date);
+  const { user } = useAuthContext();
   const [joinEventList, setJohnEventList] = useState([]);
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       //sai API
+      
       const responseAllStudentJoinThisEvent = await axios.get(`https://event-project.herokuapp.com/api/event/join/${event.event_id}`)
       setJohnEventList(responseAllStudentJoinThisEvent?.data);
     }
     fetchData();
   }, [])
 
+
+
   const handleClick = () => {
-  
+    const fetchData = async () => {
+      try {
+        const requestBody = {
+          event_id: event.event_id,
+          student_id: user.id,
+          registration_date: "2023-10-03 13-54-22"
+        }
+        const response = axios.post('https://event-project.herokuapp.com/api/event/join', requestBody)
+        setSuccess(true)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
   }
 
-  console.log('join', joinEventList);
+  useEffect(() => {
+    const fetchData = async () => {
+      //sai API
+      
+      const responseAllStudentJoinThisEvent = await axios.get(`https://event-project.herokuapp.com/api/event/join/${event.event_id}`)
+      setJohnEventList(responseAllStudentJoinThisEvent?.data);
+    }
+    fetchData();
+  }, [success])
+
+  console.log('list Event', joinEventList);
   return (
     <section className={`${EventStyles.tournament_section}`}>
       <div className={`${EventStyles.container}`}>
@@ -45,14 +70,10 @@ export const Events = ({ event }) => {
                 />
               </div>
               <div className={`${EventStyles.content}`}>
-                {joinEventList.find(thisEvent => thisEvent.event_id === event.event_id ) == false ? (
-                  <a
-                    // style="text-decoration: none"
-                    onClick={handleClick}
-                    className={`${EventStyles.tournament_btn}`}
-                  >
+                {joinEventList.find(thisUser => thisUser.student_id == user.id) ? (
+                  <div  class="text-danger">
                     JOINED
-                  </a>
+                  </div>
                 ) : (
                   <a
                     // style="text-decoration: none"
@@ -115,8 +136,8 @@ export const Events = ({ event }) => {
                   <div data-countdown="2021/12/15"> */}
                   <h4>Timeline:</h4>
 
-                  {/* <span className={`${EventStyles.time}`}>Check-in: {format(startDate, 'HH:mm:ss, dd/MM/yyyy')}</span>
-                  <span className={`${EventStyles.time}`}>Check-out: {format(endDate, 'HH:mm:ss, dd/MM/yyyy')}</span>  */}
+                  <span className={`${EventStyles.time}`}>Check-in: {format(startDate, 'HH:mm:ss, dd/MM/yyyy')}</span>
+              <span className={`${EventStyles.time}`}>Check-out: {format(endDate, 'HH:mm:ss, dd/MM/yyyy')}</span>
                   <h4>Location:</h4>
                   <span className={`${EventStyles.time}`}>{`${event.location}`}</span>
                   {event.description ? (

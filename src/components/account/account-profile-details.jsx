@@ -153,7 +153,7 @@ export const AccountProfileDetails = ({userInf}) => {
         </Grid>
       </CardContent>
       <Divider />
-      <Box
+      {/* <Box
         sx={{
           display: 'flex',
           justifyContent: 'flex-end',
@@ -166,7 +166,7 @@ export const AccountProfileDetails = ({userInf}) => {
         >
           Save details
         </Button>
-      </Box>
+      </Box> */}
     </Card>
       
     </form>

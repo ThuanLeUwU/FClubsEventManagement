@@ -46,11 +46,9 @@ const Page = () => {
           <CreateEvent/>
           {events.map(event => (
             
-            <div key={event.event_id}>
+            <div  key={event.event_id}>
               <Events event={event} />
             </div>
-          
-      
           ))}
            
         </Container>

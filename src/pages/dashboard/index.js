@@ -3,9 +3,6 @@ import Head from 'next/head';
 
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-
-
-
 import { Events } from '../../components/dashboard/events';
 import { useAuthContext } from '../../contexts/auth-context';
 import { getCookie } from 'cookies-next';
@@ -16,6 +13,7 @@ const Dashboard = () => {
   const [events, setEvents] = useState([]);
   const [campus, setCampus] = useState([]);
   const [selected, setSelected] = useState(user.campus);
+
   useEffect(() => {
     const fetchEvents = async () => {
       const headers = {
@@ -26,6 +24,7 @@ const Dashboard = () => {
           headers
         })
         setCampus(responseAllCampus?.data)
+        
       } catch (error) {
         console.log(error);
       }
@@ -52,7 +51,7 @@ const Dashboard = () => {
     setSelected(event.target.value);
   }
 
-  console.log('fetch', events);
+ 
   return (
     <>
       <Head>
@@ -69,8 +68,6 @@ const Dashboard = () => {
         }}
       >
         <Container maxWidth={false}>
-
-
           <Box sx={{ m: 1, paddingRight: '10px', position: 'fixed', right: '0px', top: '80px' }}>
             <FormControl>
               <Select value={selectedOption} defaultValue={selected} onChange={handleChange}>
@@ -81,10 +78,7 @@ const Dashboard = () => {
                 ))}
               </Select>
             </FormControl>
-
-            <Box>
-              Thêm ở dashboard/index.js
-            </Box>
+       
           </Box>
           <Box width='90%'>
             {events.map(event => (

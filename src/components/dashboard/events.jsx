@@ -5,50 +5,54 @@ import { async } from "@firebase/util";
 import axios from "axios";
 import { useAuthContext } from "../../contexts/auth-context";
 import { color } from "@mui/system";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ListItem, ListItemButton, ListItemText, Slide, Typography } from "@mui/material";
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ListItem, ListItemButton, ListItemText, Slide, Typography } from "@mui/material";
 import Link from "next/link";
-
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 
 export const Events = ({ event }) => {
-  console.log('event', event);
+
   const startDate = parseISO(event.start_date);
   const endDate = parseISO(event.end_date);
   const { user } = useAuthContext();
   const [joinEventList, setJohnEventList] = useState([]);
+ 
+
+
+
 
 
   useEffect(() => {
     const fetchData = async () => {
       const responseAllStudentJoinThisEvent = await axios.get(`https://event-project.herokuapp.com/api/event/join/${event.event_id}`)
       setJohnEventList(responseAllStudentJoinThisEvent?.data);
-      console.log('met mỏi', responseAllStudentJoinThisEvent);
     }
     fetchData();
   }, [])
 
 
 
-  const handleClick = (event) => {
-    const fetchData = async () => {
+  const handleClick = () => {
+    console.log('click');
+    const fetchData2 = async () => {
       try {
         const currentTime = new Date();
 
         const requestBody = {
-          event_id: event.event_id,
+          event_id: event.event_id ,
           student_id: user.id,
           registration_date: currentTime.toISOString()
         }
-        const response = axios.post('https://event-project.herokuapp.com/api/event/join', requestBody)
+        await axios.post('https://event-project.herokuapp.com/api/event/join', requestBody)
+
 
         const responseAllStudentJoinThisEvent = await axios.get(`https://event-project.herokuapp.com/api/event/join/${event.event_id}`)
         setJohnEventList(responseAllStudentJoinThisEvent?.data);
-
-
+        setOpen(false);
       } catch (error) {
         console.log(error);
       }
     }
-    fetchData();
+    fetchData2();
   }
 
 
@@ -59,6 +63,7 @@ export const Events = ({ event }) => {
 
 
   const handleClickOpen = () => {
+
     setOpen(true);
   };
 
@@ -66,6 +71,13 @@ export const Events = ({ event }) => {
     setOpen(false);
   };
 
+  if (joinEventList == []) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', marginTop: '500px' }}>
+        <CircularProgress />
+      </div>
+    )
+  }
   return (
     <section className={`${EventStyles.tournament_section}`}>
       <div className={`${EventStyles.container}`}>
@@ -76,7 +88,8 @@ export const Events = ({ event }) => {
             <div className={`${EventStyles.single_play}`}>
               <div className="image">
                 <img
-                  className={`${EventStyles.image}`}
+                  width='220px'
+                  height='400px'
                   src={`${event.img}`}
                   alt=""
                 />
@@ -98,7 +111,7 @@ export const Events = ({ event }) => {
                 <div className={`${EventStyles.content}`}>
                   {joinEventList.find(thisUser => thisUser.student_id == user.id) ? (
                     <Button disabled sx={{
-                      backgroundColor: 'white', margin: '1px' , border: '1px solid #0e6ae9'
+                      backgroundColor: 'white', margin: '1px', border: '1px solid #0e6ae9'
                     }}>
                       <Typography color='#0e6ae9'>
                         JOINED
@@ -145,7 +158,7 @@ export const Events = ({ event }) => {
                           'textDecoration': 'underline'
                         }
                       }}>cancel</Typography>
-                      <Button onClick={handleClose} sx={{
+                      <Button onClick={handleClick} sx={{
                         backgroundColor: '#0e6ae9', color: 'white', margin: '1px', ':hover': {
                           backgroundColor: 'white',
                           color: '#0e6ae9',
@@ -162,7 +175,8 @@ export const Events = ({ event }) => {
           </div>
           <div className={`${EventStyles.right_area}`}>
             <div className={`${EventStyles.right_top}`}>
-              <h1>Event : {`${event.event_name}`} </h1>
+              <h1>Event : {`${event.event_name}`} <Button > <NotificationsActiveIcon/></Button></h1>
+              
               <div className={`${EventStyles.reward}`}>
                 Clubs: {`${event.club_name}`}
               </div>
@@ -209,7 +223,6 @@ export const Events = ({ event }) => {
         </div>
 
       </div>
-
     </section >
   );
 };

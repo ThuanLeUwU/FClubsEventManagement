@@ -6,75 +6,19 @@ import { useEffect, useState } from "react";
 import { DashboardLayout } from "../components/dashboard-layout";
 import { Events } from "../components/dashboard/events";
 import { useAuthContext } from "../contexts/auth-context";
-import { CreateEvent } from "../components/dashboard/createEvent";
+// import { CreateEvent } from "../components/dashboard/createEvent";
 import { Button } from "antd";import Link from 'next/link';
 import Dashboard from './Dashboard';
 
 
 const Page = () => {
   const { user } = useAuthContext();
-  const [events, setEvents] = useState([]);
-  const [visible, setVisible] = useState(false);
-  const [club, setClub] = useState([]);
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        // const responseEvent = await axios(`https://event-project.herokuapp.com/api/event/${user.campus}?status=0`)
-        const responseEvent = await axios.get(
-          `https://event-project.herokuapp.com/api/event/1?status=0`
-        );
-        
-        setEvents(responseEvent?.data);
-
-        // const responseAllClubThatThisUserJoin = await axios.get(`https://event-project.herokuapp.com/api/club/student/${user.id}`)
-        // setClub(responseAllClubThatThisUserJoin);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchEvents();
-  }, []);
-
-  console.log("fetch", events);
   return (
     <>
       <Head>
         <title>Dashboard</title>
       </Head>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          py: 8,
-        }}
-      >
-        <Container maxWidth={false}>
-          {/* <div style={{ display: "flex", justifyContent: "end" }}>
-            <Button type="primary" 
-            onClick={checkClub()}>
-              Create Events
-            </Button>
-          </div> */}
-          {/* <CreateEvent
-            visible={visible}
-            setVisible={setVisible}
-            onCancel={() => {
-              setVisible(false);
-            }}
-            // onCancel={() => {
-            //   setVisible(false);
-            //   setProductDetail(undefined);
-            // }}
-            // productDetail={productDetail}
-            isEdit={true}
-          /> */}
-          {events.map((event) => (
-            <div key={event.event_id}>
-              <Events event={event} />
-            </div>
-          ))}
-        </Container>
-      </Box>
+       <Dashboard/>
     </>
   );
 };

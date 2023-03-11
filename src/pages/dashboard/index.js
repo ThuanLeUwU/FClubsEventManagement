@@ -12,7 +12,7 @@ const Dashboard = () => {
   const { user } = useAuthContext();
   const [events, setEvents] = useState([]);
   const [campus, setCampus] = useState([]);
-  const [selected, setSelected] = useState(user.campus);
+  const [selected, setSelected] = useState(1);
 
   useEffect(() => {
     const fetchEvents = async () => {

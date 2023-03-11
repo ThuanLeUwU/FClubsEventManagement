@@ -1,4 +1,4 @@
-import { async } from "@firebase/util";
+// import { async } from "@firebase/util";
 import {
   Box,
   Button,
@@ -27,7 +27,7 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import { DashboardLayout } from "../../components/dashboard-layout";
 import { useAuthContext } from "../../contexts/auth-context";
-
+import { CreateEvent } from "../../components/dashboard/createEvent";
 
 const Page = () => {
   const { user } = useAuthContext();
@@ -37,6 +37,8 @@ const Page = () => {
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
   const [clubJoinByThisUser, setClubJoinByThisUser] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [eventChoose, setEventChoose] = useState({});
+
   const handleChange = (event) => {
     setSelected(event.target.value);
   };
@@ -48,9 +50,9 @@ const Page = () => {
       try {
         const responseAllClub = await axios.get(
           `https://event-project.herokuapp.com/api/club/student/${user.id}`
-        )
+        );
         setClubJoinByThisUser(responseAllClub?.data);
-          
+
         const responseGetAll = await axios.get(
           "https://event-project.herokuapp.com/api/event/?status=0"
         );
@@ -65,12 +67,14 @@ const Page = () => {
 
   const [open, setOpen] = useState(false);
 
-  const handleClickOpen = () => {
-    if(clubJoinByThisUser == []){
-      alert('Del join club nào')
-    } else{
+  const handleClickOpen = (event) => {
+    if (clubJoinByThisUser == []) {
+      alert("Del join club nào");
+    } else {
+      setEventChoose(event);
       setOpen(true);
     }
+    console.log("dd", event);
   };
 
   const handleClose = () => {
@@ -87,18 +91,19 @@ const Page = () => {
   }
 
   const handleConfirm = (event) => {
-    
     const fetchData = async () => {
       const bodyRequest = {
-        event_id: event.event_id  ,
+        event_id: event.event_id,
         club_id: selected,
-        student_id: user.id
-      }
-      await axios.post('https://event-project.herokuapp.com/api/event/organizer', {bodyRequest})
-      setOpen(false)
-    }
-    fetchData()
+        student_id: user.id,
+      };
+      await axios.post("https://event-project.herokuapp.com/api/event/organizer", { bodyRequest });
+      setOpen(false);
+    };
+    fetchData();
   };
+
+  const checkClub = () => {};
   return (
     <>
       <Head>
@@ -113,15 +118,12 @@ const Page = () => {
         }}
       >
         <Container maxWidth={false}>
-
           <div style={{ display: "flex", justifyContent: "end" }}>
-            <Button type="primary" 
-            // onClick={checkClub()}
-            >
+            <Button type="primary" onClick={() => setVisible(true)}>
               Create Events
             </Button>
           </div>
-          {/* <CreateEvent
+          <CreateEvent
             visible={visible}
             setVisible={setVisible}
             onCancel={() => {
@@ -133,7 +135,7 @@ const Page = () => {
             // }}
             // productDetail={productDetail}
             isEdit={true}
-          /> */}
+          />
           <Box width="100%">
             <Table>
               <TableHead>
@@ -155,83 +157,114 @@ const Page = () => {
                     // <div key={event.event_id}>
                     <TableRow
                       hover
-                      key={event.id}
+                      key={event.event_id}
                       selected={selectedCustomerIds.indexOf(user.id) !== -1}
                     >
-                      <TableCell>{event.event_name}</TableCell>
-                      <TableCell>{event.email}</TableCell>
-                      <TableCell>{event.point}</TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {event.event_name}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {event.email}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {event.point}
+                          </Typography>
+                        </Box>
+                      </TableCell>
                       {event.start_date === null ? (
-                        <>null</>
+                        <TableCell>
+                          <Box
+                            sx={{
+                              alignItems: "center",
+                              display: "flex",
+                            }}
+                          >
+                            <Typography color="textPrimary" variant="body1">
+                              11/03/2023
+                            </Typography>
+                          </Box>
+                        </TableCell>
                       ) : (
-                        <TableCell>{format(start_Date, "dd/MM/yyyy")}</TableCell>
+                        <TableCell>
+                          <Box
+                            sx={{
+                              alignItems: "center",
+                              display: "flex",
+                            }}
+                          >
+                            <Typography color="textPrimary" variant="body1">
+                              {format(start_Date, "dd/MM/yyyy")}
+                            </Typography>
+                          </Box>
+                        </TableCell>
                       )}
 
                       {event.end_date === null ? (
-                        <>null</>
-                      ) : (
-                        <TableCell>{format(end_Date, "dd/MM/yyyy")}</TableCell>
-                      )}
-                      <TableCell>{event.location}</TableCell>
-                      <TableCell>
-                        <Button onClick={handleClickOpen}>ok</Button>
-                        <Dialog
-                          open={open}
-                          onClose={handleClose}
-                          aria-describedby="alert-dialog-slide-description"
-                        >
-                          <DialogTitle
-                            sx={{ backgroundColor: "#0e6ae9", fontSize: "20px", color: "white" }}
+                        <TableCell>
+                          <Box
+                            sx={{
+                              alignItems: "center",
+                              display: "flex",
+                            }}
                           >
-                            Do you want to join Club: {`${event.name}`}?
-                          </DialogTitle>
-                          <DialogContent>
-                            <FormControl>
-                              <Select
-                                value={selectedOption}
-                                defaultValue={selected}
-                                onChange={handleChange} 
-                              >
-                                {clubJoinByThisUser.map((option) => (
-                                  <MenuItem key={option.club_id} value={option.club_id}>
-                                    {option.club_name}
-                                  </MenuItem>
-                                ))}
-                              </Select>
-                            </FormControl>
-                          </DialogContent>
-                          <DialogActions>
-                            <Typography
-                              onClick={handleClose}
-                              sx={{
-                                marginRight: "12px",
-                                cursor: "pointer",
-                                ":hover": {
-                                  textDecoration: "underline",
-                                },
-                              }}
-                            >
-                              cancel
+                            <Typography color="textPrimary" variant="body1">
+                              12/03/2023
                             </Typography>
-
-                            <Button
-                              onClick={() => handleConfirm(event)}
-                              sx={{
-                                backgroundColor: "#0e6ae9",
-                                color: "white",
-                                margin: "1px",
-                                ":hover": {
-                                  backgroundColor: "white",
-                                  color: "#0e6ae9",
-                                  border: "1px solid #0e6ae9",
-                                  margin: "0px",
-                                },
-                              }}
-                            >
-                              Confirm
-                            </Button>
-                          </DialogActions>
-                        </Dialog>
+                          </Box>
+                        </TableCell>
+                      ) : (
+                        <TableCell>
+                          <Box
+                            sx={{
+                              alignItems: "center",
+                              display: "flex",
+                            }}
+                          >
+                            <Typography color="textPrimary" variant="body1">
+                              {format(end_Date, "dd/MM/yyyy")}
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                      )}
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {event.location}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Button onClick={() => handleClickOpen(event)}>ok</Button>
                       </TableCell>
                     </TableRow>
                     // </div>
@@ -239,6 +272,58 @@ const Page = () => {
                 })}
               </TableBody>
             </Table>
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              aria-describedby="alert-dialog-slide-description"
+            >
+              <DialogTitle sx={{ backgroundColor: "#0e6ae9", fontSize: "20px", color: "white" }}>
+                Do you want to join Club: {`${eventChoose.event_name}`}?
+                {console.log("cccccc", eventChoose)}
+              </DialogTitle>
+              <DialogContent>
+                <FormControl>
+                  <Select value={selectedOption} defaultValue={selected} onChange={handleChange}>
+                    {clubJoinByThisUser.map((option) => (
+                      <MenuItem key={option.club_id} value={option.club_id}>
+                        {option.club_name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </DialogContent>
+              <DialogActions>
+                <Typography
+                  onClick={handleClose}
+                  sx={{
+                    marginRight: "12px",
+                    cursor: "pointer",
+                    ":hover": {
+                      textDecoration: "underline",
+                    },
+                  }}
+                >
+                  cancel
+                </Typography>
+
+                <Button
+                  onClick={() => handleConfirm(event)}
+                  sx={{
+                    backgroundColor: "#0e6ae9",
+                    color: "white",
+                    margin: "1px",
+                    ":hover": {
+                      backgroundColor: "white",
+                      color: "#0e6ae9",
+                      border: "1px solid #0e6ae9",
+                      margin: "0px",
+                    },
+                  }}
+                >
+                  Confirm
+                </Button>
+              </DialogActions>
+            </Dialog>
           </Box>
         </Container>
       </Box>

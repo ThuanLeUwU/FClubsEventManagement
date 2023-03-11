@@ -31,7 +31,7 @@ import { async } from '@firebase/util';
 import Link from 'next/link';
 const Page = () => {
   const { user } = useAuthContext();
-  const [selected, setSelected] = useState(user.campus);
+  const [selected, setSelected] = useState(user? (user.campus) : 1);
   const [club, setClubs] = useState();
   const [campus, setCampus] = useState();
   const [allClubThatUserJoin, setAllClubThatUserJoin] = useState([]);

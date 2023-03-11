@@ -19,15 +19,14 @@ import {
   Table,
   TableBody,
   Container,
-  TableCell,
+  TableCell, Button,
   TableHead, TableRow,
-  SvgIcon, Typography, Select, Breadcrumbs
+  SvgIcon, Typography, Select, Breadcrumbs, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
 } from '@mui/material';
 
 
 import { Search } from '../../icons/search';
 
-import { Button } from 'antd';
 import { async } from '@firebase/util';
 import Link from 'next/link';
 const Page = () => {
@@ -50,8 +49,8 @@ const Page = () => {
         setCampus(responseAllCampus?.data)
         if (user.role == 'members') {
           const responseGetAllClubThatUserJoin = await axios.get(`https://event-project.herokuapp.com/api/club/student/${user.id}`)
-          console.log('All Club', responseGetAllClubThatUserJoin);
           setAllClubThatUserJoin(responseGetAllClubThatUserJoin?.data)
+          console.log('cặc', responseAllC);
         }
 
       } catch (error) {
@@ -74,18 +73,42 @@ const Page = () => {
 
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
 
-  // const handleJoin = async (event) => {
-  //   console.log('join');
-  //   try {
-  //     const response = axios.get(`https://event-project.herokuapp.com/api/club/student/${1}`)
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
+  const handleJoin = async (event) => {
+    console.log('join');
+    try {
+      const requestBody = {
+        student_id: user.id,
+        club_id: event.club_id,
+        role: 'MEMBER',
+        join_date: ''
+      }
+      const response = await axios.post('https://event-project.herokuapp.com/api/club/member', requestBody)
+
+      const responseGetAllClubThatUserJoin = await axios.get(`https://event-project.herokuapp.com/api/club/student/${user.id}`)
+      setAllClubThatUserJoin(responseGetAllClubThatUserJoin?.data)
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const handleChange = (event) => {
     setSelected(event.target.value);
   }
+
+
+
+  //Dialog
+  const [open, setOpen] = useState(false);
+
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   if (campus == undefined || club == undefined) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
@@ -236,44 +259,89 @@ const Page = () => {
                             {user.role == 'admin' ? (
                               <TableCell>
                                 <Link href={`clubs/${club.club_id}`} passHref>
-                                  <Button >
+                                  <Button sx={{
+                                    backgroundColor: '#0e6ae9', color: 'white', margin: '1px', ':hover': {
+                                      backgroundColor: 'white',
+                                      color: '#0e6ae9',
+                                      border: '1px solid #0e6ae9',
+                                      margin: '0px'
+                                  }}} >
                                     More
                                   </Button>
-                                </Link>
+                              </Link>
                               </TableCell>
-                            ) : (
-                              <TableCell>
-                                {club.campus_id == user.campus ? (
-                                  <>
-                                    {allClubThatUserJoin.find(thisClub => thisClub.club_id === club.club_id) ? (
-                                      <Button disabled>
-                                        Joined
-                                      </Button>
-                                    ) : (
-                                      <Button>
-                                        Join
-                                      </Button>
-                                    )}
-                                  </>
-                                ) : (
-                                  <Button disabled>
-                                    CAN'T Join
-                                  </Button>
-                                )}
+                        ) : (
+                      <TableCell>
+                        {club.campus_id == user.campus ? (
+                        <>
+                          {allClubThatUserJoin.find(thisClub => thisClub.club_id === club.club_id) ? (
+                            <Button disabled >
+                              Joined
+                            </Button>
+                          ) : (
+                            <Button onClick={handleClickOpen} sx={{
+                              backgroundColor: 'white', color: '#0e6ae9', border: '1px solid #0e6ae9', ':hover': {
+                                backgroundColor: '#0e6ae9',
+                                color: 'white',
 
-                              </TableCell>)}
-                          </TableRow>
+                              }
+                            }}>Join
+                            </Button>
+                          )}
+                        </>
+                         ) : (
+                                   <Button disabled>
+                                     CAN'T Join
+                                   </Button>
+                                 )} 
 
-                        )
+                      </TableCell>)}
+                      <Dialog
+                        open={open}
+                        onClose={handleClose}
+                        aria-describedby="alert-dialog-slide-description"
+
+                      >
+                        <DialogTitle sx={{ backgroundColor: '#0e6ae9', fontSize: '20px', color: 'white' }}>Do you want to join Club: {`${club.name}`}?</DialogTitle>
+                        <DialogContent>
+                          {/* <DialogContentText sx={{ color: 'black' }}>
+                                  Clubs: {`${event.club_name}`}
+                                </DialogContentText>
+                                <DialogContentText sx={{ color: 'black' }}>
+                                  Organizer:  {`${event.student_name}`}
+                                </DialogContentText> */}
+
+                        </DialogContent>
+                        <DialogActions>
+                          <Typography onClick={handleClose} sx={{
+                            marginRight: '12px', cursor: 'pointer', ':hover': {
+                              'textDecoration': 'underline'
+                            }
+                          }}>cancel</Typography>
+                          <Button onClick={handleJoin} sx={{
+                            backgroundColor: '#0e6ae9', color: 'white', margin: '1px', ':hover': {
+                              backgroundColor: 'white',
+                              color: '#0e6ae9',
+                              border: '1px solid #0e6ae9',
+                              margin: '0px'
+                            }
+                          }}>Confirm</Button>
+                        </DialogActions>
+                      </Dialog>
+                    </TableRow>
+
+
+                    )
                       })}
-                    </TableBody>
-                  </Table>
-                </Box>
-              </PerfectScrollbar>
-            </Card>
-          </Box>
-        </Container>
+                  </TableBody>
+
+                </Table>
+              </Box>
+            </PerfectScrollbar>
+          </Card>
       </Box>
+    </Container>
+      </Box >
     </>)
 };
 

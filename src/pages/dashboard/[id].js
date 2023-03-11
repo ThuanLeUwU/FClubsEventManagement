@@ -40,6 +40,12 @@ function Event() {
     }
     return (
         <DashboardLayout>
+             <Typography
+            sx={{ mb: 3 }}
+            variant="h4"
+          >
+            Account
+          </Typography>
             <Breadcrumbs aria-label="breadcrumb" sx={{ margin: '10px' }}>
                 <Link as={"/"} href="/">
                     Events
@@ -54,6 +60,7 @@ function Event() {
                 })}
 
             </Breadcrumbs>
+
 
             <Box sx={{ marginBottom: '30px', display: 'flex', justifyContent: 'center' }}>
                 {clubInfor.map(club => {
@@ -76,10 +83,17 @@ function Event() {
                                         <Box>Point: {club.point}</Box>
                                     </Typography>
                                     <Typography variant="h6" color="text.secondary" component="div">
-                                        <Box>Check-in: {format(start_date, 'dd/MM/yyyy')}</Box>
+                                        {club.start_date== null? (
+                                        <Box>Check-in: Check-in:  19:00:00, 28/01/2023</Box>
+                                        ) : (
+                                        <Box>Check-in: {format(start_date, 'dd/MM/yyyy')}</Box>)}
+                                        
                                     </Typography>
                                     <Typography variant="h6" color="text.secondary" component="div">
-                                        <Box>Check-out: {format(end_date, 'dd/MM/yyyy')}</Box>
+                                    {club.end_date== null? (
+                                        <Box>CCheck-out: 22:00:00, 03-03-2023</Box>
+                                        ) : (
+                                        <Box>Check-out: {format(end_date, 'dd/MM/yyyy')}</Box>)}
                                     </Typography>
                                     <Typography variant="h6" color="text.secondary" component="div">
                                         <Box>Location: {club.location}</Box>

@@ -153,50 +153,18 @@ const Page = () => {
                 {events.map((event) => {
                   const start_Date = parseISO(event.start_date);
                   const end_Date = parseISO(event.end_date);
-                  return (
-                    // <div key={event.event_id}>
-                    <TableRow
-                      hover
-                      key={event.event_id}
-                      selected={selectedCustomerIds.indexOf(user.id) !== -1}
-                    >
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {event.event_name}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {event.email}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {event.point}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      {event.start_date === null ? (
+                  if (
+                    event.club_id === null &&
+                    event.event_name !== "hahaahahaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    
+                  ) {
+                    return (
+                      // <div key={event.event_id}>
+                      <TableRow
+                        hover
+                        key={event.event_id}
+                        selected={selectedCustomerIds.indexOf(user.id) !== -1}
+                      >
                         <TableCell>
                           <Box
                             sx={{
@@ -205,11 +173,10 @@ const Page = () => {
                             }}
                           >
                             <Typography color="textPrimary" variant="body1">
-                              11/03/2023
+                              {event.event_name}
                             </Typography>
                           </Box>
                         </TableCell>
-                      ) : (
                         <TableCell>
                           <Box
                             sx={{
@@ -218,13 +185,77 @@ const Page = () => {
                             }}
                           >
                             <Typography color="textPrimary" variant="body1">
-                              {format(start_Date, "dd/MM/yyyy")}
+                              {event.email}
                             </Typography>
                           </Box>
                         </TableCell>
-                      )}
+                        <TableCell>
+                          <Box
+                            sx={{
+                              alignItems: "center",
+                              display: "flex",
+                            }}
+                          >
+                            <Typography color="textPrimary" variant="body1">
+                              {event.point}
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        {event.start_date === null ? (
+                          <TableCell>
+                            <Box
+                              sx={{
+                                alignItems: "center",
+                                display: "flex",
+                              }}
+                            >
+                              <Typography color="textPrimary" variant="body1">
+                                11/03/2023
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                        ) : (
+                          <TableCell>
+                            <Box
+                              sx={{
+                                alignItems: "center",
+                                display: "flex",
+                              }}
+                            >
+                              <Typography color="textPrimary" variant="body1">
+                                {format(start_Date, "dd/MM/yyyy")}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                        )}
 
-                      {event.end_date === null ? (
+                        {event.end_date === null ? (
+                          <TableCell>
+                            <Box
+                              sx={{
+                                alignItems: "center",
+                                display: "flex",
+                              }}
+                            >
+                              <Typography color="textPrimary" variant="body1">
+                                12/03/2023
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                        ) : (
+                          <TableCell>
+                            <Box
+                              sx={{
+                                alignItems: "center",
+                                display: "flex",
+                              }}
+                            >
+                              <Typography color="textPrimary" variant="body1">
+                                {format(end_Date, "dd/MM/yyyy")}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                        )}
                         <TableCell>
                           <Box
                             sx={{
@@ -233,42 +264,17 @@ const Page = () => {
                             }}
                           >
                             <Typography color="textPrimary" variant="body1">
-                              12/03/2023
+                              {event.location}
                             </Typography>
                           </Box>
                         </TableCell>
-                      ) : (
                         <TableCell>
-                          <Box
-                            sx={{
-                              alignItems: "center",
-                              display: "flex",
-                            }}
-                          >
-                            <Typography color="textPrimary" variant="body1">
-                              {format(end_Date, "dd/MM/yyyy")}
-                            </Typography>
-                          </Box>
+                          <Button onClick={() => handleClickOpen(event)}>ok</Button>
                         </TableCell>
-                      )}
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Typography color="textPrimary" variant="body1">
-                            {event.location}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Button onClick={() => handleClickOpen(event)}>ok</Button>
-                      </TableCell>
-                    </TableRow>
-                    // </div>
-                  );
+                      </TableRow>
+                      // </div>
+                    );
+                  }
                 })}
               </TableBody>
             </Table>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import Button from "react-bootstrap/Button";
 // import Form from "react-bootstrap/Form";
 // import { useForm } from "react-hook-form";
@@ -17,19 +17,23 @@ import {
   Modal,
   Space,
   Upload,
+  Select
 } from "antd";
 import { UploadFileOutlined } from "@mui/icons-material";
 import moment from "moment";
+import { FormControl, MenuItem} from "@mui/material";
+// import { Option } from "antd/es/mentions";
 // import locale from "antd/es/date-picker/locale/en_US";
 
 interface IProps {
   onCancel: () => void;
   visible: boolean;
   setVisible: (e: boolean) => void;
-  isEdit?: boolean
+  isEdit?: boolean;
+  // setSuccess: (e: boolean) => void;
 }
 
-export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
+export const CreateEvent = ({ onCancel, visible, isEdit}: IProps) => {
   const { user } = useAuthContext();
   const [showModal, setShowModal] = useState(false);
   const [newEvent, setNewEvent] = useState();
@@ -40,6 +44,12 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const [checkValid, setCheckValid] = useState();
+  const [campus, setCampus] = useState();
+  const [selected, setSelected] = useState(user.campus);
+  const [club, setClubs] = useState([]);
+  const { Option } = Select;
+
+  console.log(club);
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -54,11 +64,20 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
   //   formState: { errors },
   // } = useForm();
 
-  
+  useEffect(() => {
+    console.log("select");
+    const fetchData = async () => {
+      const response = await axios.get(
+        `https://event-project.herokuapp.com/api/club/campus/${selected}`
+      );
+      setClubs(response?.data);
+    };
+    fetchData();
+  }, [selected]);
 
   const handleSubmit = async (data) => {
     console.log(data, "hellu");
-      
+
     const formData = new FormData();
     formData.append("file", formDataImage);
     formData.append("name", data.event_name);
@@ -68,7 +87,10 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
     formData.append("start_date", startDate);
     formData.append("end_date", endDate);
     formData.append("description", data.description);
-    formData.append("organizer",user.id);
+    formData.append("organizer", user.id);
+    // formData.append("club", selected);
+
+    // console.log("haha",selected)
 
     // formData.append("date", data.date);
     // console.log('body', bodyRequest)
@@ -95,10 +117,11 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
           },
         }
       );
-      
+
       console.log("Response: ", response);
       console.log("abc");
       onCancel();
+      // setSuccess(true);
     } catch (error) {
       console.error(error);
     }
@@ -140,26 +163,31 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
     // const selectedTime = moment(dateString, "YYYY-MM-DD HH:mm:ss");
     setStartDate(dateString);
     console.log("time", dateString);
-  }
+  };
   const handleEndDatePickerChange = (date, dateString) => {
     // const selectedTime = moment(dateString, "YYYY-MM-DD HH:mm:ss");
     setEndDate(dateString);
     console.log("time", dateString);
-  }
+  };
 
   const disabledDate = (current) => {
     // Disable dates before today
-    if (current && current < moment().startOf('day')) {
+    if (current && current < moment().startOf("day")) {
       return true;
     }
 
     // Disable dates after the selected date
-    if (startDate && current && current < moment(startDate).endOf('day')) {
+    if (startDate && current && current < moment(startDate).endOf("day")) {
       return true;
     }
 
     return false;
   };
+
+  
+  const handleChangeClub = (event) => {
+    setSelected(event.value);
+  }
 
   // const disabledEndDate = (current) => {
   //   // Disable dates before today
@@ -196,73 +224,8 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
   // };
 
   return (
-    // <div>
-    //   <div className={`${EventStyles.modal_button}`}>
-    //     <button onClick={handleOpenModal} className={`${EventStyles.modal_button_content}`}>
-    //       Create Event
-    //     </button>
-    //   </div>
-    //   <Modal isOpen={showModal} className={`${EventStyles.modal}`}>
-    //     <div className={`${EventStyles.modal_content}`}>
-    //       <form onSubmit={handleSubmit(onSubmit)}>
-    //         <div>
-    //           <label>Name</label>
-    //           <input {...register("name", { required: true })} />
-    //           {errors.name && <span>This field is required</span>}
-    //         </div>
-    //         <div>
-    //           <label>Email</label>
-    //           <input {...register("email", { required: true, pattern: /^\S+@\S+$/i })} />
-    //           {errors.email && errors.email.type === "required" && (
-    //             <span>This field is required</span>
-    //           )}
-    //           {errors.email && errors.email.type === "pattern" && (
-    //             <span>Invalid email address</span>
-    //           )}
-    //         </div>
-    //         <div>
-    //           <label>Location</label>
-    //           <input {...register("location", { required: true })} />
-    //           {errors.location && <span>This field is required</span>}
-    //         </div>
-    //         <div className="flex items-center justify-center pt-2 pb-2">
-    //           <Upload accept="image/png, image/jpeg"
-    //         onChange={handleChange}
-    //         beforeUpload={beforeUpload}
-    //         // headers={{ Authorization: authorization }}
-    //         action="https://node-js-fpt-wallet.herokuapp.com/services/images"/>
-    //           {imageDataUrl && <img width={200} src={imageDataUrl} />}
-
-    //           {/* <button onClick={handleSubmitImg}>submit</button> */}
-    //         </div>
-    //         <div>
-    //           <label>point</label>
-    //           <input {...register("point", { required: true })} />
-    //           {errors.point && <span>This field is required</span>}
-    //         </div>
-    //         <div>
-    //           <label>Date start</label>
-    //           <input {...register("start", { required: true })} />
-    //           {errors.location && <span>This field is required</span>}
-    //         </div>
-    //         <div>
-    //           <label>Date end</label>
-    //           <input {...register("end", { required: true })} />
-    //           {errors.location && <span>This field is required</span>}
-    //         </div>
-    //         <div>
-    //           <label>Date</label>
-    //           <input {...register("date", { required: true })} />
-    //           {errors.location && <span>This field is required</span>}
-    //         </div>
-    //         <button type="submit">Submit</button>
-    //       </form>
-    //       {/* <button onClick={handleCloseModal}>Create</button> */}
-    //     </div>
-    //   </Modal>
-    // </div>
     <Modal
-      className="w-1/2 min-h-[300px]"
+      className="w-2/3 min-h-[300px]"
       // title={isEdit ? 'Edit PRoduct' : 'Create Product'}
       destroyOnClose
       open={visible}
@@ -320,6 +283,23 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
         >
           <Input />
         </Form.Item>
+        {/* <Form.Item
+          rules={[{ required: true, message: "Please input Location!" }]}
+          label="Club:  "
+          name="club"
+        > 
+            <Select value={Option} 
+            defaultValue={selected} 
+            onChange={handleChangeClub}
+            style={{width: "100%"}}>
+              {club.map((option) => (
+                <Option key={option.club_id} 
+                value={option.club_id}>
+                  {option.abbreviation}
+                </Option>
+              ))}
+            </Select>
+        </Form.Item> */}
         <Form.Item
           rules={[{ required: true, message: "Please input Date!" }]}
           label="Point:  "
@@ -332,20 +312,24 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
           label="From:  "
           name="date_start"
         >
-          <DatePicker showTime 
-          format="YYYY-MM-DD HH:mm:ss" 
-          onChange={handleStartDatePickerChange}  
-          disabledDate={disabledDate}/>
+          <DatePicker
+            showTime
+            format="YYYY-MM-DD HH:mm:ss"
+            onChange={handleStartDatePickerChange}
+            disabledDate={disabledDate}
+          />
         </Form.Item>
         <Form.Item
           rules={[{ required: true, message: "Please input Date!" }]}
           label="to:  "
           name="date_end"
         >
-          <DatePicker showTime 
-          format="YYYY-MM-DD HH:mm:ss" 
-          onChange={handleEndDatePickerChange} 
-          disabledDate={disabledDate}/>
+          <DatePicker
+            showTime
+            format="YYYY-MM-DD HH:mm:ss"
+            onChange={handleEndDatePickerChange}
+            disabledDate={disabledDate}
+          />
         </Form.Item>
         <Form.Item
           rules={[{ required: true, message: "Please input Description!" }]}
@@ -358,9 +342,8 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
           <Form.Item className="mb-0">
             <Space>
               <Button onClick={onCancel}>Cancel</Button>
-              <Button htmlType="submit" 
-              type="primary">
-                {isEdit ? 'Update' : 'Create'}
+              <Button htmlType="submit" type="primary">
+                {isEdit ? "Update" : "Create"}
               </Button>
             </Space>
           </Form.Item>
@@ -385,176 +368,4 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
 // } from 'antd'
 // import axios from 'axios'
 // // import { useAuth } from 'config/context/AuthContext'
-// import { getCookie } from 'cookies-next'
-// // import { IProduct } from 'interfaces/product'
-// import React, { useEffect, useState } from 'react'
-// import { useAuthContext } from '../../contexts/auth-context'
-// import { IEvent } from '../../interfaces/event'
-// // import axiosWrapper from 'utils/axiosWrapper'
-
-// interface IProps {
-//   onCancel: () => void
-//   visible: boolean
-//   setVisible: (e: boolean) => void
-//   productDetail?: IEvent
-//   isEdit?: boolean
-// }
-// const optionCategories = [
-//   { label: 'Đồ điện tử', value: '1' },
-//   { label: 'Voucher', value: '2' },
-// ]
-
-// const token = getCookie('accessToken')
-
-// const authorization = token ? `Bearer ${token}` : ''
-
-// const ProductModal = ({ onCancel, visible, productDetail, isEdit }: IProps) => {
-//   const [form] = Form.useForm()
-//   const [image, setImage] = useState<string>()
-//   const [formDataImage, setFormDataImage] = useState()
-//   const { user }: any = useAuthContext();
-//   console.log(user?.data?.id)
-//   const handleSubmit = async (value) => {
-//     try {
-//       const payload = {
-//         file: formDataImage,
-//         ...value,
-//       }
-//       await axios.post(`/products`, payload, {
-//         headers: {
-//           'Content-Type': 'multipart/form-data',
-//         },
-//       })
-//       message.success('Create Product Success')
-//       onCancel()
-//     } catch (error) {
-//       message.error(error.toString())
-//     }
-//   }
-//   const beforeUpload = (file) => {
-//     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
-//     if (!isJpgOrPng) {
-//       message.error('You can only upload JPG/PNG file!')
-//     }
-//     const isLt2M = file.size / 1024 / 1024 < 2
-//     if (!isLt2M) {
-//       message.error('Image must smaller than 2MB!')
-//     }
-//     return isJpgOrPng && isLt2M
-//   }
-//   const getBase64 = (img, callback: (url: string) => void) => {
-//     const reader = new FileReader()
-//     reader.addEventListener('load', () => callback(reader.result as string))
-//     reader.readAsDataURL(img)
-//   }
-//   const handleChange = (info) => {
-//     if (info.file.status === 'uploading') {
-//       return
-//     }
-//     if (info.file.status === 'done') {
-//       // Get this url from response in real world.
-
-//       setFormDataImage(info.file.originFileObj)
-//       getBase64(info.file.originFileObj, (url) => {
-//         setImage(url)
-//       })
-//     }
-//   }
-
-//   useEffect(() => {
-//     form.setFieldsValue({
-//       // product_name: productDetail?.name,
-//       // quantity: productDetail?.,
-//       // product_price: productDetail?.product_price,
-//       // category_id: productDetail?.category_id,
-//       // description: productDetail?.description,
-//     })
-//     setImage(productDetail?.image)
-//   }, [productDetail])
-
-//   return (
-//     <Modal
-//       className="w-1/2 min-h-[300px]"
-//       title={isEdit ? 'Edit PRoduct' : 'Create Product'}
-//       destroyOnClose
-//       open={visible}
-//       onCancel={onCancel}
-//       footer={false}
-//     >
-//       <Form
-//         autoComplete="off"
-//         form={form}
-//         labelCol={{ span: 5 }}
-//         wrapperCol={{ span: 15 }}
-//         layout="horizontal"
-//         className="mt-5"
-//         onFinish={handleSubmit}
-//         initialValues={isEdit ? productDetail : undefined}
-//       >
-//         <div className="flex items-center justify-center">
-//           <Image width={200} height={200} src={image} />
-//         </div>
-//         <div className="flex items-center justify-center pt-2 pb-2">
-//           <Upload
-//             accept="image/png, image/jpeg"
-//             onChange={handleChange}
-//             beforeUpload={beforeUpload}
-//             headers={{ Authorization: authorization }}
-//             action="https://node-js-fpt-wallet.herokuapp.com/services/images"
-//           >
-//             <Button icon={<UploadOutlined />}>Upload</Button>
-//           </Upload>
-//         </div>
-//         <Form.Item
-//           rules={[{ required: true, message: 'Please input Product Name!' }]}
-//           label="Product Name: "
-//           name="product_name"
-//         >
-//           <Input />
-//         </Form.Item>
-//         <Form.Item
-//           rules={[{ required: true, message: 'Please input Quantity!' }]}
-//           label="Quantity:  "
-//           name="quantity"
-//         >
-//           <InputNumber />
-//         </Form.Item>
-//         <Form.Item
-//           rules={[{ required: true, message: 'Please input Product Price!' }]}
-//           label="Price:  "
-//           name="product_price"
-//         >
-//           <InputNumber />
-//         </Form.Item>
-//         <Form.Item
-//           rules={[
-//             { required: true, message: 'Please select Product Category!' },
-//           ]}
-//           label="Category"
-//           name="category_id"
-//         >
-//           <Select options={optionCategories} />
-//         </Form.Item>
-//         <Form.Item
-//           rules={[{ required: true, message: 'Please input Description!' }]}
-//           label="Description "
-//           name="description"
-//         >
-//           <Input.TextArea />
-//         </Form.Item>
-//         <Space className="justify-end w-full">
-//           <Form.Item className="mb-0">
-//             <Space>
-//               <Button onClick={onCancel}>Cancel</Button>
-//               <Button htmlType="submit" type="primary">
-//                 {isEdit ? 'Update' : 'Create'}
-//               </Button>
-//             </Space>
-//           </Form.Item>
-//         </Space>
-//       </Form>
-//     </Modal>
-//   )
-// }
-
-// export default ProductModal
+//

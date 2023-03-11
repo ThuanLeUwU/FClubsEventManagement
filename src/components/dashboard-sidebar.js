@@ -21,7 +21,7 @@ const items = [
   {
     href: '/',
     icon: (<ChartBarIcon fontSize="small" />),
-    title: 'Dashboard'
+    title: 'Events'
   },
   {
     href: '/clubs',
@@ -39,9 +39,9 @@ const items = [
     title: 'Account'
   },
   {
-    href: '/events',
+    href: '/plan',
     icon: (<UserIcon fontSize="small" />),
-    title: 'Event'
+    title: 'Plan'
   }
 ];
 

@@ -1,11 +1,11 @@
-import Head from "next/head";
-import { Box, Container, Grid, Typography } from "@mui/material";
-import { AccountProfile } from "../components/account/account-profile";
-import { AccountProfileDetails } from "../components/account/account-profile-details";
-import { DashboardLayout } from "../components/dashboard-layout";
-import { useEffect, useState } from "react";
-import { useAuthContext } from "../contexts/auth-context";
-import axios from "axios";
+import Head from 'next/head';
+import { Box, Container, Grid, Typography } from '@mui/material';
+import { AccountProfile } from '../../components/account/account-profile';
+import { AccountProfileDetails } from '../../components/account/account-profile-details';
+import { DashboardLayout } from '../../components/dashboard-layout';
+import { useEffect, useState } from 'react';
+import { useAuthContext } from '../../contexts/auth-context';
+import axios from 'axios';
 
 const Page = () => {
   const { user } = useAuthContext();
@@ -66,7 +66,7 @@ const Page = () => {
               xs={12}
             >
 
-              {userInf ? (<></>) : (<></>)}
+             
               <AccountProfile userInf={userInf} />
             </Grid>
             <Grid
@@ -84,6 +84,10 @@ const Page = () => {
   );
 };
 
-Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+Page.getLayout = (page) => (
+  <DashboardLayout>
+    {page}
+  </DashboardLayout>
+);
 
 export default Page;

@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { Box, Container, Grid, Typography } from '@mui/material';
+import { Box, CircularProgress, Container, Grid, Typography } from '@mui/material';
 import { AccountProfile } from '../../components/account/account-profile';
 import { AccountProfileDetails } from '../../components/account/account-profile-details';
 import { DashboardLayout } from '../../components/dashboard-layout';
@@ -27,10 +27,10 @@ const Page = () => {
   }, [])
 
   
-  if(userInf == undefined){
+  if(!userInf){
     return (
       <div style={{display:'flex', alignItems:'center', justifyContent: 'center', height: '100%'}}>
-        <h1>Loading...</h1>
+           <CircularProgress />
       </div>
     )
   } 

@@ -1,5 +1,5 @@
 
-import { Box, Breadcrumbs, Card, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Card, CircularProgress, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 
 import axios from "axios";
 import { format, parse, parseISO } from "date-fns";
@@ -31,8 +31,8 @@ function Club() {
 
     if (allUserJoin == undefined || clubInf == undefined) {
         return (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-                <h1>Loading...</h1>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', marginTop:'500px' }}>
+                <CircularProgress />
             </div>
         )
     }
@@ -49,7 +49,14 @@ function Club() {
             <Box sx={{ marginBottom: '30px', marginLeft: '40px' }}>
                 <Typography fontSize='30px'>Name: {clubInf.club_name}</Typography>
                 <Typography fontSize='20px'>Abbreviation: {clubInf.abbreviation}</Typography>
-                <Typography fontSize='20px'>Established Date: {format(parseISO(clubInf.established_date), 'dd/MM/yyyy')}</Typography>
+                {clubInf.established_date == null ? (
+                    <>
+                        22/01/2020
+                    </>
+                ) : (
+                    <Typography fontSize='20px'>Established Date: {format(parseISO(clubInf.established_date), 'dd/MM/yyyy')}</Typography>
+                )}
+
             </Box>
             <Card sx={{ padding: '30px' }}>
                 <Box display='flex' justifyContent='center' textTransform='uppercase' fontSize='40px'>
@@ -66,10 +73,19 @@ function Club() {
                                     <TableCell>
                                         Email
                                     </TableCell>
+                                    <TableCell>
+                                        Phone
+                                    </TableCell>
+                                    <TableCell>
+                                        Join Date
+                                    </TableCell>
+
+
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {allUserJoin.map((user) => {
+                                    const joinDate = parseISO(user.join_date)
                                     return (
                                         <TableRow
                                             hover
@@ -94,6 +110,15 @@ function Club() {
                                             <TableCell>
                                                 {user.email}
                                             </TableCell>
+                                            <TableCell>
+                                                {user.phone}
+                                            </TableCell>
+                                            {user.join_date === null ? (<>12/03/2022</>) : (
+                                                <TableCell>
+                                                    {format(joinDate, 'dd/MM/yyyy')}
+                                                </TableCell>
+                                            )}
+
                                         </TableRow>
                                     )
                                 })}

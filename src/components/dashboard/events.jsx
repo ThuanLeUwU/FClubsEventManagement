@@ -5,18 +5,21 @@ import { async } from "@firebase/util";
 import axios from "axios";
 import { useAuthContext } from "../../contexts/auth-context";
 import { color } from "@mui/system";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ListItem, ListItemButton, ListItemText, Slide, Typography } from "@mui/material";
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ListItem, ListItemButton, ListItemText, Slide, Typography } from "@mui/material";
 import Link from "next/link";
-
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 
 export const Events = ({ event }) => {
-  console.log('event', event);
+
   const startDate = parseISO(event.start_date);
   const endDate = parseISO(event.end_date);
   const { user } = useAuthContext();
   const [joinEventList, setJohnEventList] = useState([]);
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [success, setSuccess] = useState(false);
+ 
+
+
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,36 +31,31 @@ export const Events = ({ event }) => {
 
 
 
-  // const handleClick = (event) => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const requestBody = {
-  //         event_id: event.event_id,
-  //         student_id: user.id,
-  //         registration_date: "2023-10-03 13-54-22"
-  //       }
-  //       const response = axios.post('https://event-project.herokuapp.com/api/event/join', requestBody)
-  //       setSuccess(true)
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  //   fetchData();
-  // }
+  const handleClick = () => {
+    console.log('click');
+    const fetchData2 = async () => {
+      try {
+        const currentTime = new Date();
 
-  const handleClickMore = () => {
+        const requestBody = {
+          event_id: event.event_id ,
+          student_id: user.id,
+          registration_date: currentTime.toISOString()
+        }
+        await axios.post('https://event-project.herokuapp.com/api/event/join', requestBody)
 
+
+        const responseAllStudentJoinThisEvent = await axios.get(`https://event-project.herokuapp.com/api/event/join/${event.event_id}`)
+        setJohnEventList(responseAllStudentJoinThisEvent?.data);
+        setOpen(false);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData2();
   }
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     //sai API
 
-  //     const responseAllStudentJoinThisEvent = await axios.get(`https://event-project.herokuapp.com/api/event/join/${event.event_id}`)
-  //     setJohnEventList(responseAllStudentJoinThisEvent?.data);
-  //   }
-  //   fetchData();
-  // }, [success])
 
 
   //Dialog
@@ -65,6 +63,7 @@ export const Events = ({ event }) => {
 
 
   const handleClickOpen = () => {
+
     setOpen(true);
   };
 
@@ -72,6 +71,13 @@ export const Events = ({ event }) => {
     setOpen(false);
   };
 
+  if (joinEventList == []) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', marginTop: '500px' }}>
+        <CircularProgress />
+      </div>
+    )
+  }
   return (
     <section className={`${EventStyles.tournament_section}`}>
       <div className={`${EventStyles.container}`}>
@@ -82,32 +88,50 @@ export const Events = ({ event }) => {
             <div className={`${EventStyles.single_play}`}>
               <div className="image">
                 <img
-                  className={`${EventStyles.image}`}
+                  width='220px'
+                  height='400px'
                   src={`${event.img}`}
                   alt=""
                 />
               </div>
               {user.role == 'admin' ? (
                 <Link href={`/dashboard/${event.event_id}`} passHref>
-                  <Button sx={{ fontSize: '30px', color: 'white' }}>
+                  <Button sx={{
+                    backgroundColor: '#0e6ae9', color: 'white', margin: '1px', ':hover': {
+                      backgroundColor: 'white',
+                      color: '#0e6ae9',
+                      border: '1px solid #0e6ae9',
+                      margin: '0px'
+                    }
+                  }}>
                     More Detail
                   </Button>
                 </Link>
               ) : (
                 <div className={`${EventStyles.content}`}>
                   {joinEventList.find(thisUser => thisUser.student_id == user.id) ? (
-                    <div>
-                      JOINED
-                    </div>
+                    <Button disabled sx={{
+                      backgroundColor: 'white', margin: '1px', border: '1px solid #0e6ae9'
+                    }}>
+                      <Typography color='#0e6ae9'>
+                        JOINED
+                      </Typography>
+                    </Button>
+
                   ) : (
                     <>
-                      <a
-                        // style="text-decoration: none"
+                      <Button sx={{
+                        backgroundColor: '#0e6ae9', color: 'white', margin: '1px', ':hover': {
+                          backgroundColor: 'white',
+                          color: '#0e6ae9',
+                          border: '1px solid #0e6ae9',
+                          margin: '0px'
+                        }
+                      }}
                         onClick={handleClickOpen}
-                        className={`${EventStyles.tournament_btn}`}
-                      >
+                        className={`${EventStyles.tournament_btn}`}>
                         JOIN EVENT
-                      </a>
+                      </Button>
 
                     </>
                   )}
@@ -134,7 +158,7 @@ export const Events = ({ event }) => {
                           'textDecoration': 'underline'
                         }
                       }}>cancel</Typography>
-                      <Button onClick={handleClose} sx={{
+                      <Button onClick={handleClick} sx={{
                         backgroundColor: '#0e6ae9', color: 'white', margin: '1px', ':hover': {
                           backgroundColor: 'white',
                           color: '#0e6ae9',
@@ -148,38 +172,11 @@ export const Events = ({ event }) => {
               )}
 
             </div>
-            {/* <h4 className={`${EventStyles.people_playing}`}>
-              59,000 People Playing
-            </h4> */}
-            {/* <ul className={`${EventStyles.players_list}`}>
-              <li className={`${EventStyles.players}`}>
-                <a href="#">
-                  <img src="" alt="" />
-                </a>
-              </li>
-              <li className={`${EventStyles.players}`}>
-                <a href="#">
-                  <img src="" alt="" />
-                </a>
-              </li>
-              <li className={`${EventStyles.players}`}>
-                <a href="#">
-                  <img src="" alt="" />
-                </a>
-              </li>
-              <li className={`${EventStyles.players}`}>
-                <a href="#">
-                  <img src="" alt="" />
-                </a>
-              </li>
-              <li className={`${EventStyles.players}`}>
-                <span className={`${EventStyles.more_players}`}>32+</span>
-              </li>
-            </ul> */}
           </div>
           <div className={`${EventStyles.right_area}`}>
             <div className={`${EventStyles.right_top}`}>
-              <h1>Event : {`${event.event_name}`} </h1>
+              <h1>Event : {`${event.event_name}`} <Button > <NotificationsActiveIcon/></Button></h1>
+              
               <div className={`${EventStyles.reward}`}>
                 Clubs: {`${event.club_name}`}
               </div>
@@ -192,23 +189,22 @@ export const Events = ({ event }) => {
             </div>
             <div className={`${EventStyles.right_bottom}`}>
               <div>
-                {/* <span className={`${EventStyles.title}`}>Date begin: </span> */}
+
                 <div className={`${EventStyles.time_counter}`}>
-                  {/* <i className="far fa-clock"></i>
-                  <div data-countdown="2021/12/15"> */}
+
                   <h4>Timeline:</h4>
                   {event.start_date == null ? (
                     <span className={`${EventStyles.time}`}>Check-in:  19:00:00, 28/01/2023</span>
                   ) : (
-                    <span className={`${EventStyles.time}`}>Check-in: 22:00:00, 28/01/2023 {format(startDate, 'HH:mm:ss, dd/MM/yyyy')}</span>
+                    <span className={`${EventStyles.time}`}>Check-in:  {format(startDate, 'HH:mm:ss, dd/MM/yyyy')}</span>
                   )}
 
                   {event.end_date == null ? (
-                    <span className={`${EventStyles.time}`}>Check-in: 03-03-2023</span>
+                    <span className={`${EventStyles.time}`}>Check-out: 22:00:00, 03-03-2023</span>
                   ) : (
-                    <span className={`${EventStyles.time}`}>Check-in: {format(endDate, 'HH:mm:ss, dd/MM/yyyy')}</span>
+                    <span className={`${EventStyles.time}`}>Check-out: {format(endDate, 'HH:mm:ss, dd/MM/yyyy')}</span>
                   )}
-                 
+
                   <h4>Location:</h4>
                   <span className={`${EventStyles.time}`}>{`${event.location}`}</span>
                   {event.description ? (
@@ -217,26 +213,16 @@ export const Events = ({ event }) => {
                       <span className={`${EventStyles.time}`}>{`${event.description}`}</span>
                     </>
                   ) : (<></>)}
-                  {/* </div> */}
+
                 </div>
-                {/* <img src="" 
-                alt="" className={`${EventStyles.time_image}`} /> */}
+
               </div>
-              {/* <div className={`${EventStyles.time_line}`}>
-                <h5 className={`${EventStyles.prize}`}>Prize pool</h5>
-                <h3 className={`${EventStyles.prize_money}`}>$2,000,000</h3>
-                <div>
-                  <h6>9/11/22 6:00 AM - 11/02/21 5:59 AM</h6>
-                  <img src="" alt="" />
-                </div>
-              </div> */}
+
             </div>
           </div>
         </div>
-        {/* </div> */}
-        {/* </div> */}
-      </div>
 
-    </section>
+      </div>
+    </section >
   );
 };

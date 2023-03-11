@@ -19,15 +19,14 @@ import {
   Table,
   TableBody,
   Container,
-  TableCell,
+  TableCell, Button,
   TableHead, TableRow,
-  SvgIcon, Typography, Select, Breadcrumbs
+  SvgIcon, Typography, Select, Breadcrumbs, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, CircularProgress
 } from '@mui/material';
 
 
 import { Search } from '../../icons/search';
 
-import { Button } from 'antd';
 import { async } from '@firebase/util';
 import Link from 'next/link';
 const Page = () => {
@@ -36,8 +35,8 @@ const Page = () => {
   const [club, setClubs] = useState();
   const [campus, setCampus] = useState();
   const [allClubThatUserJoin, setAllClubThatUserJoin] = useState([]);
+  const [clubChoise, setClubChoise] = useState();
   useEffect(() => {
-
     const fetchData = async () => {
       console.log('campus');
       const headers = {
@@ -50,7 +49,6 @@ const Page = () => {
         setCampus(responseAllCampus?.data)
         if (user.role == 'members') {
           const responseGetAllClubThatUserJoin = await axios.get(`https://event-project.herokuapp.com/api/club/student/${user.id}`)
-          console.log('All Club', responseGetAllClubThatUserJoin);
           setAllClubThatUserJoin(responseGetAllClubThatUserJoin?.data)
         }
 
@@ -58,7 +56,6 @@ const Page = () => {
         console.log(error);
       }
     }
-
     fetchData()
   }, [])
 
@@ -74,22 +71,47 @@ const Page = () => {
 
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
 
-  // const handleJoin = async (event) => {
-  //   console.log('join');
-  //   try {
-  //     const response = axios.get(`https://event-project.herokuapp.com/api/club/student/${1}`)
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
+  const handleJoin = async () => {
+    console.log('data', clubChoise);
+    const currentTime = new Date();
+    try {
+      const requestBody = {
+        student_id: user.id,
+        club_id:  clubChoise,
+        role: 'MEMBER',
+        join_date: currentTime.toISOString()
+      }
+      const response = await axios.post('https://event-project.herokuapp.com/api/club/member', requestBody)
+
+      const responseGetAllClubThatUserJoin = await axios.get(`https://event-project.herokuapp.com/api/club/student/${user.id}`);
+      setAllClubThatUserJoin(responseGetAllClubThatUserJoin?.data);
+      setOpen(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const handleChange = (event) => {
     setSelected(event.target.value);
   }
+
+
+  //Dialog
+  const [open, setOpen] = useState(false);
+
+
+  const handleClickOpen = (club) => {
+    setClubChoise(club.club_id);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   if (campus == undefined || club == undefined) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-        <h1>Loading...</h1>
+        <CircularProgress />
       </div>
     )
   }
@@ -225,9 +247,7 @@ const Page = () => {
                               {club.abbreviation}
                             </TableCell>
                             <TableCell>
-
                               {format(date, 'dd/MM/yyyy')}
-
                             </TableCell>
                             <TableCell sx={{ textAlign: 'center' }}>
                               {club.totalMembers}
@@ -236,7 +256,14 @@ const Page = () => {
                             {user.role == 'admin' ? (
                               <TableCell>
                                 <Link href={`clubs/${club.club_id}`} passHref>
-                                  <Button >
+                                  <Button sx={{
+                                    backgroundColor: '#0e6ae9', color: 'white', margin: '1px', ':hover': {
+                                      backgroundColor: 'white',
+                                      color: '#0e6ae9',
+                                      border: '1px solid #0e6ae9',
+                                      margin: '0px'
+                                    }
+                                  }} >
                                     More
                                   </Button>
                                 </Link>
@@ -246,11 +273,17 @@ const Page = () => {
                                 {club.campus_id == user.campus ? (
                                   <>
                                     {allClubThatUserJoin.find(thisClub => thisClub.club_id === club.club_id) ? (
-                                      <Button disabled>
+                                      <Button disabled >
                                         Joined
                                       </Button>
                                     ) : (
-                                      <Button>
+                                      <Button onClick={()=>handleClickOpen(club)}
+                                        sx={{
+                                          backgroundColor: 'white', color: '#0e6ae9', border: '1px solid #0e6ae9', ':hover': {
+                                            backgroundColor: '#0e6ae9',
+                                            color: 'white',
+                                          }
+                                        }}>
                                         Join
                                       </Button>
                                     )}
@@ -262,18 +295,43 @@ const Page = () => {
                                 )}
 
                               </TableCell>)}
-                          </TableRow>
+                            <Dialog
+                              open={open}
+                              onClose={handleClose}
+                              aria-describedby="alert-dialog-slide-description"
+                            >
+                              <DialogTitle sx={{ backgroundColor: '#0e6ae9', fontSize: '20px', color: 'white' }}>Do you want to join Club: {`${club.name}`}?</DialogTitle>
+                              <DialogContent>
+                              </DialogContent>
+                              <DialogActions>
+                                <Typography onClick={handleClose} sx={{
+                                  marginRight: '12px', cursor: 'pointer', ':hover': {
+                                    'textDecoration': 'underline'
+                                  }
+                                }}>cancel</Typography>
 
+                                <Button onClick={() => handleJoin(club.club_id)} sx={{
+                                  backgroundColor: '#0e6ae9', color: 'white', margin: '1px', ':hover': {
+                                    backgroundColor: 'white',
+                                    color: '#0e6ae9',
+                                    border: '1px solid #0e6ae9',
+                                    margin: '0px'
+                                  }
+                                }}><a onClick={() => setClubChoise(club)}>Confirm</a></Button>
+                              </DialogActions>
+                            </Dialog>
+                          </TableRow>
                         )
                       })}
                     </TableBody>
+
                   </Table>
                 </Box>
               </PerfectScrollbar>
             </Card>
           </Box>
         </Container>
-      </Box>
+      </Box >
     </>)
 };
 

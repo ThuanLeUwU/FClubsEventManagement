@@ -8,19 +8,17 @@ import { Events } from "../components/dashboard/events";
 import { useAuthContext } from "../contexts/auth-context";
 // import { CreateEvent } from "../components/dashboard/createEvent";
 import { Button } from "antd";import Link from 'next/link';
-import Dashboard from './Dashboard';
+// import Dashboard from './Dashboard';
+import { useRouter } from 'next/router';
 
 
 const Page = () => {
-  const { user } = useAuthContext();
-  return (
-    <>
-      <Head>
-        <title>Dashboard</title>
-      </Head>
-       <Dashboard/>
-    </>
-  );
+  const router = useRouter();
+  router
+          .replace({
+            pathname: '/dashboard',
+          })
+          .catch(console.error);
 };
 
 Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;

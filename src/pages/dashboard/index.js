@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { Events } from '../../components/dashboard/events';
 import { useAuthContext } from '../../contexts/auth-context';
 import { getCookie } from 'cookies-next';
+import { DashboardLayout } from '../../components/dashboard-layout';
 
 
 const Dashboard = () => {
@@ -53,7 +54,7 @@ const Dashboard = () => {
 
  
   return (
-    <>
+    <DashboardLayout>
       <Head>
         <title>
           Dashboard
@@ -89,7 +90,7 @@ const Dashboard = () => {
           </Box>
         </Container>
       </Box>
-    </>
+    </DashboardLayout>
   )
 };
 

@@ -28,6 +28,7 @@ import { useEffect, useState } from "react";
 import { DashboardLayout } from "../../components/dashboard-layout";
 import { useAuthContext } from "../../contexts/auth-context";
 import { CreateEvent } from "../../components/dashboard/createEvent";
+import { async } from "@firebase/util";
 
 const Page = () => {
   const { user } = useAuthContext();
@@ -38,6 +39,9 @@ const Page = () => {
   const [clubJoinByThisUser, setClubJoinByThisUser] = useState([]);
   const [visible, setVisible] = useState(false);
   const [eventChoose, setEventChoose] = useState({});
+  const [count, setCount] = useState(0);
+
+  console.log("tao nè", clubJoinByThisUser);
 
   const handleChange = (event) => {
     setSelected(event.target.value);
@@ -65,6 +69,16 @@ const Page = () => {
     fetchEvents();
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const responseGetAll = await axios.get(
+        "https://event-project.herokuapp.com/api/event/?status=0"
+      );
+      setEvents(responseGetAll?.data);
+    };
+    fetchData();
+  }, [count]);
+
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = (event) => {
@@ -91,19 +105,39 @@ const Page = () => {
   }
 
   const handleConfirm = (event) => {
+    // console.log("event nè",event.event_id);
+    // console.log("blub nè", selected);
+    // console.log("student nè", user.id)
     const fetchData = async () => {
       const bodyRequest = {
         event_id: event.event_id,
         club_id: selected,
         student_id: user.id,
       };
-      await axios.post("https://event-project.herokuapp.com/api/event/organizer", { bodyRequest });
+      await axios.post("https://event-project.herokuapp.com/api/event/organizer", bodyRequest);
+      const responseGetAll = await axios.get(
+        "https://event-project.herokuapp.com/api/event/?status=0"
+      );
+      setEvents(responseGetAll?.data);
+
+      const bodyRequestNoti = {
+        send_option: "device",
+        device_token:
+          "cSiD4AbYQ3uWb7TRnggXfI:APA91bEcYehbQavcp3WMFnT6sbQFxYGiwNpY-wzVBND5gkyZM2ojlrvWNpUQFPl--k8K9-Lzj4-Tm2ADxyp1twjYBYo3kI-3fuK9XAkbP6CvuyfJmARwz5N8RvTnBJH51w5BAPngaTiU",
+        topic: "my-topic",
+        title:  event.event_name,
+        content: "location " + event.location,
+      };
+
+      await axios.post("https://event-project.herokuapp.com/notifications", bodyRequestNoti);
+      
       setOpen(false);
     };
     fetchData();
+    setOpen(false);
   };
 
-  const checkClub = () => {};
+  // const checkClub = () => {};
   return (
     <>
       <Head>
@@ -129,6 +163,8 @@ const Page = () => {
             onCancel={() => {
               setVisible(false);
             }}
+            setCount={setCount}
+            count={count}
             // onCancel={() => {
             //   setVisible(false);
             //   setProductDetail(undefined);
@@ -320,7 +356,7 @@ const Page = () => {
                 </Typography>
 
                 <Button
-                  onClick={() => handleConfirm(event)}
+                  onClick={() => handleConfirm(eventChoose)}
                   sx={{
                     backgroundColor: "#0e6ae9",
                     color: "white",

@@ -30,10 +30,12 @@ interface IProps {
   visible: boolean;
   setVisible: (e: boolean) => void;
   isEdit?: boolean;
+  setCount:  (e: Number) => void;
+  count : number
   // setSuccess: (e: boolean) => void;
 }
 
-export const CreateEvent = ({ onCancel, visible, isEdit}: IProps) => {
+export const CreateEvent = ({ onCancel, visible, isEdit, setCount, count}: IProps) => {
   const { user } = useAuthContext();
   const [showModal, setShowModal] = useState(false);
   const [newEvent, setNewEvent] = useState();
@@ -117,9 +119,11 @@ export const CreateEvent = ({ onCancel, visible, isEdit}: IProps) => {
           },
         }
       );
-
+        
       console.log("Response: ", response);
       console.log("abc");
+        setCount(count + 1);
+
       onCancel();
       // setSuccess(true);
     } catch (error) {

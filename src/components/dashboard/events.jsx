@@ -175,7 +175,7 @@ export const Events = ({ event }) => {
           </div>
           <div className={`${EventStyles.right_area}`}>
             <div className={`${EventStyles.right_top}`}>
-              <h1>Event : {`${event.event_name}`} <Button > <NotificationsActiveIcon/></Button></h1>
+              <h1>Event : {`${event.event_name}`} </h1>
               
               <div className={`${EventStyles.reward}`}>
                 Clubs: {`${event.club_name}`}

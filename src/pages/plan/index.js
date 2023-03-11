@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { getCookie } from "cookies-next";
-// import { CreateEvent } from "../components/dashboard/createEvent";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import { format, parseISO } from "date-fns";
 import Head from "next/head";
 import { useEffect, useState } from "react";
@@ -140,6 +140,7 @@ const Page = () => {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell>Image</TableCell>
                   <TableCell>Name: </TableCell>
                   <TableCell>Email</TableCell>
                   <TableCell>Point</TableCell>
@@ -156,7 +157,6 @@ const Page = () => {
                   if (
                     event.club_id === null &&
                     event.event_name !== "hahaahahaaaaaaaaaaaaaaaaaaaaaaaaaa"
-                    
                   ) {
                     return (
                       // <div key={event.event_id}>
@@ -165,6 +165,11 @@ const Page = () => {
                         key={event.event_id}
                         selected={selectedCustomerIds.indexOf(user.id) !== -1}
                       >
+                        <TableCell>
+                          <div className="image">
+                            <img width="40px" height="60px" src={`${event.img}`} alt="" />
+                          </div>
+                        </TableCell>
                         <TableCell>
                           <Box
                             sx={{
@@ -269,7 +274,9 @@ const Page = () => {
                           </Box>
                         </TableCell>
                         <TableCell>
-                          <Button onClick={() => handleClickOpen(event)}>ok</Button>
+                          <Button onClick={() => handleClickOpen(event)}>
+                            <NotificationsActiveIcon />
+                          </Button>
                         </TableCell>
                       </TableRow>
                       // </div>

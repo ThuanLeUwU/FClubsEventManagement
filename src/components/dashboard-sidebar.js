@@ -105,7 +105,7 @@ export const DashboardSidebar = (props) => {
         <Box sx={{ flexGrow: 1 }}>
           {items.map((item,index) => (
             <div key={index}>
-              {item.title == 'Admin ' ? (
+              {item.title == 'Admin ' || item.title == 'Plan' ? (
                 <>
                   {user.role == 'admin' ? (
                     <NavItem

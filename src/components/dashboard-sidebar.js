@@ -39,9 +39,9 @@ const items = [
     title: 'Account'
   },
   {
-    href: '/upload',
+    href: '/events',
     icon: (<UserIcon fontSize="small" />),
-    title: 'Upload'
+    title: 'Event'
   }
 ];
 

@@ -1,3 +1,7 @@
+import '../styles/global.css'
+// import 'antd/dist/reset.css'
+
+
 import { Fragment } from 'react';
 import Head from 'next/head';
 import { CacheProvider } from '@emotion/react';

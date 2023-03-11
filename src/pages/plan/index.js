@@ -126,7 +126,7 @@ const Page = () => {
           "cSiD4AbYQ3uWb7TRnggXfI:APA91bEcYehbQavcp3WMFnT6sbQFxYGiwNpY-wzVBND5gkyZM2ojlrvWNpUQFPl--k8K9-Lzj4-Tm2ADxyp1twjYBYo3kI-3fuK9XAkbP6CvuyfJmARwz5N8RvTnBJH51w5BAPngaTiU",
         topic: "my-topic",
         title:  event.event_name,
-        content: "location " + event.location,
+        content:"Location:" + event.location + " From: " + event.start_date + " To: " + event.end_date,
       };
 
       await axios.post("https://event-project.herokuapp.com/notifications", bodyRequestNoti);

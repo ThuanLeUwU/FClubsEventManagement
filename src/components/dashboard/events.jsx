@@ -5,7 +5,7 @@ import { async } from "@firebase/util";
 import axios from "axios";
 import { useAuthContext } from "../../contexts/auth-context";
 import { color } from "@mui/system";
-import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ListItem, ListItemButton, ListItemText, Slide, Typography } from "@mui/material";
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, ListItem, ListItemButton, ListItemText, Slide, Typography } from "@mui/material";
 import Link from "next/link";
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 
@@ -83,8 +83,8 @@ export const Events = ({ event }) => {
       <div className={`${EventStyles.container}`}>
         {/* <div className="row"> */}
         {/* <div className="col-lg-12"> */}
-        <div className={`${EventStyles.single_tournament}`}>
-          <div className={`${EventStyles.left_area}`}>
+        <Grid  container mt={16}>
+          <Grid  item xs={4} className={`${EventStyles.left_area}`}>
             <div className={`${EventStyles.single_play}`}>
               <div className="image">
                 <img
@@ -172,8 +172,8 @@ export const Events = ({ event }) => {
               )}
 
             </div>
-          </div>
-          <div className={`${EventStyles.right_area}`}>
+          </Grid>
+          <Grid item xs={6} className={`${EventStyles.right_area}`}>
             <div className={`${EventStyles.right_top}`}>
               <h1>Event : {`${event.event_name}`} </h1>
               
@@ -216,11 +216,11 @@ export const Events = ({ event }) => {
 
                 </div>
 
-              </div>
+              </div>  
 
             </div>
-          </div>
-        </div>
+          </Grid>
+        </Grid>
 
       </div>
     </section >

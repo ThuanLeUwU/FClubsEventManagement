@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react';
 import {
   Box,
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -9,166 +7,125 @@ import {
   Grid,
   TextField
 } from '@mui/material';
+import { useState } from 'react';
 
+
+
+import { DatePicker, Form, Input, Button } from 'antd';
+import moment from "moment";
+import { async } from '@firebase/util';
 import axios from 'axios';
-// const states = [
-//   {
-//     value: 'alabama',
-//     label: 'Alabama'
-//   },
-//   {
-//     value: 'new-york',
-//     label: 'New York'
-//   },
-//   {
-//     value: 'san-francisco',
-//     label: 'San Francisco'
-//   }
-// ];
+import { format } from 'date-fns';
 
 
-export const AccountProfileDetails = ({userInf}) => {
- 
-  console.log('ifnor',userInf);
-  // const [values, setValues] = useState({
-  //   firstName: 'Katarina',
-  //   lastName: 'Smith',
-  //   email: 'demo@devias.io',
-  //   phone: '',
-  //   state: 'Alabama',
-  //   country: 'USA'
-  // });
 
- 
 
-  const handleChange = (event) => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value
-    });
+
+export const AccountProfileDetails = ({ userInf }) => {
+  console.log('use', userInf);
+
+  const [date, setDate] = useState(moment(userInf.birthday));
+  const oldDate = userInf.birthday;
+  const [form] = Form.useForm();
+  const [phone, setPhone] = useState(userInf.phone);
+  const oldPhone = `${userInf.phone}`;
+  const [address, setAddress] = useState(userInf.address);
+  const oldAddress = `${userInf.address}`;
+
+
+
+
+
+  const handleDatePickerChange = (date, dateString) => {
+    setDate(date);
+  };
+  const handleAddressChange = (value) => {
+    setAddress(value.target.value);
+  }
+
+  const handlePhoneChange = (value) => {
+    setPhone(value.target.value);
+  }
+
+  const disabledDate = (current) => {
+    const tenYearsAgo = moment().subtract(1, 'years');
+    return current && current > tenYearsAgo;
   };
 
+  const onSubmit = async (values) => {
+    console.log('old date', oldDate);
+    console.log('date', date.format('YYYY-MM-DD'));
+    if(oldAddress === address){
+      console.log('Ad same');
+    }
+    if(oldPhone === phone){
+      console.log('phone same');
+    }
+    if(moment(oldDate).isSame(moment(date))){
+      console.log('date same');
+    }
+
+
+
+    const bodyRequest = {
+      phone: phone,
+      address: address,
+      birthday: date,
+    }
+    await axios.put(`https://event-project.herokuapp.com/api/student/${userInf.student_id}`, bodyRequest)
+  };
+
+
   return (
-    <form
+    <Box
       autoComplete="off"
-      noValidate
-    >   
+    >
       <Card>
-      <CardHeader
-        subheader="The information can be edited"
-        title="Profile"
-      />
-      <Divider />
-      <CardContent>
-        <Grid
-          container
-          spacing={3}
-        >
-          <Grid
-            item
-            xs={12}
-          >
-            <TextField
-              fullWidth
-              helperText="Please specify the full name"
-              label="Full name"
-              onChange={handleChange}
-              required
-              value={userInf.name}
-              variant="outlined"
-            />
-          </Grid>
-         
-       
-          <Grid
-            item
-            md={6}
-            xs={12}
-          >
-            <TextField
-              fullWidth
-              label="Email Address"
-              name="email"
-              onChange={handleChange}
-              required
-              value={userInf.email}
-              variant="outlined"
-            />
-          </Grid>
-          <Grid
-            item
-            md={6}
-            xs={12}
-          >
-            <TextField
-              fullWidth
-              label="Phone Number"
-              name="phone"
-              onChange={handleChange}
-              type="number"
-              value={userInf.phone}
-              variant="outlined"
-            />
-          </Grid>
-          <Grid
-            item
-            md={6}
-            xs={12}
-          >
-            <TextField
-              fullWidth
-              label="Address"
-              name="address"
-              required
-              value={userInf.address}
-              variant="outlined"
-            />
-          </Grid>
-          <Grid
-            item
-            md={6}
-            xs={12}
-          >
-            {/* <TextField
-              fullWidth
-              label="Select State"
-              name="state"
-              onChange={handleChange}
-              required
-              select
-              SelectProps={{ native: true }}
-              value={values.state}
-              variant="outlined"
+        <CardHeader
+          subheader="The information can be edited"
+          title="Profile"
+        />
+        <Divider />
+        <CardContent>
+
+          <Form
+            form={form}
+            initialValues={{ date: date, phone: phone, address: address }}
+            onFinish={onSubmit}>
+            <Form.Item
+              label="Date of Birth:  "
+              name="date"
+              tooltip={{title: 'Just choose date at least 1 year ago!!'}}
             >
-              {states.map((option) => (
-                <option
-                  key={option.value}
-                  value={option.value}
-                >
-                  {option.label}
-                </option>
-              ))}
-            </TextField> */}
-          </Grid>
-        </Grid>
-      </CardContent>
-      <Divider />
-      {/* <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          p: 2
-        }}
-      >
-        <Button
-          color="primary"
-          variant="contained"
-        >
-          Save details
-        </Button>
-      </Box> */}
-    </Card>
-      
-    </form>
+              <DatePicker
+                showTime
+                disabledDate={disabledDate}
+                format="DD/MM/YYYY"
+                onChange={handleDatePickerChange}
+              />
+            </Form.Item>
+            <Form.Item name="phone" label='Phone' >
+              <Input placeholder="phone" value={phone} onChange={handlePhoneChange} />
+            </Form.Item>
+
+            <Form.Item name='address' label='Address'>
+              <Input placeholder="Address"  value={address} onChange={handleAddressChange} />
+            </Form.Item>
+
+            <Box display='flex' justifyContent='end'>
+              <Form.Item >
+                <Button type="primary" htmlType="submit" >
+                  Save
+                </Button>
+              </Form.Item>
+            </Box>
+
+          </Form>
+        </CardContent>
+        <Divider />
+
+      </Card>
+
+    </Box>
   );
 };

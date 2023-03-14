@@ -66,7 +66,7 @@ export const ImageUpload = () => {
           src={imageDataUrl} />}
         {/* </figure>
       </div> */}
-      <button onClick={handleSubmit}>submit</button>
+      <button  onClick={handleSubmit}>submit</button>
     </div>
   );
 }

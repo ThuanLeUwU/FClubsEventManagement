@@ -1,44 +1,24 @@
-import { Box, Container, FormControl, MenuItem, Select, Typography, selectedOption } from '@mui/material';
+import { Box, Container, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import Head from 'next/head';
 
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { DashboardLayout } from '../../components/dashboard-layout';
 import { Events } from '../../components/dashboard/events';
 import { useAuthContext } from '../../contexts/auth-context';
-import { getCookie } from 'cookies-next';
-import { DashboardLayout } from '../../components/dashboard-layout';
 
 
 const Dashboard = () => {
   const { user } = useAuthContext();
+  const { campus } = useAuthContext();
   const [events, setEvents] = useState([]);
-  const [campus, setCampus] = useState([]);
   const [selected, setSelected] = useState(1);
 
   useEffect(() => {
     const fetchEvents = async () => {
-      const headers = {
-        'Authorization': 'Bearer ' + getCookie('accessToken')
-      }
       try {
-        const responseAllCampus = await axios.get(`https://event-project.herokuapp.com/api/campus`, {
-          headers
-        })
-        setCampus(responseAllCampus?.data)
-        
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchEvents()
-  }, [])
+        const responseEvent = await axios.get(`https://event-project.herokuapp.com/api/event/${selected}?status=1&is_approved=1`)
 
-
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const responseEvent = await axios.get(`https://event-project.herokuapp.com/api/event/${selected}?status=0`)
-        // const responseEvent = await axios(`https://event-project.herokuapp.com/api/event/1?status=0`)
         console.log('response nè', responseEvent);
         setEvents(responseEvent?.data)
       } catch (error) {
@@ -52,7 +32,7 @@ const Dashboard = () => {
     setSelected(event.target.value);
   }
 
- 
+
   return (
     <DashboardLayout>
       <Head>
@@ -69,9 +49,12 @@ const Dashboard = () => {
         }}
       >
         <Container maxWidth={false}>
+
+
           <Box sx={{ m: 1, paddingRight: '10px', position: 'fixed', right: '0px', top: '80px' }}>
             <FormControl>
-              <Select value={selectedOption} defaultValue={selected} onChange={handleChange}>
+              <InputLabel id="select-label">Campus</InputLabel>
+              <Select value={selected} defaultValue={selected} onChange={handleChange}  labelId="select-label">
                 {campus.map(option => (
                   <MenuItem key={option.campus_id} value={option.campus_id}>
                     {option.name}
@@ -79,7 +62,7 @@ const Dashboard = () => {
                 ))}
               </Select>
             </FormControl>
-       
+
           </Box>
           <Box width='90%'>
             {events.map(event => (

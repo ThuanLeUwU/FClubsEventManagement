@@ -13,7 +13,7 @@ function Event() {
     const router = useRouter();
     console.log('router', router);
     const [allUserJoin, setAllUserJoin] = useState([])
-    const [eventInfor, setEventInfor] = useState([])
+    const [eventInfor, setEventInfor] = useState()
     const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
 
     useEffect(() => {
@@ -44,64 +44,51 @@ function Event() {
                 sx={{ mb: 3 }}
                 variant="h4"
             >
-                Account
+                Events
             </Typography>
             <Breadcrumbs aria-label="breadcrumb" sx={{ margin: '10px' }}>
                 <Link as={"/"} href="/">
                     Events
                 </Link>
-
-                {eventInfor.map(event => {
-                    return (
-                        <Typography key={event.event_id}>
-                            {event.event_name}
-                        </Typography>
-                    )
-                })}
-
+                <Typography >
+                    {eventInfor.event_name}
+                </Typography>
             </Breadcrumbs>
 
-
             <Box sx={{ marginBottom: '30px', display: 'flex', justifyContent: 'center' }}>
-                {eventInfor.map(event => {
-                    const start_date = parseISO(event.start_date);
-                    const end_date = parseISO(event.end_date);
-                    return (
-                        <Card sx={{ display: 'flex' }} key={event.club_id}>
-                            <CardMedia
-                                component="img"
-                                sx={{ width: 151 }}
-                                image={event.img}
-                                alt="Live from space album cover"
-                            />
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                <CardContent sx={{ flex: '1 0 auto' }}>
-                                    <Typography component="div" fontSize='50px'>
-                                        <Box>{event.event_name}</Box>
-                                    </Typography>
-                                    <Typography variant="h6" color="text.secondary" component="div">
-                                        <Box>Point: 1000</Box>
-                                    </Typography>
-                                    <Typography variant="h6" color="text.secondary" component="div">
-                                        {event.start_date == null ? (
-                                            <Box>Check-in: Check-in:  19:00:00, 28/01/2023</Box>
-                                        ) : (
-                                            <Box>Check-in: {format(start_date, 'dd/MM/yyyy')}</Box>)}
-                                    </Typography>
-                                    <Typography variant="h6" color="text.secondary" component="div">
-                                        {event.end_date == null ? (
-                                            <Box>Check-out: 22:00:00, 03-03-2023</Box>
-                                        ) : (
-                                            <Box>Check-out: {format(end_date, 'dd/MM/yyyy')}</Box>)}
-                                    </Typography>
-                                    <Typography variant="h6" color="text.secondary" component="div">
-                                        <Box>Location: {event.location}</Box>
-                                    </Typography>
-                                </CardContent>
-                            </Box>
-                        </Card>
-                    )
-                })}
+                <Card sx={{ display: 'flex' }} key={eventInfor.club_id}>
+                    <CardMedia
+                        component="img"
+                        sx={{ width: 151 }}
+                        image={eventInfor.img}
+                        alt="Live from space album cover"
+                    />
+                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                        <CardContent sx={{ flex: '1 0 auto' }}>
+                            <Typography component="div" fontSize='50px'>
+                                <Box>{eventInfor.event_name}</Box>
+                            </Typography>
+                            <Typography variant="h6" color="text.secondary" component="div">
+                                <Box>Point: 1000</Box>
+                            </Typography>
+                            <Typography variant="h6" color="text.secondary" component="div">
+                                {eventInfor.start_date == null ? (
+                                    <Box>Check-in: Check-in:  19:00:00, 28/01/2023</Box>
+                                ) : (
+                                    <Box>Check-in: {format(parseISO(eventInfor.start_date), 'dd/MM/yyyy')}</Box>)}
+                            </Typography>
+                            <Typography variant="h6" color="text.secondary" component="div">
+                                {eventInfor.end_date == null ? (
+                                    <Box>Check-out: 22:00:00, 03-03-2023</Box>
+                                ) : (
+                                    <Box>Check-out: {format(parseISO(eventInfor.end_date), 'dd/MM/yyyy')}</Box>)}
+                            </Typography>
+                            <Typography variant="h6" color="text.secondary" component="div">
+                                <Box>Location: {eventInfor.location}</Box>
+                            </Typography>
+                        </CardContent>
+                    </Box>
+                </Card>
             </Box>
 
             <Card sx={{ padding: '30px' }}>
@@ -136,8 +123,8 @@ function Event() {
                                     return (
                                         <TableRow
                                             hover
-                                            key={user.id}
-                                            selected={selectedCustomerIds.indexOf(user.id) !== -1}
+                                            key={user.student_id}
+                                            selected={selectedCustomerIds.indexOf(user.student_id) !== -1}
                                         >
                                             <TableCell>
                                                 <Box
@@ -163,9 +150,14 @@ function Event() {
                                             <TableCell>
                                                 {user.campus_name}
                                             </TableCell>
-                                            <TableCell>
-                                                {format(joinDate, 'dd/MM/yyyy')}
-                                            </TableCell>
+
+                                            {user.registration_date === null ? (
+                                                <TableCell>22/02/2023</TableCell>
+                                            ) : (
+                                                <TableCell>
+                                                    {format(joinDate, 'dd/MM/yyyy')}
+                                                </TableCell>
+                                            )}
                                         </TableRow>
                                     )
                                 })}

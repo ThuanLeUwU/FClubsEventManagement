@@ -29,71 +29,46 @@ import { DashboardLayout } from "../../components/dashboard-layout";
 import { useAuthContext } from "../../contexts/auth-context";
 import { CreateEvent } from "../../components/dashboard/createEvent";
 import { async } from "@firebase/util";
+import { Card } from "react-bootstrap";
 
 const Page = () => {
   const { user } = useAuthContext();
   const [events, setEvents] = useState([]);
-  const [campus, setCampus] = useState([]);
-  const [selected, setSelected] = useState();
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
-  const [clubJoinByThisUser, setClubJoinByThisUser] = useState([]);
   const [visible, setVisible] = useState(false);
   const [eventChoose, setEventChoose] = useState({});
   const [count, setCount] = useState(0);
 
-  console.log("tao nè", clubJoinByThisUser);
 
-  const handleChange = (event) => {
-    setSelected(event.target.value);
-  };
-  useEffect(() => {
-    const fetchEvents = async () => {
-      const headers = {
-        Authorization: "Bearer " + getCookie("accessToken"),
-      };
-      try {
-        const responseAllClub = await axios.get(
-          `https://event-project.herokuapp.com/api/club/student/${user.id}`
-        );
-        setClubJoinByThisUser(responseAllClub?.data);
 
-        const responseGetAll = await axios.get(
-          "https://event-project.herokuapp.com/api/event/?status=0"
-        );
-        setEvents(responseGetAll?.data);
-        console.log("event", responseGetAll);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchEvents();
-  }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
+
+  const fetchEvent = async () => {
+    try {
       const responseGetAll = await axios.get(
-        "https://event-project.herokuapp.com/api/event/?status=0"
+        "https://event-project.herokuapp.com/api/event/?status=1&is_approved=0"
       );
       setEvents(responseGetAll?.data);
-    };
-    fetchData();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchEvent();
   }, [count]);
 
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = (event) => {
-    if (clubJoinByThisUser == []) {
-      alert("Del join club nào");
-    } else {
-      setEventChoose(event);
-      setOpen(true);
-    }
-    console.log("dd", event);
+    setEventChoose(event);
+    setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
+
   if (events === undefined) {
     return (
       <div
@@ -105,39 +80,29 @@ const Page = () => {
   }
 
   const handleConfirm = (event) => {
-    // console.log("event nè",event.event_id);
-    // console.log("blub nè", selected);
-    // console.log("student nè", user.id)
+
     const fetchData = async () => {
-      const bodyRequest = {
-        event_id: event.event_id,
-        club_id: selected,
-        student_id: user.id,
-      };
-      await axios.post("https://event-project.herokuapp.com/api/event/organizer", bodyRequest);
-      const responseGetAll = await axios.get(
-        "https://event-project.herokuapp.com/api/event/?status=0"
-      );
-      setEvents(responseGetAll?.data);
 
-      const bodyRequestNoti = {
-        send_option: "device",
-        device_token:
-          "cSiD4AbYQ3uWb7TRnggXfI:APA91bEcYehbQavcp3WMFnT6sbQFxYGiwNpY-wzVBND5gkyZM2ojlrvWNpUQFPl--k8K9-Lzj4-Tm2ADxyp1twjYBYo3kI-3fuK9XAkbP6CvuyfJmARwz5N8RvTnBJH51w5BAPngaTiU",
-        topic: "my-topic",
-        title:  event.event_name,
-        content:"Location:" + event.location + " From: " + event.start_date + " To: " + event.end_date,
-      };
+      await axios.put(`https://event-project.herokuapp.com/api/event/${event.event_id}`)
+      // const bodyRequestNoti = {
+      //   send_option: "device",
+      //   device_token:
+      //     "cSiD4AbYQ3uWb7TRnggXfI:APA91bEcYehbQavcp3WMFnT6sbQFxYGiwNpY-wzVBND5gkyZM2ojlrvWNpUQFPl--k8K9-Lzj4-Tm2ADxyp1twjYBYo3kI-3fuK9XAkbP6CvuyfJmARwz5N8RvTnBJH51w5BAPngaTiU",
+      //   topic: "my-topic",
+      //   title:  event.event_name,
+      //   content:"Location:" + event.location + " From: " + event.start_date + " To: " + event.end_date,
+      // };
 
-      await axios.post("https://event-project.herokuapp.com/notifications", bodyRequestNoti);
-      
-      setOpen(false);
+      // await axios.post("https://event-project.herokuapp.com/notifications", bodyRequestNoti);
+
+      setCount(count + 1);
     };
     fetchData();
+   
     setOpen(false);
   };
 
-  // const checkClub = () => {};
+
   return (
     <>
       <Head>
@@ -149,6 +114,7 @@ const Page = () => {
         sx={{
           flexGrow: 1,
           py: 8,
+          p: 6
         }}
       >
         <Container maxWidth={false}>
@@ -165,17 +131,13 @@ const Page = () => {
             }}
             setCount={setCount}
             count={count}
-            // onCancel={() => {
-            //   setVisible(false);
-            //   setProductDetail(undefined);
-            // }}
-            // productDetail={productDetail}
             isEdit={true}
           />
-          <Box width="100%">
+          <Card width="100%">
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell>No.</TableCell>
                   <TableCell>Image</TableCell>
                   <TableCell>Name: </TableCell>
                   <TableCell>Email</TableCell>
@@ -187,11 +149,11 @@ const Page = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {events.map((event) => {
+                {events.map((event,count) => {
                   const start_Date = parseISO(event.start_date);
                   const end_Date = parseISO(event.end_date);
                   if (
-                    event.club_id === null &&
+                    
                     event.event_name !== "hahaahahaaaaaaaaaaaaaaaaaaaaaaaaaa"
                   ) {
                     return (
@@ -201,6 +163,7 @@ const Page = () => {
                         key={event.event_id}
                         selected={selectedCustomerIds.indexOf(user.id) !== -1}
                       >
+                        <TableCell>{count}</TableCell>
                         <TableCell>
                           <div className="image">
                             <img width="40px" height="60px" src={`${event.img}`} alt="" />
@@ -327,19 +290,18 @@ const Page = () => {
               aria-describedby="alert-dialog-slide-description"
             >
               <DialogTitle sx={{ backgroundColor: "#0e6ae9", fontSize: "20px", color: "white" }}>
-                Do you want to join Club: {`${eventChoose.event_name}`}?
+
                 {console.log("cccccc", eventChoose)}
+                <NotificationsActiveIcon /> Public Event!
+
               </DialogTitle>
+
               <DialogContent>
-                <FormControl>
-                  <Select value={selectedOption} defaultValue={selected} onChange={handleChange}>
-                    {clubJoinByThisUser.map((option) => (
-                      <MenuItem key={option.club_id} value={option.club_id}>
-                        {option.club_name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                <Typography variant="h6">
+                  Do you want to public Event: {`${eventChoose.event_name}`} ?
+                </Typography>
+
+
               </DialogContent>
               <DialogActions>
                 <Typography
@@ -373,7 +335,7 @@ const Page = () => {
                 </Button>
               </DialogActions>
             </Dialog>
-          </Box>
+          </Card>
         </Container>
       </Box>
     </>

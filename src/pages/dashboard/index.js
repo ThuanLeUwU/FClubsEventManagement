@@ -11,7 +11,7 @@ import { CreateEvent } from "../../components/dashboard/createEvent";
 
 const Dashboard = () => {
   const { user } = useAuthContext();
-  const { campus } = useAuthContext();
+  // const { campus } = useAuthContext();
   const [events, setEvents] = useState([]);
   const [selected, setSelected] = useState(1);
   const [count, setCount] = useState(0);

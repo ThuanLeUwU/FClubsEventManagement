@@ -21,7 +21,7 @@ import {
 } from "antd";
 import { UploadFileOutlined } from "@mui/icons-material";
 import moment from "moment";
-import { FormControl, MenuItem} from "@mui/material";
+
 // import { Option } from "antd/es/mentions";
 // import locale from "antd/es/date-picker/locale/en_US";
 
@@ -30,12 +30,12 @@ interface IProps {
   visible: boolean;
   setVisible: (e: boolean) => void;
   isEdit?: boolean;
-  setCount:  (e: Number) => void;
-  count : number
+  setCount: (e: Number) => void;
+  count: number
   // setSuccess: (e: boolean) => void;
 }
 
-export const CreateEvent = ({ onCancel, visible, isEdit, setCount, count}: IProps) => {
+export const CreateEvent = ({ onCancel, visible, isEdit, setCount, count }: IProps) => {
   const { user } = useAuthContext();
   const [showModal, setShowModal] = useState(false);
   const [newEvent, setNewEvent] = useState();
@@ -47,7 +47,7 @@ export const CreateEvent = ({ onCancel, visible, isEdit, setCount, count}: IProp
   const [endDate, setEndDate] = useState();
   const [checkValid, setCheckValid] = useState();
   const [campus, setCampus] = useState();
-  const [selected, setSelected] = useState(user.campus);
+  const [selected, setSelected] = useState();
   const [club, setClubs] = useState([]);
   const { Option } = Select;
 
@@ -67,29 +67,31 @@ export const CreateEvent = ({ onCancel, visible, isEdit, setCount, count}: IProp
   // } = useForm();
 
   useEffect(() => {
-    console.log("select");
     const fetchData = async () => {
       const response = await axios.get(
-        `https://event-project.herokuapp.com/api/club/campus/${selected}`
+        `https://event-project.herokuapp.com/api/club/student/${user.id}`
       );
       setClubs(response?.data);
+      setSelected(response?.data[0].club_id)
     };
     fetchData();
-  }, [selected]);
+  }, []);
 
   const handleSubmit = async (data) => {
-    console.log(data, "hellu");
+
 
     const formData = new FormData();
     formData.append("file", formDataImage);
     formData.append("name", data.event_name);
-    formData.append("email", data.email);
+    formData.append("club_id", selected);
+    formData.append("student_id", user.id);
+    formData.append("email", user.email);
     formData.append("location", data.location);
     formData.append("point", data.point);
     formData.append("start_date", startDate);
     formData.append("end_date", endDate);
     formData.append("description", data.description);
-    formData.append("organizer", user.id);
+
     // formData.append("club", selected);
 
     // console.log("haha",selected)
@@ -119,10 +121,8 @@ export const CreateEvent = ({ onCancel, visible, isEdit, setCount, count}: IProp
           },
         }
       );
-        
-      console.log("Response: ", response);
-      console.log("abc");
-        setCount(count + 1);
+
+      setCount(count + 1);
 
       onCancel();
       // setSuccess(true);
@@ -179,7 +179,6 @@ export const CreateEvent = ({ onCancel, visible, isEdit, setCount, count}: IProp
     if (current && current < moment().startOf("day")) {
       return true;
     }
-
     // Disable dates after the selected date
     if (startDate && current && current < moment(startDate).endOf("day")) {
       return true;
@@ -188,9 +187,9 @@ export const CreateEvent = ({ onCancel, visible, isEdit, setCount, count}: IProp
     return false;
   };
 
-  
-  const handleChangeClub = (event) => {
-    setSelected(event.value);
+
+  const handleChangeClub = (value) => {
+    setSelected(value);
   }
 
   // const disabledEndDate = (current) => {
@@ -244,7 +243,7 @@ export const CreateEvent = ({ onCancel, visible, isEdit, setCount, count}: IProp
         layout="horizontal"
         className="mt-5"
         onFinish={handleSubmit}
-        // initialValues={isEdit ?  : undefined}
+      // initialValues={isEdit ?  : undefined}
       >
         <div
           style={{ display: "flex", justifyContent: "center" }}
@@ -274,11 +273,26 @@ export const CreateEvent = ({ onCancel, visible, isEdit, setCount, count}: IProp
           <Input />
         </Form.Item>
         <Form.Item
-          rules={[{ required: true, message: "Please input Email!" }]}
+         
+          label="Club_Name: "
+          name="club_name"
+        >
+
+          <Select defaultValue={selected} onChange={handleChangeClub}>
+            {club.map(option => (
+              <Option key={option.club_id} value={option.club_id}>
+                {option.club_name}
+              </Option>
+            ))}
+          </Select>
+
+        </Form.Item>
+        <Form.Item
+
           label="Email: "
           name="email"
         >
-          <Input />
+          {`${user.email}`}
         </Form.Item>
         <Form.Item
           rules={[{ required: true, message: "Please input Location!" }]}

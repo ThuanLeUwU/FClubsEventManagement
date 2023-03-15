@@ -17,10 +17,11 @@ import { Logo } from './logo';
 import { NavItem } from './nav-item';
 import { useAuthContext } from '../contexts/auth-context';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import EventIcon from '@mui/icons-material/Event';
 const items = [
   {
     href: '/',
-    icon: (<ChartBarIcon fontSize="small" />),
+    icon: (<EventIcon fontSize="small" />),
     title: 'Event'
   },
   {
@@ -40,7 +41,7 @@ const items = [
   },
   {
     href: '/plan',
-    icon: (<UserIcon fontSize="small" />),
+    icon: (<ChartBarIcon fontSize="small" />),
     title: 'Plan'
   }
 ];

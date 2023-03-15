@@ -126,9 +126,16 @@ export const AccountProfile = ({ userInf }) => {
           <input type="file" onChange={handleImageChange} />
           {imageDataUrl && <img width={200} src={imageDataUrl} />}
 
-          <button onClick={handleSubmit}>submit</button>
-        </Button>
-      </CardActions>
-    </Card>
+          <Button
+            sx={{
+              backgroundColor: '#0e6ae9', color: 'white', margin: '1px', ':hover': {
+                backgroundColor: 'white',
+                color: '#0e6ae9',
+                border: '1px solid #0e6ae9',
+                margin: '0px'
+              }}}onClick={ handleSubmit } > submit</Button>
+      </Button>
+    </CardActions>
+    </Card >
   );
 };

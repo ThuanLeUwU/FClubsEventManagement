@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { authFirebase } from '../firebase/firebase';
 import axios from 'axios';
-import { setCookie, deleteCookie } from 'cookies-next';
+import { setCookie, deleteCookie, getCookie } from 'cookies-next';
 import axiosWrapper from '../utils/axiosWrapper';
 import { async } from '@firebase/util';
 
@@ -14,10 +14,23 @@ export const AuthProvider = (props) => {
 
 
   const [user, setUser] = useState()
+  const [campus,setCampus] = useState()
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(authFirebase, (currentUser) => {
       if (currentUser) {
         checkUserLogin();
+        const fetchCampus = async () =>{
+          const headers = {
+            'Authorization': 'Bearer ' + getCookie('accessToken')
+          }
+    
+          const responseAllCampus = await axios.get(`https://event-project.herokuapp.com/api/campus`, {
+            headers
+          })
+          setCampus(responseAllCampus?.data)
+        }
+        fetchCampus();
+       
       }
     })
     return () => unsubscribe()
@@ -30,13 +43,18 @@ export const AuthProvider = (props) => {
       // console.log('toekn', token);
       const condition = {
         token: token,
-        role: 'members'
+        role: 'members',
+        deviceToken: ''
+
       }
 
       const response = await axios.post(
         'https://event-project.herokuapp.com/api/login', condition
       )
+
+
     
+
       setCookie('accessToken', response?.data?.access_token)
       setUser(response?.data?.data)
 
@@ -69,6 +87,7 @@ export const AuthProvider = (props) => {
       value={{
         // ...state,
         user,
+        campus,
         signInWithGoogle,
         signOutProject
       }}

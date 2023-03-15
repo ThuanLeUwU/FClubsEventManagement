@@ -1,52 +1,35 @@
 import axios from 'axios';
-import { getCookie } from 'cookies-next';
 import { format, parseISO } from 'date-fns';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { CustomerListToolbar } from '../../components/customer/customer-list-toolbar';
 import { DashboardLayout } from '../../components/dashboard-layout';
 import { useAuthContext } from '../../contexts/auth-context';
+
 import {
-  Box,
-  Card,
-  CardContent,
-  FormControl,
-  selectedOption,
-  TextField,
-  InputAdornment,
-  MenuItem,
-  Table,
-  TableBody,
-  Container,
-  TableCell, Button,
-  TableHead, TableRow,
-  SvgIcon, Typography, Select, Breadcrumbs, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, CircularProgress
+  Box, Button, Card, CircularProgress, Container, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, Table,
+  TableBody, TableCell, TableHead, TableRow, Typography
 } from '@mui/material';
 
 
-import { Search } from '../../icons/search';
 
-import { async } from '@firebase/util';
 import Link from 'next/link';
 const Page = () => {
   const { user } = useAuthContext();
+  const {campus} = useAuthContext();
   const [selected, setSelected] = useState(user? (user.campus) : 1);
   const [club, setClubs] = useState();
-  const [campus, setCampus] = useState();
   const [allClubThatUserJoin, setAllClubThatUserJoin] = useState([]);
+
   const [clubChoise, setClubChoise] = useState();
+  const [isSearch,setIsSearch] = useState(false);
+  const [searchValue,setSearchValue] = useState()
+  const [newData, setNewData] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      console.log('campus');
-      const headers = {
-        'Authorization': 'Bearer ' + getCookie('accessToken')
-      }
+     
       try {
-        const responseAllCampus = await axios.get(`https://event-project.herokuapp.com/api/campus`, {
-          headers
-        })
-        setCampus(responseAllCampus?.data)
+       
         if (user.role == 'members') {
           const responseGetAllClubThatUserJoin = await axios.get(`https://event-project.herokuapp.com/api/club/student/${user.id}`)
           setAllClubThatUserJoin(responseGetAllClubThatUserJoin?.data)
@@ -93,8 +76,18 @@ const Page = () => {
 
   const handleChange = (event) => {
     setSelected(event.target.value);
+  
   }
 
+  const handleSearchChange = (event) => {
+    console.log(event.target.value);
+    setSearchValue(event.target.value);
+    if(event.target.value !== ''){
+     setIsSearch(true)
+    } else {
+     setIsSearch(false)
+    }
+  }
 
   //Dialog
   const [open, setOpen] = useState(false);
@@ -108,7 +101,7 @@ const Page = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  if (campus == undefined || club == undefined) {
+  if ( club == undefined) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
         <CircularProgress />
@@ -131,7 +124,6 @@ const Page = () => {
         }}
       >
         <Container maxWidth={false}>
-
           <Box >
             <Box
               sx={{
@@ -149,8 +141,9 @@ const Page = () => {
                 Clubs
               </Typography>
               <Box sx={{ m: 1, paddingRight: '10px' }}>
+              <InputLabel id="select-label">Campus</InputLabel>
                 <FormControl>
-                  <Select value={selectedOption} defaultValue={selected} onChange={handleChange}>
+                  <Select value={selected} defaultValue={selected} onChange={handleChange} labelId="select-label">
                     {campus.map(option => (
                       <MenuItem key={option.campus_id} value={option.campus_id}>
                         {option.name}
@@ -161,12 +154,13 @@ const Page = () => {
 
               </Box>
             </Box>
-            <Box sx={{ mt: 3 }}>
+            {/* <Box sx={{ mt: 3 }}>
               <Card>
                 <CardContent>
                   <Box sx={{ maxWidth: 500 }}>
                     <TextField
                       fullWidth
+                      onChange={(e => handleSearchChange(e))}
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
@@ -185,7 +179,7 @@ const Page = () => {
                   </Box>
                 </CardContent>
               </Card>
-            </Box>
+            </Box> */}
           </Box>
 
 
@@ -220,12 +214,13 @@ const Page = () => {
                     </TableHead>
                     <TableBody>
                       {club.map((club) => {
+                     
                         const date = parseISO(club.established_date)
                         return (
                           <TableRow
 
                             hover
-                            key={club.name}
+                            key={club.club_id}
                             selected={selectedCustomerIds.indexOf(club.id) !== -1}
                           >
                             <TableCell>

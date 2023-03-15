@@ -1,4 +1,4 @@
-import { Box, Card, Table, TableBody, TableCell, TableHead, TableRow , Typography} from '@mui/material';
+import { Box, Card, CircularProgress, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import Head from 'next/head';
 // import { Budget } from '../components/dashboard/budget';
 import { useEffect, useState } from 'react';
@@ -8,18 +8,10 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
 const Page = () => {
-
   const { user } = useAuthContext();
   const [allUser, setAllUser] = useState([]);
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
-  // if (!user.role == 'admin') {
-  //   const router = useRouter();
-  //   router.replace({
-  //     pathname: '/',
-  //     query: router.asPath !== '/' ? { continueUrl: router.asPath } : undefined
-  //   })
-  //     .catch(console.error)
-  // }
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,10 +26,12 @@ const Page = () => {
     fetchData()
   }, [])
 
+  
+
   if (allUser == []) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-        <h1>Loading...</h1>
+        <CircularProgress />
       </div>
     )
   }
@@ -52,10 +46,15 @@ const Page = () => {
         component="main"
         sx={{
           flexGrow: 1,
-          py: 8
+          py: 8,
+          p: 9
+
         }}
       >
         <Card>
+          <Box display='flex' justifyContent='center'>
+            <Typography textTransform='uppercase' variant='h3'> Table Of all user</Typography>
+          </Box>
           <PerfectScrollbar>
             <Box sx={{ minWidth: 1050 }}>
               <Table>

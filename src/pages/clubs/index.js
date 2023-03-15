@@ -14,22 +14,29 @@ import {
 
 
 import Link from 'next/link';
+import { getCookie } from 'cookies-next';
 const Page = () => {
   const { user } = useAuthContext();
-  const {campus} = useAuthContext();
-  const [selected, setSelected] = useState(user? (user.campus) : 1);
+  const [campus, setCampus] = useState([]);
+  const [selected, setSelected] = useState(user ? (user.campus) : 1);
   const [club, setClubs] = useState();
   const [allClubThatUserJoin, setAllClubThatUserJoin] = useState([]);
-
   const [clubChoise, setClubChoise] = useState();
-  const [isSearch,setIsSearch] = useState(false);
-  const [searchValue,setSearchValue] = useState()
-  const [newData, setNewData] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
-     
+
       try {
-       
+        const headers = {
+          'Authorization': 'Bearer ' + getCookie('accessToken')
+        }
+
+        const responseAllCampus = await axios.get(`https://event-project.herokuapp.com/api/campus`, {
+          headers
+        })
+
+        setCampus(responseAllCampus?.data)
+
         if (user.role == 'members') {
           const responseGetAllClubThatUserJoin = await axios.get(`https://event-project.herokuapp.com/api/club/student/${user.id}`)
           setAllClubThatUserJoin(responseGetAllClubThatUserJoin?.data)
@@ -60,7 +67,7 @@ const Page = () => {
     try {
       const requestBody = {
         student_id: user.id,
-        club_id:  clubChoise,
+        club_id: clubChoise,
         role: 'MEMBER',
         join_date: currentTime.toISOString()
       }
@@ -76,17 +83,7 @@ const Page = () => {
 
   const handleChange = (event) => {
     setSelected(event.target.value);
-  
-  }
 
-  const handleSearchChange = (event) => {
-    console.log(event.target.value);
-    setSearchValue(event.target.value);
-    if(event.target.value !== ''){
-     setIsSearch(true)
-    } else {
-     setIsSearch(false)
-    }
   }
 
   //Dialog
@@ -101,7 +98,7 @@ const Page = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  if ( club == undefined) {
+  if (club == undefined) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
         <CircularProgress />
@@ -141,8 +138,9 @@ const Page = () => {
                 Clubs
               </Typography>
               <Box sx={{ m: 1, paddingRight: '10px' }}>
-              <InputLabel id="select-label">Campus</InputLabel>
+
                 <FormControl>
+                  <InputLabel id="select-label">Campus</InputLabel>
                   <Select value={selected} defaultValue={selected} onChange={handleChange} labelId="select-label">
                     {campus.map(option => (
                       <MenuItem key={option.campus_id} value={option.campus_id}>
@@ -154,32 +152,7 @@ const Page = () => {
 
               </Box>
             </Box>
-            {/* <Box sx={{ mt: 3 }}>
-              <Card>
-                <CardContent>
-                  <Box sx={{ maxWidth: 500 }}>
-                    <TextField
-                      fullWidth
-                      onChange={(e => handleSearchChange(e))}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <SvgIcon
-                              color="action"
-                              fontSize="small"
-                            >
-                              <Search />
-                            </SvgIcon>
-                          </InputAdornment>
-                        )
-                      }}
-                      placeholder="Search customer"
-                      variant="outlined"
-                    />
-                  </Box>
-                </CardContent>
-              </Card>
-            </Box> */}
+           
           </Box>
 
 
@@ -214,7 +187,7 @@ const Page = () => {
                     </TableHead>
                     <TableBody>
                       {club.map((club) => {
-                     
+
                         const date = parseISO(club.established_date)
                         return (
                           <TableRow
@@ -272,7 +245,7 @@ const Page = () => {
                                         Joined
                                       </Button>
                                     ) : (
-                                      <Button onClick={()=>handleClickOpen(club)}
+                                      <Button onClick={() => handleClickOpen(club)}
                                         sx={{
                                           backgroundColor: 'white', color: '#0e6ae9', border: '1px solid #0e6ae9', ':hover': {
                                             backgroundColor: '#0e6ae9',

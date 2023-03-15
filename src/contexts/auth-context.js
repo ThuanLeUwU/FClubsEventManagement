@@ -14,33 +14,35 @@ export const AuthProvider = (props) => {
 
 
   const [user, setUser] = useState()
-  const [campus,setCampus] = useState()
+  const [campus, setCampus] = useState()
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(authFirebase, (currentUser) => {
       if (currentUser) {
+        console.log('check');
         checkUserLogin();
-        const fetchCampus = async () =>{
-          const headers = {
-            'Authorization': 'Bearer ' + getCookie('accessToken')
-          }
-    
-          const responseAllCampus = await axios.get(`https://event-project.herokuapp.com/api/campus`, {
-            headers
-          })
-          setCampus(responseAllCampus?.data)
-        }
-        fetchCampus();
-       
       }
     })
     return () => unsubscribe()
   }, [])
 
+  const fetchCampus = async () => {
+    const headers = {
+      'Authorization': 'Bearer ' + getCookie('accessToken')
+    }
+
+    const responseAllCampus = await axios.get(`https://event-project.herokuapp.com/api/campus`, {
+      headers
+    })
+
+    setCampus(responseAllCampus?.data)
+  }
+
+
 
   const checkUserLogin = async () => {
     try {
       const token = authFirebase.currentUser.accessToken;
-      // console.log('toekn', token);
+
       const condition = {
         token: token,
         role: 'members',
@@ -51,15 +53,11 @@ export const AuthProvider = (props) => {
       const response = await axios.post(
         'https://event-project.herokuapp.com/api/login', condition
       )
-
-
-    
-
       setCookie('accessToken', response?.data?.access_token)
+
       setUser(response?.data?.data)
 
     } catch (error) {
-      deleteCookie('accessToken')
       console.log(error);
       // if(error.code == "ERR_BAD_REQUEST"){
       //   alert("Lỗi Đăng Nhập")
@@ -68,6 +66,7 @@ export const AuthProvider = (props) => {
   }
 
   const signInWithGoogle = async () => {
+
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(authFirebase, provider);

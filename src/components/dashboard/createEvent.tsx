@@ -30,41 +30,20 @@ interface IProps {
   visible: boolean;
   setVisible: (e: boolean) => void;
   isEdit?: boolean;
-  setCount: (e: Number) => void;
-  count: number
+ 
   // setSuccess: (e: boolean) => void;
 }
 
-export const CreateEvent = ({ onCancel, visible, isEdit, setCount, count }: IProps) => {
+export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
   const { user } = useAuthContext();
-  const [showModal, setShowModal] = useState(false);
-  const [newEvent, setNewEvent] = useState();
-  const [imageDataUrl, setImageDataUrl] = useState();
   const [formDataImage, setFormDataImage] = useState();
   const [image, setImage] = useState<string>();
   const [form] = Form.useForm();
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
-  const [checkValid, setCheckValid] = useState();
-  const [campus, setCampus] = useState();
   const [selected, setSelected] = useState();
   const [club, setClubs] = useState([]);
   const { Option } = Select;
-
-  console.log(club);
-
-  const handleOpenModal = () => {
-    setShowModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors },
-  // } = useForm();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -91,27 +70,8 @@ export const CreateEvent = ({ onCancel, visible, isEdit, setCount, count }: IPro
     formData.append("start_date", startDate);
     formData.append("end_date", endDate);
     formData.append("description", data.description);
-
-    // formData.append("club", selected);
-
-    // console.log("haha",selected)
-
-    // formData.append("date", data.date);
-    // console.log('body', bodyRequest)
-    // console.log("image", formDataImage)
     try {
-      // const bodyRequest = {
-      //   event_name: data.name,
-      //   email: data.email,
-      //   location: data.location,
-      //   image: formDataImage,
-      //   point: data.point,
-      //   start: data.start,
-      //   end: data.end,
-      //   date: data.date,
-      // };
-
-      const response = await axios.post(
+       await axios.post(
         "https://event-project.herokuapp.com/api/event/insert",
         // bodyRequest
         formData,
@@ -121,8 +81,6 @@ export const CreateEvent = ({ onCancel, visible, isEdit, setCount, count }: IPro
           },
         }
       );
-
-      setCount(count + 1);
 
       onCancel();
       // setSuccess(true);
@@ -350,7 +308,6 @@ export const CreateEvent = ({ onCancel, visible, isEdit, setCount, count }: IPro
           />
         </Form.Item>
         <Form.Item
-          rules={[{ required: true, message: "Please input Description!" }]}
           label="Description: "
           name="description"
         >

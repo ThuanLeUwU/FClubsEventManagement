@@ -1,5 +1,5 @@
 
-import { Box, Breadcrumbs, Button, Card, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Button, Card, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 
 
 import axios from "axios";
@@ -48,7 +48,7 @@ function Club() {
         setOpen(false)
     }
 
-    
+
 
 
     //Dialog
@@ -86,7 +86,14 @@ function Club() {
 
     return (
         <DashboardLayout>
-            <Breadcrumbs aria-label="breadcrumb" sx={{ margin: '10px' }}>
+            <Typography
+                sx={{ mb: 0, ml: 5 }}
+                variant="h4"
+            >
+            Clubs
+            </Typography>
+
+            <Breadcrumbs aria-label="breadcrumb" sx={{ marginBottom: '40px', ml: 5 }}>
                 <Link as={"/clubs"} href="/clubs">
                     Clubs
                 </Link>
@@ -94,7 +101,7 @@ function Club() {
                     {clubInf.club_name}
                 </Typography>
             </Breadcrumbs>
-            <Box sx={{ marginBottom: '30px', marginLeft: '40px' }}>
+            <Paper elevation={4} sx={{p: 4, margin: '40px' }}>
                 <Typography fontSize='30px'>Name: {clubInf.club_name}</Typography>
                 <Typography fontSize='20px'>Abbreviation: {clubInf.abbreviation}</Typography>
                 {clubInf.established_date == null ? (
@@ -105,7 +112,7 @@ function Club() {
                     <Typography fontSize='20px'>Established Date: {format(parseISO(clubInf.established_date), 'dd/MM/yyyy')}</Typography>
                 )}
 
-            </Box>
+            </Paper>
 
             <Card sx={{ padding: '30px' }}>
                 <Box display='flex' justifyContent='center' textTransform='uppercase' fontSize='40px'>

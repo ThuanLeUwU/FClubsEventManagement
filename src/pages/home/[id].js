@@ -1,5 +1,5 @@
 
-import { Box, Breadcrumbs, Card, CardContent, CardMedia, CircularProgress, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Button, Card, CardContent, CardMedia, CircularProgress, Stack, Grid, Table, TableBody, TableCell, TableHead, TableRow, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 
 import axios from "axios";
 import { format, parseISO } from "date-fns";
@@ -8,14 +8,15 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { DashboardLayout } from "../../components/dashboard-layout";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Warning } from "@mui/icons-material";
 
 function Event() {
     const router = useRouter();
-    console.log('router', router);
     const [allUserJoin, setAllUserJoin] = useState([])
     const [eventInfor, setEventInfor] = useState()
     const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
-
+    const [open, setOpen] = useState(false);
     useEffect(() => {
         const fetchData = async () => {
             console.log('router1111', router.query.id);
@@ -38,22 +39,57 @@ function Event() {
             </div>
         )
     }
+
+    const handleDelete = async () => {
+        // const fetchData3 = async () => {
+        try {
+            await axios.delete(`https://event-project.herokuapp.com/api/event/${eventInfor.event_id}`);
+
+            // //Noti
+            const bodyRequestNoti = {
+                send_option: "device",
+                topic: "",
+                title: `Cancel the event!!! ${eventInfor.event_name}`,
+                content:"Something bad happened, so we decided to cancel the event"
+              };
+        
+              await axios.post("https://event-project.herokuapp.com/notifications", bodyRequestNoti);
+        } catch (error) {
+            console.log(error);
+        }
+        setOpen(false);
+    };
+
+    //Dialog
+   
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
     return (
         <DashboardLayout>
             <Typography
-                sx={{ mb: 3 }}
+                sx={{ mb: 0, ml: 5 }}
                 variant="h4"
             >
                 Events
             </Typography>
-            <Breadcrumbs aria-label="breadcrumb" sx={{ margin: '10px' }}>
+
+            <Breadcrumbs aria-label="breadcrumb" sx={{ marginBottom: '40px', ml: 5 }}>
                 <Link as={"/"} href="/">
                     Events
                 </Link>
                 <Typography >
                     {eventInfor.event_name}
                 </Typography>
+
             </Breadcrumbs>
+
+
 
             <Box sx={{ marginBottom: '30px', display: 'flex', justifyContent: 'center' }}>
                 <Card sx={{ display: 'flex' }} key={eventInfor.club_id}>
@@ -65,9 +101,82 @@ function Event() {
                     />
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <CardContent sx={{ flex: '1 0 auto' }}>
-                            <Typography component="div" fontSize='50px'>
-                                <Box>{eventInfor.event_name}</Box>
-                            </Typography>
+                            <Grid container>
+                                <Grid item xs={10}>
+                                    <Typography component="div" fontSize='50px'>
+                                        <Box>{eventInfor.event_name}</Box>
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={2}>
+                                    <Button
+                                        onClick={() => handleClickOpen()}
+                                        sx={{
+
+                                            backgroundColor: "#ff0000",
+                                            color: "white",
+                                            margin: "1px",
+                                            ":hover": {
+                                                backgroundColor: "white",
+                                                color: "#ff0000",
+                                                border: "1px solid #ff0000",
+                                                margin: "0px",
+                                            },
+                                        }}
+                                    >
+                                        <DeleteIcon />
+                                    </Button>
+                                </Grid>
+                                <Dialog
+                                    open={open}
+                                    onClose={handleClose}
+                                    aria-describedby="alert-dialog-slide-description"
+                                >
+                                    <DialogTitle sx={{ backgroundColor: "#ff0000", fontSize: "20px", color: "white" }}>
+                                        {" "}
+                                        <Warning /> WARNING!!!{" "}
+                                    </DialogTitle>
+                                    <DialogContent>
+                                        <DialogContentText>
+                                            <Typography>Do you want to Cancel Event: {`${eventInfor.event_name}`} ?</Typography>
+                                        </DialogContentText>
+                                    </DialogContent>
+                                    <DialogActions>
+                                        <Typography
+                                            onClick={handleClose}
+                                            sx={{
+                                                marginRight: "12px",
+                                                cursor: "pointer",
+                                                ":hover": {
+                                                    textDecoration: "underline",
+                                                },
+                                            }}
+                                        >
+                                            cancel
+                                        </Typography>
+                                        <Link  as={"/"} href="/" passHref>
+                                            <Button
+                                                onClick={() => handleDelete()}
+                                                sx={{
+                                                    backgroundColor: "#ff0000",
+                                                    color: "white",
+                                                    margin: "1px",
+                                                    ":hover": {
+                                                        backgroundColor: "white",
+                                                        color: "#ff0000",
+                                                        border: "1px solid #ff0000",
+                                                        margin: "0px",
+                                                    },
+                                                }}
+                                            >
+                                                Remove
+                                            </Button>
+                                        </Link>
+                                    </DialogActions>
+                                </Dialog>
+                            </Grid>
+
+
+
                             <Typography variant="h6" color="text.secondary" component="div">
                                 <Box>Point: 1000</Box>
                             </Typography>
@@ -89,7 +198,7 @@ function Event() {
                         </CardContent>
                     </Box>
                 </Card>
-            </Box>
+            </Box >
 
             <Card sx={{ padding: '30px' }}>
                 <Box display='flex' justifyContent='center' textTransform='uppercase' fontSize='40px'>
@@ -167,7 +276,7 @@ function Event() {
                 </PerfectScrollbar>
             </Card>
 
-        </DashboardLayout>
+        </DashboardLayout >
     )
 }
 

@@ -16,7 +16,7 @@ const Page = () => {
   const router = useRouter();
   router
           .replace({
-            pathname: '/dashboard',
+            pathname: '/home',
           })
           .catch(console.error);
 };

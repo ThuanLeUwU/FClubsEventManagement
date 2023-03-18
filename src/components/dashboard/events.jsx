@@ -30,6 +30,7 @@ export const Events = ({ event }) => {
   const { user } = useAuthContext();
   const [joinEventList, setJohnEventList] = useState([]);
   const [deleteEvent, setDeleteEvent] = useState();
+  const [count,setCount] = useState(0);
   useEffect(() => {
     const fetchData = async () => {
       const responseAllStudentJoinThisEvent = await axios.get(
@@ -40,20 +41,17 @@ export const Events = ({ event }) => {
     fetchData();
   }, []);
 
-  const handleDelete = async () => {
-    // const fetchData3 = async () => {
-      try {
-        axios.delete(`https://event-project.herokuapp.com/api/event/${event.event_id}`);
-        const responseAllStudentJoinThisEvent = await axios.get(
-          `https://event-project.herokuapp.com/api/event/join/${event.event_id}`
-        );
-        setJohnEventList(responseAllStudentJoinThisEvent?.data);
-      } catch (error) {
-        console.log(error);
-      }
-      setOpen(false);
-      
+  useEffect(() => {
+    const fetchData = async () => {
+      const responseAllStudentJoinThisEvent = await axios.get(
+        `https://event-project.herokuapp.com/api/event/join/${event.event_id}`
+      );
+      setJohnEventList(responseAllStudentJoinThisEvent?.data);
     };
+    fetchData();
+  }, [count]);
+
+
 
     // useEffect(() => {
     //   handleDelete();
@@ -63,7 +61,6 @@ export const Events = ({ event }) => {
   // };
 
   const handleClick = () => {
-    console.log("click");
     const fetchData2 = async () => {
       try {
         const currentTime = new Date();
@@ -125,7 +122,7 @@ export const Events = ({ event }) => {
                 <img width="100%" height="400px" src={`${event.img}`} alt="" />
               </div>
               {user.role == "admin" ? (
-                <Link href={`/dashboard/${event.event_id}`} passHref>
+                <Link href={`/home/${event.event_id}`} passHref>
                   <Button
                     sx={{
                       backgroundColor: "#0e6ae9",
@@ -231,103 +228,61 @@ export const Events = ({ event }) => {
             </div>
           </div>
           <div className={`${EventStyles.right_area}`}>
-            <div className={`${EventStyles.class_btn}`}>
-              <Button
-                onClick={() => handleClickOpen()}
-                sx={{
-                  backgroundColor: "#ff0000",
-                  color: "white",
-                  margin: "1px",
-                  ":hover": {
-                    backgroundColor: "white",
-                    color: "#ff0000",
-                    border: "1px solid #ff0000",
-                    margin: "0px",
-                  },
-                }}
-              >
-                <DeleteIcon />
-              </Button>
-              <Dialog
-                open={open}
-                onClose={handleClose}
-                aria-describedby="alert-dialog-slide-description"
-              >
-                <DialogTitle sx={{ backgroundColor: "#ff0000", fontSize: "20px", color: "white" }}>
-                  {" "}
-                  <Warning /> WARNING!!!{" "}
-                </DialogTitle>
-                <DialogContent>
-                  <DialogContentText>
-                    <Typography>Do you want to Cancel Event: {`${event.event_name}`} ?</Typography>
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Typography
-                    onClick={handleClose}
-                    sx={{
-                      marginRight: "12px",
-                      cursor: "pointer",
-                      ":hover": {
-                        textDecoration: "underline",
-                      },
-                    }}
-                  >
-                    cancel
-                  </Typography>
-
-                  <Button
-                    onClick={() => handleDelete(event.event_id)}
-                    sx={{
-                      backgroundColor: "#ff0000",
-                      color: "white",
-                      margin: "1px",
-                      ":hover": {
-                        backgroundColor: "white",
-                        color: "#ff0000",
-                        border: "1px solid #ff0000",
-                        margin: "0px",
-                      },
-                    }}
-                  >
-                    Remove
-                  </Button>
-                </DialogActions>
-              </Dialog>
-            </div>
+          {user.role == "admin" ? (
+          <div className={`${EventStyles.class_btn}`}>
+          {/* <Button
+            onClick={() => handleClickOpen()}
+            sx={{
+              backgroundColor: "#ff0000",
+              color: "white",
+              margin: "1px",
+              ":hover": {
+                backgroundColor: "white",
+                color: "#ff0000",
+                border: "1px solid #ff0000",
+                margin: "0px",
+              },
+            }}
+          >
+            <DeleteIcon />
+          </Button>
+          */}
+        </div>
+          ) : (<></>)}
+            
             <div className={`${EventStyles.right_top}`}>
-              <h1>Event : {`${event.event_name}`} </h1>
+              <Typography color="#ffc44c" fontSize='50px'> Event : {`${event.event_name}`} </Typography>
 
-              <div className={`${EventStyles.reward}`}>Clubs: {`${event.club_name}`}</div>
-              <div className={`${EventStyles.reward}`}>Organizer: {`${event.student_name}`}</div>
-              <div className={`${EventStyles.reward}`}>Mail Contact: {`${event.email}`}</div>
+              <Typography className={`${EventStyles.reward}`} color='white'>Clubs: {`${event.club_name}`}</Typography>
+              <Typography className={`${EventStyles.reward}`}color='white'>Organizer: {`${event.student_name}`}</Typography>
+              <Typography className={`${EventStyles.reward}`}color='white'>Mail Contact: {`${event.email}`}</Typography>
             </div>
             <div className={`${EventStyles.right_bottom}`}>
               <div>
                 <div className={`${EventStyles.time_counter}`}>
-                  <h4>Timeline:</h4>
+                  <Typography color="#ffc44c" fontSize='30px'>Timeline:</Typography>
                   {event.start_date == null ? (
-                    <span className={`${EventStyles.time}`}>Check-in: 19:00:00, 28/01/2023</span>
+                    <Typography color='white' className={`${EventStyles.time}`}>Check-in: 19:00:00, 28/01/2023</Typography>
                   ) : (
-                    <span className={`${EventStyles.time}`}>
+                    <Typography color='white' className={`${EventStyles.time}`}>
                       Check-in: {format(startDate, "HH:mm:ss, dd/MM/yyyy")}
-                    </span>
+                    </Typography>
                   )}
 
                   {event.end_date == null ? (
-                    <span className={`${EventStyles.time}`}>Check-out: 22:00:00, 03-03-2023</span>
+                    <Typography color='white' className={`${EventStyles.time}`}>Check-out: 22:00:00, 03-03-2023</Typography>
                   ) : (
-                    <span className={`${EventStyles.time}`}>
+                    <Typography color='white' className={`${EventStyles.time}`}>
                       Check-out: {format(endDate, "HH:mm:ss, dd/MM/yyyy")}
-                    </span>
+                    </Typography>
                   )}
 
-                  <h4>Location:</h4>
-                  <span className={`${EventStyles.time}`}>{`${event.location}`}</span>
+                  <Typography color="#ffc44c" fontSize='30px'>Location:</Typography>
+                  <Typography color='white' className={`${EventStyles.time}`}>{`${event.location}`}</Typography>
                   {event.description ? (
                     <>
-                      <h4>Description:</h4>
-                      <span className={`${EventStyles.time}`}>{`${event.description}`}</span>
+                      <Typography color="#ffc44c" fontSize='30px'>Description:</Typography>
+                      <Typography color='white' className={`${EventStyles.time}`}>{`${event.description}`}</Typography>
                     </>
                   ) : (
                     <></>

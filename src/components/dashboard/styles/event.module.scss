@@ -13,11 +13,12 @@
 //   background: #0d3f74;
   border-radius: 10px;
 //   box-shadow: 0px 0px 20px 0px rgb(0 0 0 / 10%);
-  display: block;
+  display: flex;
   margin-bottom: 110px;
   margin-top: 50px;
-  //   width: 100%;
+    width: 100%;
   // justify-content: center;
+  // margin-right: 0;
   
 }
 
@@ -136,7 +137,10 @@
   text-align: center;
   @media screen and (min-width: 766px) {
     display: flex;
+    justify-content: space-between;
   }
+
+
 }
 .rl_bottom {
   text-align: center;
@@ -151,6 +155,7 @@
   display: inline-block;
   text-align: start;
 }
+
 
 .time_counter {
     margin-top: 20px;

@@ -18,9 +18,15 @@ import { NavItem } from './nav-item';
 import { useAuthContext } from '../contexts/auth-context';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import EventIcon from '@mui/icons-material/Event';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 const items = [
   {
     href: '/',
+    icon: (<DashboardIcon fontSize="small" />),
+    title: 'Dashboard'
+  },
+  {
+    href: '/events',
     icon: (<EventIcon fontSize="small" />),
     title: 'Event'
   },

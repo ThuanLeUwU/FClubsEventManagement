@@ -1,5 +1,6 @@
 import '../styles/global.css'
 // import 'antd/dist/reset.css'
+import "./../styles/app.css"
 
 
 import { Fragment } from 'react';

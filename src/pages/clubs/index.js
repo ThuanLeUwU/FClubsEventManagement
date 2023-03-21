@@ -5,10 +5,10 @@ import { useEffect, useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { DashboardLayout } from '../../components/dashboard-layout';
 import { useAuthContext } from '../../contexts/auth-context';
-
+import PropTypes from 'prop-types';
 import {
-  Box, Button, Card, CircularProgress, Container, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, Table,
-  TableBody, TableCell, TableHead, TableRow, Typography
+  Box, Button, Card, CircularProgress, Container, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Paper, Select, Table,
+  TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Typography
 } from '@mui/material';
 
 
@@ -62,7 +62,6 @@ const Page = () => {
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
 
   const handleJoin = async () => {
-    console.log('data', clubChoise);
     const currentTime = new Date();
     try {
       const requestBody = {
@@ -71,7 +70,10 @@ const Page = () => {
         role: 'MEMBER',
         join_date: currentTime.toISOString()
       }
-      const response = await axios.post('https://event-project.herokuapp.com/api/club/member', requestBody)
+      await axios.post('https://event-project.herokuapp.com/api/club/member', requestBody)
+
+      const response = await axios.get(`https://event-project.herokuapp.com/api/club/campus/${selected}`)
+      setClubs(response?.data)
 
       const responseGetAllClubThatUserJoin = await axios.get(`https://event-project.herokuapp.com/api/club/student/${user.id}`);
       setAllClubThatUserJoin(responseGetAllClubThatUserJoin?.data);
@@ -98,6 +100,36 @@ const Page = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
+
+  //test
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('name');
+  const [selectedPage, setSelectedPage] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
+
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - club.length + 1.49) : 0;
+
   if (club == undefined) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
@@ -149,80 +181,46 @@ const Page = () => {
                     ))}
                   </Select>
                 </FormControl>
-
               </Box>
             </Box>
-           
+
           </Box>
 
 
           <Box sx={{ mt: 3 }}>
-            <Card>
-              <PerfectScrollbar>
-                <Box sx={{ minWidth: 1050 }}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>
-                          Club Name
-                        </TableCell>
-                        <TableCell>
-                          Abbreviation
-                        </TableCell>
-                        <TableCell>
-                          Established Date
-                        </TableCell>
-                        <TableCell>
-                          Total Members
-                        </TableCell>
-                        {user.role == 'admin' ? (
-                          <TableCell>
-                            Information
-                          </TableCell>
-                        ) : (
-                          <TableCell>
-                            Status
-                          </TableCell>)}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {club.map((club) => {
+            <Paper sx={{ width: '100%', mb: 2 }}>
+              <TableContainer>
+                <Table
+                  sx={{ minWidth: 750 }}
+                  aria-labelledby="tableTitle"
+                  size={'medium'}
+                >
+                  <EnhancedTableHead
+                    order={order}
+                    orderBy={orderBy}
+                    onRequestSort={handleRequestSort}
+                  />
 
-                        const date = parseISO(club.established_date)
+                  <TableBody>
+                    {stableSort(club, getComparator(order, orderBy))
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((club, index) => {
+                        const establishDate = parseISO(club.established_date);
+                        const num = page * rowsPerPage + index + 1;
                         return (
                           <TableRow
-
                             hover
-                            key={club.club_id}
-                            selected={selectedCustomerIds.indexOf(club.id) !== -1}
+                            tabIndex={-1}
+                            key={index}
                           >
-                            <TableCell>
-                              <Box
-                                sx={{
-                                  alignItems: 'center',
-                                  display: 'flex'
-                                }}
-                              >
-                                <Typography
-                                  color="textPrimary"
-                                  variant="body1"
-                                >
-                                  {club.name}
-                                </Typography>
-                              </Box>
-                            </TableCell>
-                            <TableCell>
-                              {club.abbreviation}
-                            </TableCell>
-                            <TableCell>
-                              {format(date, 'dd/MM/yyyy')}
-                            </TableCell>
-                            <TableCell sx={{ textAlign: 'center' }}>
-                              {club.totalMembers}
-                            </TableCell>
+                            <TableCell>{num}  </TableCell>
+                            <TableCell align="left">{club.name}</TableCell>
+                            <TableCell align="left">{club.abbreviation}</TableCell>
+                            <TableCell align="right">{format(establishDate, 'dd/MM/yyyy')}</TableCell>
+                            <TableCell align="right">  {club.totalMembers}</TableCell>
 
                             {user.role == 'admin' ? (
-                              <TableCell>
+                              <TableCell align='right'>
                                 <Link href={`clubs/${club.club_id}`} passHref>
                                   <Button sx={{
                                     backgroundColor: '#0e6ae9', color: 'white', margin: '1px', ':hover': {
@@ -237,7 +235,7 @@ const Page = () => {
                                 </Link>
                               </TableCell>
                             ) : (
-                              <TableCell>
+                              <TableCell align='right'>
                                 {club.campus_id == user.campus ? (
                                   <>
                                     {allClubThatUserJoin.find(thisClub => thisClub.club_id === club.club_id) ? (
@@ -245,15 +243,42 @@ const Page = () => {
                                         Joined
                                       </Button>
                                     ) : (
-                                      <Button onClick={() => handleClickOpen(club)}
-                                        sx={{
-                                          backgroundColor: 'white', color: '#0e6ae9', border: '1px solid #0e6ae9', ':hover': {
-                                            backgroundColor: '#0e6ae9',
-                                            color: 'white',
-                                          }
-                                        }}>
-                                        Join
-                                      </Button>
+                                      <>
+                                        <Button onClick={() => handleClickOpen(club)}
+                                          sx={{
+                                            backgroundColor: 'white', color: '#0e6ae9', border: '1px solid #0e6ae9', ':hover': {
+                                              backgroundColor: '#0e6ae9',
+                                              color: 'white',
+                                            }
+                                          }}>
+                                          Join
+                                        </Button>
+                                        <Dialog
+                                          open={open}
+                                          onClose={handleClose}
+                                          aria-describedby="alert-dialog-slide-description"
+                                        >
+                                          <DialogTitle sx={{ backgroundColor: '#0e6ae9', fontSize: '20px', color: 'white' }}>Do you want to join Club: {`${club.name}`}?</DialogTitle>
+                                          <DialogContent>
+                                          </DialogContent>
+                                          <DialogActions>
+                                            <Typography onClick={handleClose} sx={{
+                                              marginRight: '12px', cursor: 'pointer', ':hover': {
+                                                'textDecoration': 'underline'
+                                              }
+                                            }}>cancel</Typography>
+
+                                            <Button onClick={() => handleJoin(club.club_id)} sx={{
+                                              backgroundColor: '#0e6ae9', color: 'white', margin: '1px', ':hover': {
+                                                backgroundColor: 'white',
+                                                color: '#0e6ae9',
+                                                border: '1px solid #0e6ae9',
+                                                margin: '0px'
+                                              }
+                                            }}><a onClick={() => setClubChoise(club)}>Confirm</a></Button>
+                                          </DialogActions>
+                                        </Dialog>
+                                      </>
                                     )}
                                   </>
                                 ) : (
@@ -263,45 +288,166 @@ const Page = () => {
                                 )}
 
                               </TableCell>)}
-                            <Dialog
-                              open={open}
-                              onClose={handleClose}
-                              aria-describedby="alert-dialog-slide-description"
-                            >
-                              <DialogTitle sx={{ backgroundColor: '#0e6ae9', fontSize: '20px', color: 'white' }}>Do you want to join Club: {`${club.name}`}?</DialogTitle>
-                              <DialogContent>
-                              </DialogContent>
-                              <DialogActions>
-                                <Typography onClick={handleClose} sx={{
-                                  marginRight: '12px', cursor: 'pointer', ':hover': {
-                                    'textDecoration': 'underline'
-                                  }
-                                }}>cancel</Typography>
-
-                                <Button onClick={() => handleJoin(club.club_id)} sx={{
-                                  backgroundColor: '#0e6ae9', color: 'white', margin: '1px', ':hover': {
-                                    backgroundColor: 'white',
-                                    color: '#0e6ae9',
-                                    border: '1px solid #0e6ae9',
-                                    margin: '0px'
-                                  }
-                                }}><a onClick={() => setClubChoise(club)}>Confirm</a></Button>
-                              </DialogActions>
-                            </Dialog>
                           </TableRow>
-                        )
+                        );
                       })}
-                    </TableBody>
-
-                  </Table>
-                </Box>
-              </PerfectScrollbar>
-            </Card>
+                    {emptyRows > 0 && (
+                      <TableRow
+                        style={{
+                          height: (53) * emptyRows,
+                        }}
+                      >
+                        <TableCell colSpan={6} />
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[5, 10]}
+                component="div"
+                count={club.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </Paper>
           </Box>
         </Container>
       </Box >
     </>)
 };
+
+
+
+function descendingComparator(a, b, orderBy) {
+  if (orderBy === 'name') {
+    return compareStrings(a.name, b.name);
+  }
+  if (orderBy === 'establishDate') {
+    const dateA = new Date(a.establishDate);
+    const dateB = new Date(b.establishDate);
+    return dateA.getTime() - dateB.getTime();
+  }
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+
+  return 0;
+}
+
+
+
+function getComparator(order, orderBy) {
+  return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+function compareStrings(a, b) {
+  return a.localeCompare(b);
+}
+
+function stableSort(array, comparator) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) {
+      return order;
+    }
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
+
+const headCells = [
+  {
+    id: 'no',
+    numeric: false,
+    label: 'No.',
+  },
+  {
+    id: 'name',
+    numeric: false,
+    label: 'Name of Club',
+  },
+  {
+    id: 'abbreviation',
+    numeric: false,
+    label: 'Abbreviation',
+  },
+  {
+    id: 'establishDate',
+    numeric: true,
+    label: 'Establish Day',
+  },
+  {
+    id: 'total',
+    numeric: true,
+    label: 'Total',
+  },
+  {
+    id: 'information',
+    numeric: true,
+    label: 'Information',
+  },
+];
+
+
+EnhancedTableHead.propTypes = {
+  onRequestSort: PropTypes.func.isRequired,
+  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+  orderBy: PropTypes.string.isRequired,
+  rowCount: PropTypes.number.isRequired,
+};
+
+function EnhancedTableHead(props) {
+  const { order, orderBy, onRequestSort } = props;
+  const createSortHandler = (property) => (event) => {
+    onRequestSort(event, property);
+  };
+
+  return (
+    <TableHead>
+      <TableRow>
+        {headCells.map((headCell) => (
+          headCell.label === 'No.' || headCell.label === 'Information' || headCell.label === 'Email' ? (
+            <TableCell
+              key={headCell.id}
+              align={headCell.numeric ? 'right' : 'left'}
+              padding='normal'
+            >
+              <Table>
+                {headCell.label}
+              </Table>
+            </TableCell>
+          ) : (
+            <TableCell
+              key={headCell.id}
+              align={headCell.numeric ? 'right' : 'left'}
+              padding='normal'
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : 'asc'}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+              </TableSortLabel>
+            </TableCell>
+          )
+        ))}
+      </TableRow>
+    </TableHead>
+  );
+}
+
+
 
 
 Page.getLayout = (page) => (

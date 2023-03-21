@@ -122,7 +122,7 @@ export const AccountProfile = ({ userInf }) => {
         onChange={handleFileChange}/>
         <Button type='submit'>Upload</Button>
       </FormControl>  */}
-        <Button color="primary" fullWidth variant="text">
+        {/* <Button color="primary" fullWidth variant="text">
           <input type="file" onChange={handleImageChange} />
           {imageDataUrl && <img width={200} src={imageDataUrl} />}
 
@@ -134,7 +134,7 @@ export const AccountProfile = ({ userInf }) => {
                 border: '1px solid #0e6ae9',
                 margin: '0px'
               }}}onClick={ handleSubmit } > submit</Button>
-      </Button>
+      </Button> */}
     </CardActions>
     </Card >
   );

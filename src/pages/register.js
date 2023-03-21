@@ -1,228 +1,91 @@
-import Head from 'next/head';
-import NextLink from 'next/link';
-import Router from 'next/router';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import {
-  Box,
-  Button,
-  Checkbox,
-  Container,
-  FormHelperText,
-  Link,
-  TextField,
-  Typography
-} from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Head from "next/head";
+import { Box, Container, Grid, MenuItem, Typography } from "@mui/material";
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+// import Box from '@mui/material/Box';
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+// import Typography from '@mui/material/Typography';
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+// import Container from '@mui/material/Container';
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Tooltip from "@mui/material/Tooltip";
+// import MenuItem from '@mui/material/MenuItem';
+import AdbIcon from "@mui/icons-material/Adb";
+import { DashboardLayout } from "../components/dashboard-layout";
+import { AdminPanelSettings, ChatRounded, Event, Group } from "@mui/icons-material";
+import { NavItem } from "../components/nav-item";
+// import Notification from '../components/notification/notification';
+// import { Nav, Navbar, NavDropdown, NavItem } from "react-bootstrap";
 
-const Register = () => {
-  const formik = useFormik({
-    initialValues: {
-      email: '',
-      firstName: '',
-      lastName: '',
-      password: '',
-      policy: false
-    },
-    validationSchema: Yup.object({
-      email: Yup
-        .string()
-        .email('Must be a valid email')
-        .max(255)
-        .required(
-          'Email is required'),
-      firstName: Yup
-        .string()
-        .max(255)
-        .required('First name is required'),
-      lastName: Yup
-        .string()
-        .max(255)
-        .required('Last name is required'),
-      password: Yup
-        .string()
-        .max(255)
-        .required('Password is required'),
-      policy: Yup
-        .boolean()
-        .oneOf(
-          [true],
-          'This field must be checked'
-        )
-    }),
-    onSubmit: () => {
-      Router
-        .push('/')
-        .catch(console.error);
-    }
-  });
+const items = [
+  {
+    href: "/notification",
+    icon: <Event fontSize="small" />,
+    title: "Events",
+  },
+  {
+    href: "/register",
+    icon: <Group fontSize="small" />,
+    title: "Clubs",
+  },
+];
 
+const Page = () => {
   return (
     <>
       <Head>
-        <title>
-          Register | Material Kit
-        </title>
+        <title>Event</title>
       </Head>
-      <Box
-        component="main"
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          flexGrow: 1,
-          minHeight: '100%'
-        }}
-      >
-        <Container maxWidth="sm">
-          <NextLink
-            href="/"
-            passHref
-          >
-            <Button
+      <AppBar position="static">
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
+            <Typography
+              variant="h5"
+              noWrap
               component="a"
-              startIcon={<ArrowBackIcon fontSize="small" />}
-            >
-              Dashboard
-            </Button>
-          </NextLink>
-          <form onSubmit={formik.handleSubmit}>
-            <Box sx={{ my: 3 }}>
-              <Typography
-                color="textPrimary"
-                variant="h4"
-              >
-                Create a new account
-              </Typography>
-              <Typography
-                color="textSecondary"
-                gutterBottom
-                variant="body2"
-              >
-                Use your email to create a new account
-              </Typography>
-            </Box>
-            <TextField
-              error={Boolean(formik.touched.firstName && formik.errors.firstName)}
-              fullWidth
-              helperText={formik.touched.firstName && formik.errors.firstName}
-              label="First Name"
-              margin="normal"
-              name="firstName"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              value={formik.values.firstName}
-              variant="outlined"
-            />
-            <TextField
-              error={Boolean(formik.touched.lastName && formik.errors.lastName)}
-              fullWidth
-              helperText={formik.touched.lastName && formik.errors.lastName}
-              label="Last Name"
-              margin="normal"
-              name="lastName"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              value={formik.values.lastName}
-              variant="outlined"
-            />
-            <TextField
-              error={Boolean(formik.touched.email && formik.errors.email)}
-              fullWidth
-              helperText={formik.touched.email && formik.errors.email}
-              label="Email Address"
-              margin="normal"
-              name="email"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              type="email"
-              value={formik.values.email}
-              variant="outlined"
-            />
-            <TextField
-              error={Boolean(formik.touched.password && formik.errors.password)}
-              fullWidth
-              helperText={formik.touched.password && formik.errors.password}
-              label="Password"
-              margin="normal"
-              name="password"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              type="password"
-              value={formik.values.password}
-              variant="outlined"
-            />
-            <Box
+              href=""
               sx={{
-                alignItems: 'center',
-                display: 'flex',
-                ml: -1
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                flexGrow: 1,
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
               }}
             >
-              <Checkbox
-                checked={formik.values.policy}
-                name="policy"
-                onChange={formik.handleChange}
-              />
-              <Typography
-                color="textSecondary"
-                variant="body2"
-              >
-                I have read the
-                {' '}
-                <NextLink
-                  href="#"
-                  passHref
-                >
-                  <Link
-                    color="primary"
-                    underline="always"
-                    variant="subtitle2"
-                  >
-                    Terms and Conditions
-                  </Link>
-                </NextLink>
-              </Typography>
-            </Box>
-            {Boolean(formik.touched.policy && formik.errors.policy) && (
-              <FormHelperText error>
-                {formik.errors.policy}
-              </FormHelperText>
-            )}
-            <Box sx={{ py: 2 }}>
-              <Button
-                color="primary"
-                disabled={formik.isSubmitting}
-                fullWidth
-                size="large"
-                type="submit"
-                variant="contained"
-              >
-                Sign Up Now
-              </Button>
-            </Box>
-            <Typography
-              color="textSecondary"
-              variant="body2"
-            >
-              Have an account?
-              {' '}
-              <NextLink
-                href="/login"
-                passHref
-              >
-                <Link
-                  variant="subtitle2"
-                  underline="hover"
-                >
-                  Sign In
-                </Link>
-              </NextLink>
+              LOGO
             </Typography>
-          </form>
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            {items.map((item,index) => (
+            <div key={index}>
+              <NavItem
+                  icon={item.icon}
+                  href={item.href}
+                  title={item.title}
+                />
+            </div>
+          ))}
+            </Box>
+
+            <Box sx={{ flexGrow: 0 }}>
+              
+            </Box>
+          </Toolbar>
         </Container>
-      </Box>
+      </AppBar>
     </>
   );
 };
 
-export default Register;
+// Page.getLayout = (page) => (
+//   <DashboardLayout>
+//     {page}
+//   </DashboardLayout>
+// );
+
+export default Page;

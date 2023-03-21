@@ -1,5 +1,5 @@
 
-import { Box, Breadcrumbs, Button, Card, CardContent, CardMedia, CircularProgress, Stack, Grid, Table, TableBody, TableCell, TableHead, TableRow, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
+import { Box, Breadcrumbs, Button, Card, CardContent, CardMedia, CircularProgress, TableSortLabel, Stack, Grid, Table, TableBody, TableCell, TableHead, TableRow, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Paper, TableContainer, TablePagination } from "@mui/material";
 
 import axios from "axios";
 import { format, parseISO } from "date-fns";
@@ -10,6 +10,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import { DashboardLayout } from "../../components/dashboard-layout";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Warning } from "@mui/icons-material";
+import PropTypes from 'prop-types';
 
 function Event() {
     const router = useRouter();
@@ -31,6 +32,33 @@ function Event() {
         fetchData()
     }, [])
 
+    //Table
+    const [order, setOrder] = useState('asc');
+    const [orderBy, setOrderBy] = useState('name');
+    const [selected, setSelected] = useState([]);
+    const [page, setPage] = useState(0);
+    const [dense, setDense] = useState(false);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+
+    const handleRequestSort = (event, property) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
+
+
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
+    const emptyRows =
+        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length + 1.49) : 0;
 
     if (allUserJoin == undefined || eventInfor == undefined) {
         return (
@@ -50,10 +78,10 @@ function Event() {
                 send_option: "device",
                 topic: "",
                 title: `Cancel the event!!! ${eventInfor.event_name}`,
-                content:"Something bad happened, so we decided to cancel the event"
-              };
-        
-              await axios.post("https://event-project.herokuapp.com/notifications", bodyRequestNoti);
+                content: "Something bad happened, so we decided to cancel the event"
+            };
+
+            await axios.post("https://event-project.herokuapp.com/notifications", bodyRequestNoti);
         } catch (error) {
             console.log(error);
         }
@@ -61,7 +89,7 @@ function Event() {
     };
 
     //Dialog
-   
+
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -72,6 +100,8 @@ function Event() {
     };
     return (
         <DashboardLayout>
+
+
             <Typography
                 sx={{ mb: 0, ml: 5 }}
                 variant="h4"
@@ -80,7 +110,7 @@ function Event() {
             </Typography>
 
             <Breadcrumbs aria-label="breadcrumb" sx={{ marginBottom: '40px', ml: 5 }}>
-                <Link as={"/"} href="/">
+                <Link as={"/events"} href="/events">
                     Events
                 </Link>
                 <Typography >
@@ -92,7 +122,7 @@ function Event() {
 
 
             <Box sx={{ marginBottom: '30px', display: 'flex', justifyContent: 'center' }}>
-                <Card sx={{ display: 'flex' }} key={eventInfor.club_id}>
+                <Paper key={eventInfor.club_id} display='flex' elevation={4}>
                     <CardMedia
                         component="img"
                         sx={{ width: 151 }}
@@ -102,12 +132,12 @@ function Event() {
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <CardContent sx={{ flex: '1 0 auto' }}>
                             <Grid container>
-                                <Grid item xs={10}>
+                                <Grid item xs={11}>
                                     <Typography component="div" fontSize='50px'>
                                         <Box>{eventInfor.event_name}</Box>
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={2}>
+                                <Grid item xs={1}>
                                     <Button
                                         onClick={() => handleClickOpen()}
                                         sx={{
@@ -153,7 +183,7 @@ function Event() {
                                         >
                                             cancel
                                         </Typography>
-                                        <Link  as={"/"} href="/" passHref>
+                                        <Link as={"/events"} href="/events" passHref>
                                             <Button
                                                 onClick={() => handleDelete()}
                                                 sx={{
@@ -165,6 +195,7 @@ function Event() {
                                                         color: "#ff0000",
                                                         border: "1px solid #ff0000",
                                                         margin: "0px",
+                                                        ml: '10px'
                                                     },
                                                 }}
                                             >
@@ -174,7 +205,6 @@ function Event() {
                                     </DialogActions>
                                 </Dialog>
                             </Grid>
-
 
 
                             <Typography variant="h6" color="text.secondary" component="div">
@@ -195,89 +225,213 @@ function Event() {
                             <Typography variant="h6" color="text.secondary" component="div">
                                 <Box>Location: {eventInfor.location}</Box>
                             </Typography>
+
+                      
                         </CardContent>
                     </Box>
-                </Card>
+                </Paper>
             </Box >
 
             <Card sx={{ padding: '30px' }}>
                 <Box display='flex' justifyContent='center' textTransform='uppercase' fontSize='40px'>
                     Table of Participants
                 </Box>
-                <PerfectScrollbar>
-                    <Box sx={{ minWidth: 1050 }}>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>
-                                        Name of User
-                                    </TableCell>
-                                    <TableCell>
-                                        Department
-                                    </TableCell>
-                                    <TableCell>
-                                        Email
-                                    </TableCell>
-                                    <TableCell>
-                                        Campus
-                                    </TableCell>
-                                    <TableCell>
-                                        Join Date
-                                    </TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {allUserJoin.map((user) => {
-                                    const joinDate = parseISO(user.registration_date)
-                                    return (
-                                        <TableRow
-                                            hover
-                                            key={user.student_id}
-                                            selected={selectedCustomerIds.indexOf(user.student_id) !== -1}
-                                        >
-                                            <TableCell>
-                                                <Box
-                                                    sx={{
-                                                        alignItems: 'center',
-                                                        display: 'flex'
-                                                    }}
-                                                >
-                                                    <Typography
-                                                        color="textPrimary"
-                                                        variant="body1"
-                                                    >
-                                                        {user.student_name}
-                                                    </Typography>
-                                                </Box>
-                                            </TableCell>
-                                            <TableCell>
-                                                {user.dpm_name}
-                                            </TableCell>
-                                            <TableCell>
-                                                {user.email}
-                                            </TableCell>
-                                            <TableCell>
-                                                {user.campus_name}
-                                            </TableCell>
+                <Paper sx={{ width: '100%', mb: 2 }}>
+                    <TableContainer>
+                        <Table
+                            sx={{ minWidth: 750 }}
+                            aria-labelledby="tableTitle"
+                            size={dense ? 'small' : 'medium'}
+                        >
+                            <EnhancedTableHead
+                                order={order}
+                                orderBy={orderBy}
+                                onRequestSort={handleRequestSort}
+                            />
 
-                                            {user.registration_date === null ? (
-                                                <TableCell>22/02/2023</TableCell>
-                                            ) : (
-                                                <TableCell>
-                                                    {format(joinDate, 'dd/MM/yyyy')}
+                            <TableBody>
+                                {stableSort(allUserJoin, getComparator(order, orderBy))
+                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    .map((user, index) => {
+                                        const joinDate = parseISO(user.registration_date);
+                                        return (
+                                            <TableRow
+                                                hover
+                                                tabIndex={-1}
+                                                key={user.student_id}
+                                            >
+                                                <TableCell
+
+                                                    component="th"
+                                                    scope="row"
+                                                    padding="normal"
+                                                >
+                                                    {user.student_name}
                                                 </TableCell>
-                                            )}
-                                        </TableRow>
-                                    )
-                                })}
+                                                <TableCell align="left">{user.email}</TableCell>
+                                                <TableCell align="left">{user.dpm_name}</TableCell>
+                                                <TableCell align="left">{user.campus_name}</TableCell>
+                                                {user.registration_date === null ? (
+                                                    <TableCell align="right">22/02/2023</TableCell>
+                                                ) : (
+                                                    <TableCell align="right">
+                                                        {format(joinDate, 'dd/MM/yyyy')}
+                                                    </TableCell>
+                                                )}
+
+                                            </TableRow>
+                                        );
+                                    })}
+                                {emptyRows > 0 && (
+                                    <TableRow
+                                        style={{
+                                            height: (dense ? 33 : 53) * emptyRows,
+                                        }}
+                                    >
+                                        <TableCell colSpan={6} />
+                                    </TableRow>
+                                )}
                             </TableBody>
                         </Table>
-                    </Box>
-                </PerfectScrollbar>
+                    </TableContainer>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={allUserJoin.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                </Paper>
             </Card>
 
         </DashboardLayout >
     )
+}
+
+
+function descendingComparator(a, b, orderBy) {
+    if (orderBy === 'name') {
+        return compareStrings(a.student_name, b.student_name);
+    }
+    if (orderBy === 'joinDate') {
+        const dateA = new Date(a.registration_date);
+        const dateB = new Date(b.registration_date);
+        return dateA.getTime() - dateB.getTime();
+    }
+    if (orderBy === 'department') {
+        return compareStrings(a.dpm_name, b.dpm_name);
+    }
+    if (orderBy === 'campus') {
+        return compareStrings(a.campus_name, b.campus_name);
+    }
+
+
+    return 0;
+}
+
+
+
+function getComparator(order, orderBy) {
+    return order === 'desc'
+        ? (a, b) => descendingComparator(a, b, orderBy)
+        : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+function compareStrings(a, b) {
+    return a.localeCompare(b);
+}
+
+function stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+        const order = comparator(a[0], b[0]);
+        if (order !== 0) {
+            return order;
+        }
+        return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+}
+
+const headCells = [
+    {
+        id: 'name',
+        numeric: false,
+        label: 'Name of User',
+    },
+    {
+        id: 'email',
+        numeric: false,
+        label: 'Email',
+    },
+    {
+        id: 'department',
+        numeric: false,
+        label: 'Department',
+    },
+    {
+        id: 'campus',
+        numeric: false,
+        label: 'Campus',
+    },
+    {
+        id: 'joinDate',
+        numeric: true,
+        label: 'Join Date',
+    },
+];
+
+
+EnhancedTableHead.propTypes = {
+    onRequestSort: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+    orderBy: PropTypes.string.isRequired,
+    rowCount: PropTypes.number.isRequired,
+};
+
+function EnhancedTableHead(props) {
+    const { order, orderBy, onRequestSort } = props;
+    const createSortHandler = (property) => (event) => {
+        onRequestSort(event, property);
+    };
+
+    return (
+        <TableHead>
+            <TableRow>
+                {headCells.map((headCell) => (
+                    headCell.label === 'Remove' ? (
+                        <TableCell
+                            key={headCell.id}
+                            align={headCell.numeric ? 'right' : 'left'}
+                            padding='normal'
+                        >
+                            <Table>
+                                {headCell.label}
+                            </Table>
+                        </TableCell>
+                    ) : (
+                        <TableCell
+                            key={headCell.id}
+                            align={headCell.numeric ? 'right' : 'left'}
+                            padding='normal'
+                            sortDirection={orderBy === headCell.id ? order : false}
+                        >
+                            <TableSortLabel
+                                active={orderBy === headCell.id}
+                                direction={orderBy === headCell.id ? order : 'asc'}
+                                onClick={createSortHandler(headCell.id)}
+                            >
+                                {headCell.label}
+                            </TableSortLabel>
+                        </TableCell>
+                    )
+
+                ))}
+            </TableRow>
+        </TableHead>
+    );
 }
 
 export default Event;

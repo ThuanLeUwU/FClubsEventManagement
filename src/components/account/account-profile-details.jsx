@@ -1,10 +1,12 @@
 import {
+  Alert,
   Box,
   Card,
   CardContent,
   CardHeader,
   Divider,
   Grid,
+  Snackbar,
   TextField
 } from '@mui/material';
 import { useState } from 'react';
@@ -53,6 +55,7 @@ export const AccountProfileDetails = ({ userInf }) => {
   };
 
   const onSubmit = async (values) => {
+    try{
     if(oldAddress === address && oldPhone === phone ) {
       const bodyRequest = {
         phone: phone,
@@ -60,8 +63,12 @@ export const AccountProfileDetails = ({ userInf }) => {
         birthday: date.format('YYYY-MM-DD'),
       }
       await axios.put(`https://event-project.herokuapp.com/api/student/${userInf.student_id}`, bodyRequest)
+
+      alert("Update successfully!!")
     }
-    
+    } catch (error) {
+      console.log(error);
+    }
   };
 
 

@@ -17,7 +17,7 @@ export const AccountPopover = (props) => {
       console.log(authFirebase);
       if(authFirebase){
       Router
-        .push('/login')
+        .push('/')
         .catch(console.error);
       }
     } catch (err) {

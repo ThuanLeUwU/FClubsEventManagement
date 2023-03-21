@@ -9,3 +9,168 @@
     height: 500px;
     border-image-width: 100%;
 }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+ }
+ 
+ .row-header {
+    margin: 0px auto;
+    padding: 0px auto;
+ }
+ 
+ .row-content {
+    margin: 0px auto;
+    padding: 50px 0px 50px 0px;
+    border-bottom: 1px ridge;
+    /* min-height: min-content; */
+    min-height: 400px;
+    /* display: flex; */
+    text-align: center;
+ }
+ 
+ .footer {
+    background-color: #FFCCFF;
+    margin: 0px auto;
+    margin-top: 30px;
+    padding: 20px 0px 20px 0px;
+ }
+ 
+ .carousel {
+   height: 400px;
+   display: flex;
+   align-items: center;
+   margin-left: 10px;
+   margin-right: 10px;
+   gap: 10px;
+   
+ }
+
+ .grid_item{
+   background-image: linear-gradient(to left, #ffffff, aqua);
+ }
+
+ .link_button{
+
+ }
+
+ .h3 {
+   height: 50px;
+ }
+
+ .title{
+   height: 75px;
+ }
+ .address {
+    font-size: 80%;
+    margin: 0px;
+    color: #0f0f0f;
+    
+ }
+ 
+ .navbar-dark {
+    background-color: #0f0f0f;
+ }
+ 
+ /* .main{
+    background-image: url(/public/assets/images/12214.jpg);
+    background-size: 100%;
+ } */
+ 
+ .nav {
+    opacity: 0.8;
+ }
+ 
+ .nav:hover {
+    opacity: 1.0;
+ }
+ 
+ .header-jum {
+    height: 50%;
+ }
+ 
+ /* .container{
+    background-color: #66FFFF;
+ } */
+ .image{
+   align-items: center;
+ }
+ 
+.card{
+   gap: 10px
+}
+
+ .top-login.no-background {
+    margin-left: 0;
+    padding-left: 0;
+    padding-bottom: 0;
+    background: transparent;
+ }
+ 
+ .top-login {
+    display: inline-block;
+    /* float: left; */
+    position: relative;
+    margin-left: 10px;
+    padding-left: 15px;
+    padding-bottom: 2px;
+    background: rgba(0, 0, 0, 0.1);
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+ }
+ 
+ .login-button {
+    border-radius: 30%;
+ }
+ 
+ .text-title {
+    /* color: #FFCCFF; */
+ }
+ 
+ /* .card-img{
+    height: 400px;
+    width: 400px;
+ } */
+ 
+ .form-feedback {
+    background-image: linear-gradient(to left, #ffffff, aqua);
+    border-radius: 30px;
+ }
+ 
+ .mine {
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+ }
+ 
+ 
+ .price {
+    font-size: 20px;
+ }
+ 
+ .img-discount {
+    background-image: url(/public/assets/images/divider2.png);
+    background-size: cover;
+    width: 100%;
+    height: 220px;
+    margin-top: 30px;
+ 
+ }
+ 
+ 
+ 
+ 
+ @media (max-width: 100%) {
+    .text-discount {
+       padding-top: 5%;
+       padding-left: 50%;
+    }
+ }
+ 
+ @media (max-width: 400px) {
+    .text-discount {
+       padding-top: 150px;
+       padding-left: 20px;
+    }
+ }

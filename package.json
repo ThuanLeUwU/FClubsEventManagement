@@ -54,6 +54,7 @@
     "react-image-preview": "^0.1.0",
     "react-modal": "^3.16.1",
     "react-perfect-scrollbar": "1.5.8",
+    "react-responsive-carousel": "^3.2.23",
     "react-toastify": "^9.1.1",
     "reactjs-popup": "^2.0.5",
     "reactstrap": "^9.1.6",

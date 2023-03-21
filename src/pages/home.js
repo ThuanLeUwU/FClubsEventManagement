@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Box, Container, Grid, MenuItem, Typography } from "@mui/material";
+import { Box, Card, Container, Grid, MenuItem, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 // import Box from '@mui/material/Box';
@@ -19,6 +19,10 @@ import { AdminPanelSettings, ChatRounded, Event, Group } from "@mui/icons-materi
 import { NavItem } from "../components/nav-item";
 import { useAuthContext } from "../contexts/auth-context";
 import axios from "axios";
+import { Carousel } from "antd";
+import { format, parseISO } from "date-fns";
+import Link from "next/link";
+// import { Carousel } from "react-responsive-carousel";
 // import Jumbotron from "react-bootstrap/Jumbotron";
 
 // import Notification from '../components/notification/notification';
@@ -37,9 +41,9 @@ const items = [
   },
 ];
 
-const Page = () => {
+const Home = () => {
   const { user } = useAuthContext();
-  const [event, SetEvent] = useState();
+  const [event, SetEvent] = useState([]);
   console.log(event);
 
   useEffect(() => {
@@ -98,11 +102,67 @@ const Page = () => {
           </Toolbar>
         </Container>
       </AppBar> */}
-      <div className="jumbotron">
-        <div className="container ">
-          <div className="row row-header">
-            <div className="col-12 col-sm-6">Hellu</div>
+      <div className="container">
+        <div className="jumbotron">
+          <div className="container ">
+            <div className="row row-header">
+              <div className="col-12 col-sm-6"></div>
+            </div>
           </div>
+        </div>
+        <div className="row-content">
+          <h1>Events going on </h1>
+
+          {/* <h1>Top 10 students with the highest point </h1> */}
+          <Carousel autoplay slidesToShow={3} className="carousel" >
+            {/* {event.map((item) => {
+                  <div>
+                    <img src={item.img}/>
+                  </div>
+                })} */}
+            {/* <div> */}
+            {/* <h3 >{event.img}</h3> */}
+            {/* </div>
+            <div>
+              <h3>2</h3>
+            </div>
+            <div>
+              <h3 >3</h3>
+            </div>
+            <div>
+              <h3>4</h3>
+            </div> */}
+            {event.map((item, key) => {
+              return (
+                <Card key={key} 
+                className="card">
+                  {console.log(item.event_name)}
+                  <Grid container >
+                    <Grid item xs={8} className="grid_item">
+                      <div className="title">
+                      <h3>{item.event_name} </h3>
+                      <br />
+                      </div>
+                      <div>
+                      Check-in: {format(parseISO(item.start_date), "HH:mm:ss, dd/MM/yyyy")}
+                      <br />
+                      Check-out: {format(parseISO(item.end_date), "HH:mm:ss, dd/MM/yyyy")}
+                      <br /> 
+                      <button className="link_button">
+                        <Link href="/login" className="link_button">More Detail</Link>
+                      </button>
+                      </div>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <img src={item.img} className="image" width="150px" height="150px"></img>
+                    </Grid>
+                    {/* <h1>Top 10 students with the highest point </h1> */}
+                  </Grid>
+                </Card>
+              );
+              // <img src={event.img} width="100%"/>
+            })}
+          </Carousel>
         </div>
       </div>
     </>
@@ -115,4 +175,4 @@ const Page = () => {
 //   </DashboardLayout>
 // );
 
-export default Page;
+export default Home;

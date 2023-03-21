@@ -1,16 +1,16 @@
 
-import { Box, Breadcrumbs, Button, Card, CircularProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Button, Card, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Typography } from "@mui/material";
 
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from "axios";
-import { format, parseISO, compareAsc  } from "date-fns";
+import { format, parseISO, compareAsc } from "date-fns";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import PropTypes from 'prop-types';
-import react, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { DashboardLayout } from "../../components/dashboard-layout";
-
+import { Warning } from "@mui/icons-material";
 function Club() {
     const router = useRouter();
     const [allUserJoin, setAllUserJoin] = useState([])
@@ -18,13 +18,13 @@ function Club() {
     const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
     const [userChoice, setUserChoice] = useState(null);
 
+    //test
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('name');
     const [selected, setSelected] = useState([]);
     const [page, setPage] = useState(0);
     const [dense, setDense] = useState(false);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -39,7 +39,6 @@ function Club() {
     }, [])
 
     const handleDelete = async () => {
-        console.log(userChoice);
         try {
             await axios.delete(`https://event-project.herokuapp.com/api/club/member/${userChoice.student_id}?club_id=${router.query.id}`)
             const id = router.query.id
@@ -62,10 +61,7 @@ function Club() {
 
 
     const handleClickOpen = (user) => {
-        console.log(user);
         setUserChoice(user)
-        console.log(clubInf);
-
         setOpen(true);
     };
 
@@ -85,8 +81,8 @@ function Club() {
         )
     }
 
-    //test
     
+
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
@@ -102,7 +98,7 @@ function Club() {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
-    };  
+    };
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
@@ -149,82 +145,130 @@ function Club() {
                 </Box>
 
                 <Paper sx={{ width: '100%', mb: 2 }}>
-                        <TableContainer>
-                            <Table
-                                sx={{ minWidth: 750 }}
-                                aria-labelledby="tableTitle"
-                                size={dense ? 'small' : 'medium'}
-                            >
-                                <EnhancedTableHead
-                                    order={order}
-                                    orderBy={orderBy}
-                                    onRequestSort={handleRequestSort}
-                                />
+                    <TableContainer>
+                        <Table
+                            sx={{ minWidth: 750 }}
+                            aria-labelledby="tableTitle"
+                            size={dense ? 'small' : 'medium'}
+                        >
+                            <EnhancedTableHead
+                                order={order}
+                                orderBy={orderBy}
+                                onRequestSort={handleRequestSort}
+                            />
 
-                                <TableBody>
-                                    {stableSort(allUserJoin, getComparator(order, orderBy))
-                                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                        .map((user, index) => {
-                                            const joinDate = parseISO(user.join_date);
-                                            return (
-                                                <TableRow
-                                                    hover
-                                                    tabIndex={-1}
-                                                    key={user.student_id}
+                            <TableBody>
+                                {stableSort(allUserJoin, getComparator(order, orderBy))
+                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    .map((user, index) => {
+                                        const joinDate = parseISO(user.join_date);
+                                        return (
+                                            <TableRow
+                                                hover
+                                                tabIndex={-1}
+                                                key={user.student_id}
+                                            >
+                                                <TableCell
+
+                                                    component="th"
+                                                    scope="row"
+                                                    padding="normal"
                                                 >
-                                                    <TableCell
+                                                    {user.student_name}
+                                                </TableCell>
+                                                <TableCell align="left">{user.email}</TableCell>
+                                                <TableCell align="left">{user.phone}</TableCell>
+                                                <TableCell align="right">{format(joinDate, 'dd/MM/yyyy')}</TableCell>
+                                                <TableCell align="right">
+                                                    <Button onClick={() => handleClickOpen(user)}
+                                                        sx={{
+                                                            backgroundColor: '#ff0000', color: 'white', margin: '1px', ':hover': {
+                                                                backgroundColor: 'white',
+                                                                color: '#ff0000',
+                                                                border: '1px solid #ff0000',
+                                                                margin: '0px'
+                                                            }
+                                                        }} >
+                                                        <DeleteIcon />
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                                {emptyRows > 0 && (
+                                    <TableRow
+                                        style={{
+                                            height: (dense ? 33 : 53) * emptyRows,
+                                        }}
+                                    >
+                                        <TableCell colSpan={6} />
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={allUserJoin.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                </Paper>
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-describedby="alert-dialog-slide-description"
+                >
+                    <DialogTitle sx={{ backgroundColor: "#ff0000", fontSize: "20px", color: "white" }}>
+                        {" "}
+                        <Warning /> WARNING!!!{" "}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            <Typography>Do you want to Remove user: {userChoice && `${userChoice.student_name}`}  out of {`${clubInf.club_name}`}?</Typography>
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Typography
+                            onClick={handleClose}
+                            sx={{
+                                marginRight: "12px",
+                                cursor: "pointer",
+                                ":hover": {
+                                    textDecoration: "underline",
+                                },
+                            }}
+                        >
+                            cancel
+                        </Typography>
 
-                                                        component="th"
-                                                        scope="row"
-                                                        padding="normal"
-                                                    >
-                                                        {user.student_name}
-                                                    </TableCell>
-                                                    <TableCell align="left">{user.email}</TableCell>
-                                                    <TableCell align="left">{user.phone}</TableCell>
-                                                    <TableCell align="right">{format(joinDate, 'dd/MM/yyyy')}</TableCell>
-                                                    <TableCell align="right">
-                                                        <Button onClick={() => handleClickOpen(user)}
-                                                            sx={{
-                                                                backgroundColor: '#ff0000', color: 'white', margin: '1px', ':hover': {
-                                                                    backgroundColor: 'white',
-                                                                    color: '#ff0000',
-                                                                    border: '1px solid #ff0000',
-                                                                    margin: '0px'
-                                                                }
-                                                            }} >
-                                                            <DeleteIcon />
-                                                        </Button>
-                                                    </TableCell>
-                                                </TableRow>
-                                            );
-                                        })}
-                                    {emptyRows > 0 && (
-                                        <TableRow
-                                            style={{
-                                                height: (dense ? 33 : 53) * emptyRows,
-                                            }}
-                                        >
-                                            <TableCell colSpan={6} />
-                                        </TableRow>
-                                    )}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                        <TablePagination
-                            rowsPerPageOptions={[5, 10, 25]}
-                            component="div"
-                            count={allUserJoin.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            onPageChange={handleChangePage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
-                        />
-                    </Paper>
+                        <Button
+                            onClick={() => handleDelete()}
+                            sx={{
+                                backgroundColor: "#ff0000",
+                                color: "white",
+                                margin: "1px",
+                                ":hover": {
+                                    backgroundColor: "white",
+                                    color: "#ff0000",
+                                    border: "1px solid #ff0000",
+                                    margin: "0px",
+                                    ml: '10px'
+                                },
+                            }}
+                        >
+                            Remove
+                        </Button>
 
-                </Card>
+                    </DialogActions>
+                </Dialog>
 
-                
+            </Card>
+
+
         </DashboardLayout>
     )
 }
@@ -234,10 +278,10 @@ function descendingComparator(a, b, orderBy) {
     if (orderBy === 'name') {
         return compareStrings(a.student_name, b.student_name);
     }
-    if(orderBy === 'joinDate'){
-            const dateA = new Date(a.join_date);
-            const dateB = new Date(b.join_date);
-            return dateA.getTime() - dateB.getTime();   
+    if (orderBy === 'joinDate') {
+        const dateA = new Date(a.join_date);
+        const dateB = new Date(b.join_date);
+        return dateA.getTime() - dateB.getTime();
     }
     if (b[orderBy] < a[orderBy]) {
         return -1;
@@ -251,7 +295,7 @@ function descendingComparator(a, b, orderBy) {
 
 
 
-function getComparator(order, orderBy) { 
+function getComparator(order, orderBy) {
     return order === 'desc'
         ? (a, b) => descendingComparator(a, b, orderBy)
         : (a, b) => -descendingComparator(a, b, orderBy);
@@ -259,7 +303,7 @@ function getComparator(order, orderBy) {
 
 function compareStrings(a, b) {
     return a.localeCompare(b);
-  }
+}
 
 function stableSort(array, comparator) {
     const stabilizedThis = array.map((el, index) => [el, index]);

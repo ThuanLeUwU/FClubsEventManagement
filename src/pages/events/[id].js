@@ -11,6 +11,7 @@ import { DashboardLayout } from "../../components/dashboard-layout";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Warning } from "@mui/icons-material";
 import PropTypes from 'prop-types';
+import { async } from "@firebase/util";
 
 function Event() {
     const router = useRouter();
@@ -18,6 +19,7 @@ function Event() {
     const [eventInfor, setEventInfor] = useState()
     const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
     const [open, setOpen] = useState(false);
+    const [checkinInfo, setCheckinInfo] = useState(null);
     useEffect(() => {
         const fetchData = async () => {
             console.log('router1111', router.query.id);
@@ -28,6 +30,8 @@ function Event() {
 
             const responseGetClubInfor = await axios.get(`https://event-project.herokuapp.com/api/event/detail/${id}`)
             setEventInfor(responseGetClubInfor?.data)
+
+
         }
         fetchData()
     }, [])
@@ -68,6 +72,13 @@ function Event() {
         )
     }
 
+    const handleClickQR = async () => {
+        const responseCheckinEvent = await axios.get(
+            `https://event-project.herokuapp.com/imagesQrCodeCheckin/event/${eventInfor.event_id}?status=0`
+        );
+        setCheckinInfo(responseCheckinEvent.data);
+    }
+
     const handleDelete = async () => {
         // const fetchData3 = async () => {
         try {
@@ -98,6 +109,13 @@ function Event() {
     const handleClose = () => {
         setOpen(false);
     };
+
+
+    // QR
+
+
+
+
     return (
         <DashboardLayout>
 
@@ -123,39 +141,21 @@ function Event() {
 
             <Box sx={{ marginBottom: '30px', display: 'flex', justifyContent: 'center' }}>
                 <Paper key={eventInfor.club_id} display='flex' elevation={4}>
-                    <CardMedia
-                        component="img"
-                        sx={{ width: 151 }}
-                        image={eventInfor.img}
-                        alt="Live from space album cover"
-                    />
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <CardContent sx={{ flex: '1 0 auto' }}>
-                            <Grid container>
-                                <Grid item xs={11}>
-                                    <Typography component="div" fontSize='50px'>
-                                        <Box>{eventInfor.event_name}</Box>
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={1}>
-                                    <Button
-                                        onClick={() => handleClickOpen()}
-                                        sx={{
+                    <Grid container width='1200px'>
+                        <Grid item xs={3}>
+                            <div className="image">
+                                <img width="250px" height="300px" src={`${eventInfor.img}`} alt="" />
+                            </div>
+                        </Grid>
+                        <Grid item xs={7}>
+                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
 
-                                            backgroundColor: "#ff0000",
-                                            color: "white",
-                                            margin: "1px",
-                                            ":hover": {
-                                                backgroundColor: "white",
-                                                color: "#ff0000",
-                                                border: "1px solid #ff0000",
-                                                margin: "0px",
-                                            },
-                                        }}
-                                    >
-                                        <DeleteIcon />
-                                    </Button>
-                                </Grid>
+
+                                <Typography component="div" fontSize='50px'>
+                                    <Box>{eventInfor.event_name}</Box>
+                                </Typography>
+
+
                                 <Dialog
                                     open={open}
                                     onClose={handleClose}
@@ -204,31 +204,82 @@ function Event() {
                                         </Link>
                                     </DialogActions>
                                 </Dialog>
-                            </Grid>
 
 
-                            <Typography variant="h6" color="text.secondary" component="div">
-                                <Box>Point: 1000</Box>
-                            </Typography>
-                            <Typography variant="h6" color="text.secondary" component="div">
-                                {eventInfor.start_date == null ? (
-                                    <Box>Check-in: Check-in:  19:00:00, 28/01/2023</Box>
-                                ) : (
-                                    <Box>Check-in: {format(parseISO(eventInfor.start_date), 'dd/MM/yyyy')}</Box>)}
-                            </Typography>
-                            <Typography variant="h6" color="text.secondary" component="div">
-                                {eventInfor.end_date == null ? (
-                                    <Box>Check-out: 22:00:00, 03-03-2023</Box>
-                                ) : (
-                                    <Box>Check-out: {format(parseISO(eventInfor.end_date), 'dd/MM/yyyy')}</Box>)}
-                            </Typography>
-                            <Typography variant="h6" color="text.secondary" component="div">
-                                <Box>Location: {eventInfor.location}</Box>
-                            </Typography>
 
-                      
-                        </CardContent>
-                    </Box>
+                                <Typography variant="h6" color="text.secondary" component="div">
+                                    <Box>Point: {eventInfor.point}</Box>
+                                </Typography>
+                                <Typography variant="h6" color="text.secondary" component="div">
+                                    {eventInfor.start_date == null ? (
+                                        <Box>Check-in: Check-in:  19:00:00, 28/01/2023</Box>
+                                    ) : (
+                                        <Box>Check-in: {format(parseISO(eventInfor.start_date), 'dd/MM/yyyy')}</Box>)}
+                                </Typography>
+                                <Typography variant="h6" color="text.secondary" component="div">
+                                    {eventInfor.end_date == null ? (
+                                        <Box>Check-out: 22:00:00, 03-03-2023</Box>
+                                    ) : (
+                                        <Box>Check-out: {format(parseISO(eventInfor.end_date), 'dd/MM/yyyy')}</Box>)}
+                                </Typography>
+                                <Typography variant="h6" color="text.secondary" component="div">
+                                    <Box>Location: {eventInfor.location}</Box>
+                                </Typography>
+                                {checkinInfo === null && (
+                                    <Box justifySelf='end' mt={2}>
+                                        <Button onClick={handleClickQR} sx={{
+
+                                            backgroundColor: "#0E6AE9",
+                                            color: "white",
+                                            margin: "1px",
+                                            ":hover": {
+                                                backgroundColor: "white",
+                                                color: "#0E6AE9",
+                                                border: "1px solid #0E6AE9",
+                                                margin: "0px",
+                                            },
+                                        }}>
+                                            Show QR code
+                                        </Button>
+                                    </Box>
+                                )}
+
+
+                            </Box>
+
+                        </Grid>
+                        <Grid xs={2}>
+                            <Box display='flex' justifyContent='center' mt={2}>
+                                <Button
+                                    onClick={() => handleClickOpen()}
+                                    sx={{
+
+                                        backgroundColor: "#ff0000",
+                                        color: "white",
+                                        margin: "1px",
+                                        ":hover": {
+                                            backgroundColor: "white",
+                                            color: "#ff0000",
+                                            border: "1px solid #ff0000",
+                                            margin: "0px",
+                                        },
+                                    }}
+                                >
+                                    <DeleteIcon />
+                                </Button>
+                            </Box>
+                            {checkinInfo !== null &&
+                                (
+                                    <Box align='center' mt={4}>
+                                        <Typography variant="h6" width='200px'>Check-in QR code</Typography>
+                                        <Box>
+                                            <img src={checkinInfo.data} />
+                                        </Box>
+
+                                    </Box>
+                                )}
+                        </Grid>
+                    </Grid>
                 </Paper>
             </Box >
 

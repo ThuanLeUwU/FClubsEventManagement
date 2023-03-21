@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-// import Button from "react-bootstrap/Button";
-// import Form from "react-bootstrap/Form";
-// import { useForm } from "react-hook-form";
-// import Modal from "react-modal";
+
 import EventStyles from "./styles/event.module.scss";
 import axios from "axios";
 import { useAuthContext } from "../../contexts/auth-context";
@@ -22,15 +19,13 @@ import {
 import { UploadFileOutlined } from "@mui/icons-material";
 import moment from "moment";
 
-// import { Option } from "antd/es/mentions";
-// import locale from "antd/es/date-picker/locale/en_US";
 
 interface IProps {
   onCancel: () => void;
   visible: boolean;
   setVisible: (e: boolean) => void;
   isEdit?: boolean;
- 
+
   // setSuccess: (e: boolean) => void;
 }
 
@@ -42,9 +37,20 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const [selected, setSelected] = useState();
+  const [selectedPoint,setSelectedPoint] = useState('10');
   const [club, setClubs] = useState([]);
   const { Option } = Select;
-
+  const point = [
+    {
+      id: 1, name: '10', value: '10'
+    },
+    {
+      id: 2, name: '20', value: '20'
+    },
+    {
+      id: 3, name: '30', value: '30'
+    },
+  ]
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(
@@ -66,12 +72,12 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
     formData.append("student_id", user.id);
     formData.append("email", user.email);
     formData.append("location", data.location);
-    formData.append("point", data.point);
+    formData.append("point", selectedPoint);
     formData.append("start_date", startDate);
     formData.append("end_date", endDate);
     formData.append("description", data.description);
     try {
-       await axios.post(
+      await axios.post(
         "https://event-project.herokuapp.com/api/event/insert",
         // bodyRequest
         formData,
@@ -150,39 +156,13 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
     setSelected(value);
   }
 
-  // const disabledEndDate = (current) => {
-  //   // Disable dates before today
-  //   return current && current < moment().startOf(startDate);
-  // };
-  // const handleImageChange = (event) => {
-  //   // setImageDataUrl(event.target.files[0]);
-  //   // console.log(event.target.files[0]);
-  //   setFormDataImage(event.file.originFileObj);
-  //   getBase64(event.file.originFileObj, (url) => {
-  //     setImage(url);
-  //   });
-  // };
+  const handleChangePoint = (value) => {
+    setSelectedPoint(value);
+  }
 
-  // const handleSubmit = (data) => {
-  //   console.log(data);
-  // }
+  
 
-  // const handleSubmitImg = async () => {
-  //   console.log("File", imageDataUrl);
-  //   const formData = new FormData();
-  //   formData.append("file", imageDataUrl);
-  //   try {
-  //     const response = await axios.post(
-  //       "https://event-project.herokuapp.com/images",
-  //       formData
-  //     );
 
-  //     console.log("Response: ", response);
-  //     console.log("abc");
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
 
   return (
     <Modal
@@ -231,7 +211,7 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
           <Input />
         </Form.Item>
         <Form.Item
-         
+
           label="Club_Name: "
           name="club_name"
         >
@@ -281,7 +261,13 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
           label="Point:  "
           name="point"
         >
-          <InputNumber />
+          <Select defaultValue={selectedPoint} onChange={handleChangePoint}>
+            {point.map(option => (
+              <Option key={option.id} value={option.value}>
+                {option.name}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
         <Form.Item
           rules={[{ required: true, message: "Please input Date!" }]}
@@ -328,19 +314,4 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
   );
 };
 
-// import { UploadOutlined } from '@ant-design/icons'
-// import {
-//   Button,
-//   Form,
-//   Image,
-//   Input,
-//   InputNumber,
-//   message,
-//   Modal,
-//   Select,
-//   Space,
-//   Upload,
-// } from 'antd'
-// import axios from 'axios'
-// // import { useAuth } from 'config/context/AuthContext'
-//
+

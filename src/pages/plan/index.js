@@ -152,6 +152,8 @@ const Page = () => {
                       const start_Date = parseISO(event.start_date);
                       const end_Date = parseISO(event.end_date);
                       const num = page * rowsPerPage + index + 1;
+                      const campus =
+                        event.club_id < 4 ? "Xavalo" : event.club_id < 7 ? "Hola" : "Fuda";
                       return (
                         <TableRow hover tabIndex={-1} key={event.event_id}>
                           <TableCell>{num}</TableCell>
@@ -174,7 +176,7 @@ const Page = () => {
                           ) : (
                             <TableCell align="right">{format(end_Date, "dd/MM/yyyy")}</TableCell>
                           )}
-
+                          <TableCell align="right"> {campus}</TableCell>
                           <TableCell align="right">{event.location}</TableCell>
                           <TableCell align="right">
                             <Button onClick={() => handleClickOpen(event)}>
@@ -351,6 +353,12 @@ const headCells = [
     label: "Check-out",
   },
   {
+    id: "campus",
+    numeric: true,
+    label: "Campus",
+  },
+
+  {
     id: "location",
     numeric: true,
     label: "Location",
@@ -383,7 +391,8 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) =>
           headCell.label === "Notications" ||
           headCell.label === "Image" ||
-          headCell.label === "Location" ? (
+          headCell.label === "Location" ||
+          headCell.label === "Campus" ? (
             <TableCell
               key={headCell.id}
               align={headCell.numeric ? "right" : "left"}

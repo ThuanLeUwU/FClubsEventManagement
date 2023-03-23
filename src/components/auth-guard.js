@@ -37,7 +37,6 @@ export const AuthGuard = (props) => {
   if(user) {
     return children;
   }
-  console.log("checkedd", checked);
   if (!checked) {
     return <Home />;
   } else {

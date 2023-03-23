@@ -259,13 +259,13 @@ export const Events = ({ event }) => {
 
                   <Typography color="#ffc44c" fontSize='30px'>Location:</Typography>
                   <Typography color='white' className={`${EventStyles.time}`}>{`${event.location}`}</Typography>
-                  {event.description ? (
-                    <>
-                      <Typography color="#ffc44c" fontSize='30px'>Description:</Typography>
-                      <Typography color='white' className={`${EventStyles.time}`}>{`${event.description}`}</Typography>
-                    </>
+                  {event.description !== undefined ? (
+                  <></>
                   ) : (
-                    <></>
+                    <>
+                    <Typography color="#ffc44c" fontSize='30px'>Description:</Typography>
+                    <Typography color='white' className={`${EventStyles.time}`}>{`${event.description}`}</Typography>
+                  </>
                   )}
                 </div>
               </div>

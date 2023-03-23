@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import { AppBar, Avatar, Badge, Box, IconButton, Toolbar, Tooltip, Typography,CircularProgress } from '@mui/material';
+import { AppBar, Avatar, Badge, Box, IconButton, Toolbar, Tooltip, Typography, CircularProgress } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import { Bell as BellIcon } from '../icons/bell';
@@ -38,10 +38,10 @@ export const DashboardNavbar = (props) => {
     } catch (error) {
       console.log(error);
     }
-   
+
   }, [])
 
-  if(user === undefined){
+  if (user === undefined) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
         <CircularProgress />
@@ -89,13 +89,14 @@ export const DashboardNavbar = (props) => {
               <SchoolIcon fontSize="small" />
             </IconButton>
           </Tooltip>
+          {user.role !== 'admin' && (
+            <Tooltip title="Point">
+              <IconButton sx={{ ml: 1 }} >
+                <StarsIcon fontSize="small" />
+                {point !== undefined ? `${point.point}` : '0'}
+              </IconButton>
+            </Tooltip>)}
 
-          <Tooltip title="Point">
-            <IconButton sx={{ ml: 1 }} >
-              <StarsIcon fontSize="small" />
-              {point !== undefined ? `${point.point}` : '0'}
-            </IconButton>
-          </Tooltip>
 
           <Avatar
             onClick={() => setOpenAccountPopover(true)}

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-
+// import Button from "react-bootstrap/Button";
+// import Form from "react-bootstrap/Form";
+// import { useForm } from "react-hook-form";
+// import Modal from "react-modal";
 import EventStyles from "./styles/event.module.scss";
 import axios from "axios";
 import { useAuthContext } from "../../contexts/auth-context";
@@ -19,6 +22,8 @@ import {
 import { UploadFileOutlined } from "@mui/icons-material";
 import moment from "moment";
 
+// import { Option } from "antd/es/mentions";
+// import locale from "antd/es/date-picker/locale/en_US";
 
 interface IProps {
   onCancel: () => void;
@@ -40,6 +45,7 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
   const [selectedPoint,setSelectedPoint] = useState('10');
   const [club, setClubs] = useState([]);
   const { Option } = Select;
+  
   const point = [
     {
       id: 1, name: '10', value: '10'
@@ -57,14 +63,16 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
         `https://event-project.herokuapp.com/api/club/student/${user.id}`
       );
       setClubs(response?.data);
-      setSelected(response?.data[0].club_id)
+      console.log(response?.data);
+      if(response?.data.length !== 0){
+        setSelected(response?.data[0].club_id)
+      };
+      
     };
     fetchData();
   }, []);
 
   const handleSubmit = async (data) => {
-
-
     const formData = new FormData();
     formData.append("file", formDataImage);
     formData.append("name", data.event_name);
@@ -314,4 +322,19 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
   );
 };
 
-
+// import { UploadOutlined } from '@ant-design/icons'
+// import {
+//   Button,
+//   Form,
+//   Image,
+//   Input,
+//   InputNumber,
+//   message,
+//   Modal,
+//   Select,
+//   Space,
+//   Upload,
+// } from 'antd'
+// import axios from 'axios'
+// // import { useAuth } from 'config/context/AuthContext'
+//

@@ -2,7 +2,7 @@
     /* padding: 70px 30px 70px 30px;
     margin: 0px auto; */
     /* background-color: #9575cd !important; */
-    background-image: url(https://storage.googleapis.com/f-club-management.appspot.com/sk2uEvents_Page_Header_2903ed9c-40c1-4f6c-9a69-70bb8415295b.jpg?GoogleAccessId=firebase-adminsdk-601p4%40f-club-management.iam.gserviceaccount.com&Expires=1893456000&Signature=GJFwZ3o9ebIetKtqdyUJQ1R2ESKlxoe%2BNBzZxJFTkGrlSI6zc9%2Fb1ib7zoxFp%2BY8Ps1EdskmYtQXD9VWQenfFisJexYMJdNClX2pIdiFHAglshce1uwmdOECzQ%2FzHnVLGsTINsm0SBenCTT%2F6%2BHP1LLOS3gjixApDyiyuTSumburlnEZXYbtwZ0Q0vgbwGunf1LdrFH7r3WI%2F4lho2m8s2Ir%2BH7pkRvdaH5ao7HZt8aNg0pEYyU6C3bQORIy9eSCE8KeC1TaeiBangRZIT5TQ3tJmebPHxlexj7gljTQpjTecrSupWanJb0Mf5Nn2023sUspQuttZqxHt62ZdP1bnA%3D%3D);
+    background-image: url(https://storage.googleapis.com/f-club-management.appspot.com/336374596_1303419743864146_2244859197252892457_n.jpg?GoogleAccessId=firebase-adminsdk-601p4%40f-club-management.iam.gserviceaccount.com&Expires=1893456000&Signature=DNJ7fXUjH1lGQSXarnKYH3NVy%2BiQEUam8BV%2FWhhj%2Bbkt%2FlK5I3qIWGQ9aLyPx0xv7Yt1UmH7nzhRqVBXbjvv9IBYwfCqhkn65%2FuMg5roO61P3dX5auvFWZisF2AmfCpWelZ1MGQQVnQhVloAfFstbWJ%2FuEjqKm0JzClsawE2%2F1kC5H3066npcaa9YDSPo2TaWBDjIVIjkmYvUqCOmkzIkOPsAceKq3dREPzHy0L1PTJkOKK2Awe474Z%2Br1WHjv3NQ4gkXlA1Kg9hh0hYST58h9%2F1rmTv68W1QhNV5vZ3kZRzX8BG2xy7183Uc5n%2BAdV0ckPpze%2BGBZO8kYZ0lmHstA%3D%3D);
     background-size: 100% 500px;
     background-repeat: no-repeat;
     /* color: floralwhite; */
@@ -51,9 +51,11 @@
    background-image: linear-gradient(to left, #ffffff, aqua);
  }
 
- .link_button{
-
- }
+.link_button {
+   border: 2px solid red;
+   border-radius: 25px;
+   font-size: 24px;
+}
 
  .h3 {
    height: 50px;

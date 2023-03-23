@@ -9,6 +9,7 @@ import { useAuthContext } from '../../contexts/auth-context';
 import { getCookie } from 'cookies-next';
 import { CreateEvent } from '../../components/dashboard/createEvent';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
+import { useRouter } from 'next/router';
 
 const Page = () => {
   const { user } = useAuthContext();
@@ -17,8 +18,8 @@ const Page = () => {
   const [selected, setSelected] = useState(user ? (user.campus) : 1);
   const [visible, setVisible] = useState(false);
   const [page, setPage] = useState(1);
-  const [selectItemsPerPage, setSelectItemPerPage] = useState(10);
-
+  const [selectItemsPerPage, setSelectItemPerPage] = useState(5);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,11 +35,6 @@ const Page = () => {
 
         setCampus(responseAllCampus?.data)
 
-        if (user.role == 'members') {
-          const responseGetAllClubThatUserJoin = await axios.get(`https://event-project.herokuapp.com/api/club/student/${user.id}`)
-          setAllClubThatUserJoin(responseGetAllClubThatUserJoin?.data)
-        }
-
       } catch (error) {
         console.log(error);
       }
@@ -47,17 +43,32 @@ const Page = () => {
   }, [])
 
 
+
+
+  // Re-render the component when the URL changes
+  useEffect(() => {
+    router.events.on('routeChangeComplete', () => {
+      console.log('re-render');
+    });
+
+    // Clean up the event listener
+    return () => {
+      router.events.off('routeChangeComplete');
+    };
+  }, []);
+
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const responseEvent = await axios.get(`https://event-project.herokuapp.com/api/event/${selected}?status=1&is_approved=1`)
-
-        console.log('response nè', responseEvent);
         setEvents(responseEvent?.data)
+       
       } catch (error) {
         console.log(error);
       }
     }
+    setPage(1)
     fetchEvents()
   }, [selected])
 
@@ -74,22 +85,22 @@ const Page = () => {
 
 
   //Search
-  const [searchTerm, setSearchTerm] = useState('');
-  const [resultSearch, setResultSearch] = useState([])
-  const handleSearch = (event) => {
-    const searchTerm = event.target.value.toLowerCase();
 
-    console.log('log', event.target.value);
+  // const [resultSearch, setResultSearch] = useState([])
+  // const handleSearch = (event) => {
+  //   const searchTerm = event.target.value.toLowerCase();
 
-    if (searchTerm.trim().length > 0) {
-      setResultSearch(events.filter((thisEvent) =>
-        thisEvent.event_name.toLowerCase().includes(searchTerm))
-      );
-    } else {
-      setResultSearch([]);
-    }
-    console.log(resultSearch);
-  };
+  //   console.log('log', event.target.value);
+
+  //   if (searchTerm.trim().length > 0) {
+  //     setResultSearch(events.filter((thisEvent) =>
+  //       thisEvent.event_name.toLowerCase().includes(searchTerm))
+  //     );
+  //   } else {
+  //     setResultSearch([]);
+  //   }
+  //   console.log(resultSearch);
+  // };
 
   if (events == undefined || user === undefined) {
     return (
@@ -115,7 +126,7 @@ const Page = () => {
         }}
       >
         <Container maxWidth={false}>
-          <Stack direction='row' zIndex={2} spacing={2} sx={{ m: 1, paddingRight: '10px', backgroundColor: 'white', border: '2px solid black', width: '240px', py: 1, px: 1.5, borderRadius: '30px', position: 'fixed', right: 3, top: '80px' }}>
+          <Stack direction='row' zIndex={2} width={user.role === 'admin' ? '125px' : '260px'} spacing={2} sx={{ m: 1, paddingRight: '10px', backgroundColor: 'white', border: '2px solid black', py: 1, px: 1.5, borderRadius: '30px', position: 'fixed', right: 3, top: '80px' }}>
             {/* <TextField
               label="Search by Event's name"
               variant="outlined"
@@ -135,31 +146,35 @@ const Page = () => {
                 ))}
               </Select>
             </FormControl>
+            {user.role !== 'admin' && (
+              <>
+                <Button
+                  onClick={() => setVisible(true)}
+                  sx={{
+                    backgroundColor: "#0E6AE9",
+                    color: "white",
+                    margin: "1px",
+                    ":hover": {
+                      backgroundColor: "white",
+                      color: "#0E6AE9",
+                      border: "1px solid #0E6AE9"
+                    },
+                  }}>
+                  <ControlPointIcon fontSize='small' />
+                  <Typography variant='h6'> Events</Typography>
+                </Button>
 
-            <Button
-              onClick={() => setVisible(true)}
-              sx={{
-                backgroundColor: "#0E6AE9",
-                color: "white",
-                margin: "1px",
-                ":hover": {
-                  backgroundColor: "white",
-                  color: "#0E6AE9",
-                  border: "1px solid #0E6AE9"
-                },
-              }}>
-              <ControlPointIcon fontSize='small' />
-              <Typography variant='h6'> Events</Typography>
-            </Button>
-           
-            <CreateEvent
-              visible={visible}
-              setVisible={setVisible}
-              onCancel={() => {
-                setVisible(false);
-              }}
-              isEdit={false}
-            />
+                <CreateEvent
+                  visible={visible}
+                  setVisible={setVisible}
+                  onCancel={() => {
+                    setVisible(false);
+                  }}
+                  isEdit={false}
+                />
+              </>
+            )}
+
 
 
 
@@ -197,9 +212,6 @@ const Page = () => {
             <Stack pr='120px' display='flex' justifyItems='center' direction='column' width='100%'>
 
               <Stack direction='row' display='flex' justifyContent='center'>
-
-
-
               </Stack>
             </Stack>
           )}

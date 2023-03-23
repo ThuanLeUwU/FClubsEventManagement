@@ -6,12 +6,14 @@ import axios from 'axios';
 import { setCookie, deleteCookie, getCookie } from 'cookies-next';
 import axiosWrapper from '../utils/axiosWrapper';
 import { async } from '@firebase/util';
+import { useRouter } from 'next/router';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = (props) => {
   const { children } = props;
 
+  const router = useRouter();
 
   const [user, setUser] = useState()
   const [campus, setCampus] = useState()
@@ -56,7 +58,7 @@ export const AuthProvider = (props) => {
       setCookie('accessToken', response?.data?.access_token)
 
       setUser(response?.data?.data)
-
+      router.replace('/')
     } catch (error) {
       console.log(error);
       // if(error.code == "ERR_BAD_REQUEST"){

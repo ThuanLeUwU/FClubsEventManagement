@@ -111,7 +111,7 @@ const Home = () => {
           </div>
         </div>
         <div className="row-content">
-          <h1>Events going on </h1>
+          <h1>Events On-going </h1>
 
           {/* <h1>Top 10 students with the highest point </h1> */}
           <Carousel autoplay slidesToShow={3} className="carousel" >
@@ -136,7 +136,7 @@ const Home = () => {
               return (
                 <Card key={key} 
                 className="card">
-                  {console.log(item.event_name)}
+                  {/* {console.log(item.event_name)} */}
                   <Grid container >
                     <Grid item xs={8} className="grid_item">
                       <div className="title">
@@ -148,9 +148,9 @@ const Home = () => {
                       <br />
                       Check-out: {format(parseISO(item.end_date), "HH:mm:ss, dd/MM/yyyy")}
                       <br /> 
-                      <button className="link_button">
-                        <Link href="/login" className="link_button">More Detail</Link>
-                      </button>
+                      <Button className="link_button" >
+                        <Link href="/login">More Detail</Link>
+                      </Button>
                       </div>
                     </Grid>
                     <Grid item xs={4}>

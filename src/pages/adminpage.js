@@ -1,14 +1,13 @@
-import { Box, Card, CircularProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Typography, Button } from '@mui/material';
+import { Box, Card, CircularProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Typography } from '@mui/material';
 import Head from 'next/head';
 // import { Budget } from '../components/dashboard/budget';
+import axios from 'axios';
+import { getCookie } from 'cookies-next';
+import { format, parseISO } from 'date-fns';
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { DashboardLayout } from '../components/dashboard-layout';
 import { useAuthContext } from '../contexts/auth-context';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import axios from 'axios';
-import { getCookie } from 'cookies-next';
-import PropTypes from 'prop-types';
-import { format, parseISO } from 'date-fns';
 const Page = () => {
   const { user } = useAuthContext();
   const [allUser, setAllUser] = useState([]);
@@ -117,7 +116,7 @@ const Page = () => {
                             <img width="40px" height="60px" src={`${event.img}`} alt="" />
                           </div>
                         </TableCell> */}
-                          <TableCell align="left">{user.name}</TableCell>
+                          <TableCell align="left">{user.student_name}</TableCell>
                           <TableCell align="left">{user.email}</TableCell>
                           <TableCell align="left">{user.phone}</TableCell>
 
@@ -130,6 +129,7 @@ const Page = () => {
                             </TableCell>
                           )}
 
+                          <TableCell align="right">{user.campus_name}</TableCell>
                           <TableCell align="right">{user.address}</TableCell>
                           <TableCell align="right">{user.role === 'admin' ? 'admin' : 'member'} </TableCell>
                         </TableRow>
@@ -169,14 +169,16 @@ const Page = () => {
 
 function descendingComparator(a, b, orderBy) {
   if (orderBy === 'name') {
-    return compareStrings(a.name, b.name);
+    return compareStrings(a.student_name, b.student_name);
   }
-
+  if (orderBy === 'campus') {
+    return compareStrings(a.campus_name, b.campus_name);
+  }
   if (orderBy === 'birthday') {
-    if(a.birthDate === null){
+    if (a.birthDate === null) {
       a.birthDate = '20/3/2001'
     }
-    if(b.birthDate === null){
+    if (b.birthDate === null) {
       b.birthDate = '20/3/2001'
     }
     const dateA = new Date(a.birthday);
@@ -249,6 +251,11 @@ const headCells = [
     id: 'birthday',
     numeric: true,
     label: 'Birth Day',
+  },
+  {
+    id: 'campus',
+    numeric: true,
+    label: 'Campus',
   },
   {
     id: 'address',

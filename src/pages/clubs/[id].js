@@ -18,13 +18,13 @@ function Club() {
     const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
     const [userChoice, setUserChoice] = useState(null);
 
-     //test
-     const [order, setOrder] = useState('asc');
-     const [orderBy, setOrderBy] = useState('name');
-     const [selected, setSelected] = useState([]);
-     const [page, setPage] = useState(0);
-     const [dense, setDense] = useState(false);
-     const [rowsPerPage, setRowsPerPage] = useState(5);
+    //test
+    const [order, setOrder] = useState('asc');
+    const [orderBy, setOrderBy] = useState('name');
+    const [selected, setSelected] = useState([]);
+    const [page, setPage] = useState(0);
+    const [dense, setDense] = useState(false);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -81,7 +81,7 @@ function Club() {
         )
     }
 
-   
+    
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -370,7 +370,10 @@ function EnhancedTableHead(props) {
                             padding='normal'
                         >
                             <Table>
-                                {headCell.label}
+                                <Typography variant="h6">
+                                    {headCell.label}
+                                </Typography>
+
                             </Table>
                         </TableCell>
                     ) : (
@@ -385,7 +388,10 @@ function EnhancedTableHead(props) {
                                 direction={orderBy === headCell.id ? order : 'asc'}
                                 onClick={createSortHandler(headCell.id)}
                             >
-                                {headCell.label}
+                                <Typography variant="h6">
+                                    {headCell.label}
+                                </Typography>
+
                             </TableSortLabel>
                         </TableCell>
                     )

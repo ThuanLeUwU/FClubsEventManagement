@@ -265,7 +265,6 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
             </Select>
         </Form.Item> */}
         <Form.Item
-          rules={[{ required: true, message: "Please input Date!" }]}
           label="Point:  "
           name="point"
         >

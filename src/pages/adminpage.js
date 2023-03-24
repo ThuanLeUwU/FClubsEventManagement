@@ -109,29 +109,31 @@ const Page = () => {
                           tabIndex={-1}
                           key={index}
                         >
-                          <TableCell>{num}
+                          <TableCell><Typography variant='body1'>{num}</Typography>
                           </TableCell>
                           {/* <TableCell>
                           <div className="image">
                             <img width="40px" height="60px" src={`${event.img}`} alt="" />
                           </div>
                         </TableCell> */}
-                          <TableCell align="left">{user.student_name}</TableCell>
-                          <TableCell align="left">{user.email}</TableCell>
-                          <TableCell align="left">{user.phone}</TableCell>
+                          <TableCell align="left"><Typography variant='body1'>{user.student_name}</Typography></TableCell>
+                          <TableCell align="left"><Typography variant='body1'>{user.email}</Typography></TableCell>
+                          <TableCell align="left"><Typography variant='body1'>{user.phone}</Typography></TableCell>
 
 
                           {user.birthday === null ? (
-                            <TableCell align="right">20/03/2001</TableCell>
+                            <TableCell align="right"><Typography variant='body1'>20/03/2001</Typography></TableCell>
                           ) : (
                             <TableCell align="right">
-                              {format(birthDate, 'dd/MM/yyyy')}
+                              <Typography variant='body1'>
+                                {format(birthDate, 'dd/MM/yyyy')}
+                              </Typography>
                             </TableCell>
                           )}
 
-                          <TableCell align="right">{user.campus_name}</TableCell>
-                          <TableCell align="right">{user.address}</TableCell>
-                          <TableCell align="right">{user.role === 'admin' ? 'admin' : 'member'} </TableCell>
+                          <TableCell align="right"><Typography variant='body1'>{user.campus_name}</Typography></TableCell>
+                          <TableCell align="right"><Typography variant='body1'>{user.address}</Typography></TableCell>
+                          <TableCell align="right"><Typography variant='body1'>{user.role === 'admin' ? 'admin' : 'member'} </Typography></TableCell>
                         </TableRow>
                       );
                     })}
@@ -297,7 +299,10 @@ function EnhancedTableHead(props) {
               padding='normal'
             >
               <Table>
-                {headCell.label}
+                <Typography variant='h6'>
+                  {headCell.label}
+                </Typography>
+
               </Table>
             </TableCell>
           ) : (
@@ -308,14 +313,19 @@ function EnhancedTableHead(props) {
               sortDirection={orderBy === headCell.id ? order : false}
             >
               {headCell.id === 'no' ? (
-                headCell.label
+                <Typography variant='h6'>
+                  {headCell.label}
+                </Typography>
+
               ) : (
                 <TableSortLabel
                   active={orderBy === headCell.id}
                   direction={orderBy === headCell.id ? order : 'asc'}
                   onClick={createSortHandler(headCell.id)}
                 >
-                  {headCell.label}
+                  <Typography variant='h6'>
+                    {headCell.label}
+                  </Typography>
                 </TableSortLabel>
               )}
             </TableCell>

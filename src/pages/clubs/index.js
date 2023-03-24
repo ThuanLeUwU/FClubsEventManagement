@@ -8,13 +8,14 @@ import { useAuthContext } from '../../contexts/auth-context';
 import PropTypes from 'prop-types';
 import {
   Box, Button, Card, CircularProgress, Container, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Paper, Select, Table,
-  TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Typography
+  TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Tooltip, Typography
 } from '@mui/material';
 
 
 
 import Link from 'next/link';
 import { getCookie } from 'cookies-next';
+import { width } from '@mui/system';
 const Page = () => {
   const { user } = useAuthContext();
   const [campus, setCampus] = useState([]);
@@ -213,11 +214,20 @@ const Page = () => {
                             tabIndex={-1}
                             key={index}
                           >
-                            <TableCell>{num}  </TableCell>
-                            <TableCell align="left">{club.name}</TableCell>
-                            <TableCell align="left">{club.abbreviation}</TableCell>
-                            <TableCell align="right">{format(establishDate, 'dd/MM/yyyy')}</TableCell>
-                            <TableCell align="right">  {club.totalMembers}</TableCell>
+                            <TableCell><Typography variant='body1'>{num}</Typography>  </TableCell>
+                            <TableCell>
+                              <Box height={120} width={120}>
+                                <Tooltip followCursor arrow title={
+                                  <img src={club.img} height={200} width={200} />
+                                }>
+                                  <img src={club.img} height={110} width={110} style={{ borderRadius: '50%' }} />
+                                </Tooltip>
+                              </Box>
+                            </TableCell>
+                            <TableCell align="left"><Typography variant='body1'>{club.name}</Typography></TableCell>
+                            <TableCell align="left"><Typography variant='body1'>{club.abbreviation}</Typography></TableCell>
+                            <TableCell align="right"><Typography variant='body1'>{format(establishDate, 'dd/MM/yyyy')}</Typography></TableCell>
+                            <TableCell align="right">  <Typography variant='body1'>{club.totalMembers}</Typography></TableCell>
 
                             {user.role == 'admin' ? (
                               <TableCell align='right'>
@@ -325,18 +335,22 @@ function descendingComparator(a, b, orderBy) {
   if (orderBy === 'name') {
     return compareStrings(a.name, b.name);
   }
+
   if (orderBy === 'establishDate') {
     const dateA = new Date(a.establishDate);
     const dateB = new Date(b.establishDate);
     return dateA.getTime() - dateB.getTime();
   }
+  if(orderBy === 'total'){
+    return compareInts(a.totalMembers, b.totalMembers)
+  }
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
+
   if (b[orderBy] > a[orderBy]) {
     return 1;
   }
-
   return 0;
 }
 
@@ -351,6 +365,12 @@ function getComparator(order, orderBy) {
 function compareStrings(a, b) {
   return a.localeCompare(b);
 }
+
+function compareInts(a, b) {
+  return a - b;
+}
+
+
 
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -369,6 +389,11 @@ const headCells = [
     id: 'no',
     numeric: false,
     label: 'No.',
+  },
+  {
+    id: 'img',
+    numeric: false,
+    label: 'Image',
   },
   {
     id: 'name',
@@ -415,15 +440,18 @@ function EnhancedTableHead(props) {
     <TableHead>
       <TableRow>
         {headCells.map((headCell) => (
-          headCell.label === 'No.' || headCell.label === 'Information' || headCell.label === 'Email' ? (
+          headCell.label === 'No.' || headCell.label === 'Information' || headCell.label === 'Email' || headCell.label === 'Image' ? (
             <TableCell
               key={headCell.id}
               align={headCell.numeric ? 'right' : 'left'}
               padding='normal'
             >
-              <Table>
-                {headCell.label}
-              </Table>
+    
+                <Typography variant='h6'>
+                  {headCell.label}
+                </Typography>
+
+        
             </TableCell>
           ) : (
             <TableCell
@@ -437,7 +465,8 @@ function EnhancedTableHead(props) {
                 direction={orderBy === headCell.id ? order : 'asc'}
                 onClick={createSortHandler(headCell.id)}
               >
-                {headCell.label}
+                <Typography variant='h6'>   {headCell.label}</Typography>
+
               </TableSortLabel>
             </TableCell>
           )

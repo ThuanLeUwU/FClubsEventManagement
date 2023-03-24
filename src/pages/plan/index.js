@@ -1,29 +1,20 @@
+
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import {
   Box,
   Button,
   CircularProgress,
-  Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Paper,
-  Table,
+  Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Paper, Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
-  TableRow,
-  TableSortLabel,
-  Typography,
+  TablePagination, TableRow, TableSortLabel, Typography
 } from "@mui/material";
 import axios from "axios";
 import { format, parseISO } from "date-fns";
 import Head from "next/head";
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 import { useEffect, useState } from "react";
 import { DashboardLayout } from "../../components/dashboard-layout";
 import { useAuthContext } from "../../contexts/auth-context";
@@ -36,13 +27,15 @@ const Page = () => {
   const [count, setCount] = useState(0);
   const [open, setOpen] = useState(false);
 
-  //Table
-  const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("name");
+
+//Table
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('name');
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
 
   const fetchEvent = async () => {
     try {
@@ -58,6 +51,8 @@ const Page = () => {
   useEffect(() => {
     fetchEvent();
   }, [count]);
+
+
 
   const handleClickOpen = (event) => {
     setEventChoose(event);
@@ -80,18 +75,13 @@ const Page = () => {
 
   const handleConfirm = (event) => {
     const fetchData = async () => {
-      await axios.put(`https://event-project.herokuapp.com/api/event/${eventChoose.event_id}`);
+
+      await axios.put(`https://event-project.herokuapp.com/api/event/${eventChoose.event_id}`)
       const bodyRequestNoti = {
         send_option: "device",
         topic: "my-topic",
         title: eventChoose.event_name,
-        content:
-          "Location:" +
-          eventChoose.location +
-          " From: " +
-          eventChoose.start_date +
-          " To: " +
-          eventChoose.end_date,
+        content: "Location:" + eventChoose.location + " From: " + eventChoose.start_date + " To: " + eventChoose.end_date,
       };
 
       await axios.post("https://event-project.herokuapp.com/notifications", bodyRequestNoti);
@@ -102,11 +92,16 @@ const Page = () => {
     setOpen(false);
   };
 
+
+  
+
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
+
+
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -117,7 +112,8 @@ const Page = () => {
     setPage(0);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - events.length + 1.49) : 0;
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - events.length + 1.49) : 0;
   return (
     <>
       <Head>
@@ -128,17 +124,17 @@ const Page = () => {
         sx={{
           flexGrow: 1,
           py: 8,
-          p: 4,
+          p: 4
         }}
       >
-        <Container maxWidth={false}>
+        <Container maxWidth={false} >
           <Typography variant="h2"> Table Of Events Plan</Typography>
-          <Paper sx={{ width: "100%" }}>
+          <Paper sx={{ width: '100%' }}>
             <TableContainer>
               <Table
                 sx={{ minWidth: 900 }}
                 aria-labelledby="tableTitle"
-                size={dense ? "small" : "medium"}
+                size={dense ? 'small' : 'medium'}
               >
                 <EnhancedTableHead
                   order={order}
@@ -152,11 +148,15 @@ const Page = () => {
                       const start_Date = parseISO(event.start_date);
                       const end_Date = parseISO(event.end_date);
                       const num = page * rowsPerPage + index + 1;
-                      const campus =
-                        event.club_id < 4 ? "Xavalo" : event.club_id < 7 ? "Hola" : "Fuda";
+                      const campus = event.club_id < 4 ? 'Xavalo' : ( event.club_id < 7 ? 'Hola' : 'Fuda')
                       return (
-                        <TableRow hover tabIndex={-1} key={event.event_id}>
-                          <TableCell>{num}</TableCell>
+                        <TableRow
+                          hover
+                          tabIndex={-1}
+                          key={event.event_id}
+                        >
+                          <TableCell>{num}
+                          </TableCell>
                           <TableCell>
                             <div className="image">
                               <img width="40px" height="60px" src={`${event.img}`} alt="" />
@@ -169,14 +169,18 @@ const Page = () => {
                           {event.start_date === null ? (
                             <TableCell align="right">30/03/2023</TableCell>
                           ) : (
-                            <TableCell align="right">{format(start_Date, "dd/MM/yyyy")}</TableCell>
+                            <TableCell align="right">
+                              {format(start_Date, 'dd/MM/yyyy')}
+                            </TableCell>
                           )}
                           {event.end_date === null ? (
                             <TableCell align="right">31/03/2023</TableCell>
                           ) : (
-                            <TableCell align="right">{format(end_Date, "dd/MM/yyyy")}</TableCell>
+                            <TableCell align="right">
+                              {format(end_Date, 'dd/MM/yyyy')}
+                            </TableCell>
                           )}
-                          <TableCell align="right"> {campus}</TableCell>
+                          <TableCell align="right"> { campus}</TableCell>
                           <TableCell align="right">{event.location}</TableCell>
                           <TableCell align="right">
                             <Button onClick={() => handleClickOpen(event)}>
@@ -191,17 +195,13 @@ const Page = () => {
                     onClose={handleClose}
                     aria-describedby="alert-dialog-slide-description"
                   >
-                    <DialogTitle
-                      sx={{ backgroundColor: "#0e6ae9", fontSize: "20px", color: "white" }}
-                    >
+                    <DialogTitle sx={{ backgroundColor: "#0e6ae9", fontSize: "20px", color: "white" }}>
                       {" "}
                       <NotificationsActiveIcon /> Notications!!!{" "}
                     </DialogTitle>
                     <DialogContent>
                       <DialogContentText>
-                        <Typography>
-                          Do you want to Public Event: {`${eventChoose.event_name}`} ?
-                        </Typography>
+                        <Typography>Do you want to Public Event: {`${eventChoose.event_name}`} ?</Typography>
                       </DialogContentText>
                     </DialogContent>
                     <DialogActions>
@@ -232,24 +232,38 @@ const Page = () => {
                           },
                         }}
                       >
+
                         Confirm
                       </Button>
+
                     </DialogActions>
                   </Dialog>
                   {emptyRows > 0 && (
                     <TableRow
                       style={{
-                        height: (dense ? 33 : 53) * emptyRows,
+                        height: (53) * emptyRows,
                       }}
                     >
                       <TableCell colSpan={6} />
                     </TableRow>
                   )}
+                     {events.length === 0 && (
+                    <TableRow
+                      style={{
+                        height: (53) * 6,
+                      }}
+                    >
+                      <TableCell colSpan={12}  ><Typography display='flex' justifyContent='center' variant="h1">The Event Plan is Empty </Typography></TableCell>
+
+                    </TableRow>
+                  )}
+
+
                 </TableBody>
               </Table>
             </TableContainer>
             <TablePagination
-              display="flex"
+              display='flex'
               rowsPerPageOptions={[5, 10]}
               component="div"
               count={events.length}
@@ -258,7 +272,9 @@ const Page = () => {
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
+
           </Paper>
+
         </Container>
       </Box>
     </>
@@ -266,15 +282,15 @@ const Page = () => {
 };
 
 function descendingComparator(a, b, orderBy) {
-  if (orderBy === "name") {
+  if (orderBy === 'name') {
     return compareStrings(a.event_name, b.event_name);
   }
-  if (orderBy === "check-in") {
+  if (orderBy === 'check-in') {
     const dateA = new Date(a.start_date);
     const dateB = new Date(b.start_date);
     return dateA.getTime() - dateB.getTime();
   }
-  if (orderBy === "check-out") {
+  if (orderBy === 'check-out') {
     const dateA = new Date(a.end_date);
     const dateB = new Date(b.end_date);
     return dateA.getTime() - dateB.getTime();
@@ -289,20 +305,27 @@ function descendingComparator(a, b, orderBy) {
   return 0;
 }
 
+
+
+
 function getComparator(order, orderBy) {
-  if (orderBy === "no") {
+  if (orderBy === 'no') {
     return (a, b) => {
-      return order === "desc" ? b.no - a.no : a.no - b.no;
+      return order === 'desc' ? b.no - a.no : a.no - b.no;
     };
   }
-  return order === "desc"
+  return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function compareStrings(a, b) {
-  return a.localeCompare(b);
-}
+  function compareStrings(a, b) {
+    return a.localeCompare(b);
+  }
+
+  
+
+
 
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -318,61 +341,62 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "no",
+    id: 'no',
     numeric: false,
-    label: "No.",
+    label: 'No.',
   },
   {
-    id: "img",
+    id: 'img',
     numeric: false,
-    label: "Image",
+    label: 'Image',
   },
   {
-    id: "name",
+    id: 'name',
     numeric: false,
-    label: "Name of Event",
+    label: 'Name of Event',
   },
   {
-    id: "email",
+    id: 'email',
     numeric: false,
-    label: "Email Contact",
+    label: 'Email Contact',
   },
   {
-    id: "point",
+    id: 'point',
     numeric: true,
-    label: "Point",
+    label: 'Point',
   },
   {
-    id: "check-in",
+    id: 'check-in',
     numeric: true,
-    label: "Check-in",
+    label: 'Check-in',
   },
   {
-    id: "check-out",
+    id: 'check-out',
     numeric: true,
-    label: "Check-out",
+    label: 'Check-out',
   },
   {
-    id: "campus",
+    id: 'campus',
     numeric: true,
-    label: "Campus",
+    label: 'Campus',
   },
-
+  
   {
-    id: "location",
+    id: 'location',
     numeric: true,
-    label: "Location",
+    label: 'Location',
   },
   {
-    id: "notications",
+    id: 'notications',
     numeric: true,
-    label: "Notications",
+    label: 'Notications',
   },
 ];
 
+
 EnhancedTableHead.propTypes = {
   onRequestSort: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
 };
@@ -385,34 +409,34 @@ function EnhancedTableHead(props) {
 
   //Table
 
+
   return (
     <TableHead>
       <TableRow>
-        {headCells.map((headCell) =>
-          headCell.label === "Notications" ||
-          headCell.label === "Image" ||
-          headCell.label === "Location" ||
-          headCell.label === "Campus" ? (
+        {headCells.map((headCell) => (
+          headCell.label === 'Notications' || headCell.label === 'Image' || headCell.label === 'Location'|| headCell.label === 'Campus' ? (
             <TableCell
               key={headCell.id}
-              align={headCell.numeric ? "right" : "left"}
-              padding="normal"
+              align={headCell.numeric ? 'right' : 'left'}
+              padding='normal'
             >
-              <Table>{headCell.label}</Table>
+              <Table>
+                {headCell.label}
+              </Table>
             </TableCell>
           ) : (
             <TableCell
               key={headCell.id}
-              align={headCell.numeric ? "right" : "left"}
-              padding="normal"
+              align={headCell.numeric ? 'right' : 'left'}
+              padding='normal'
               sortDirection={orderBy === headCell.id ? order : false}
             >
-              {headCell.id === "no" ? (
+              {headCell.id === 'no' ? (
                 headCell.label
               ) : (
                 <TableSortLabel
                   active={orderBy === headCell.id}
-                  direction={orderBy === headCell.id ? order : "asc"}
+                  direction={orderBy === headCell.id ? order : 'asc'}
                   onClick={createSortHandler(headCell.id)}
                 >
                   {headCell.label}
@@ -420,7 +444,8 @@ function EnhancedTableHead(props) {
               )}
             </TableCell>
           )
-        )}
+
+        ))}
       </TableRow>
     </TableHead>
   );
@@ -429,3 +454,4 @@ function EnhancedTableHead(props) {
 Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default Page;
+

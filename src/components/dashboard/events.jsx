@@ -143,90 +143,106 @@ export const Events = ({ event }) => {
                   </Button>
                 </Link>
               ) : (
-                <div className={`${EventStyles.content}`}>
-                  {joinEventList.find((thisUser) => thisUser.student_id == user.id) ? (
-                    <Button
-                      disabled
-                      sx={{
-                        backgroundColor: "white",
-                        margin: "1px",
-                        border: "1px solid #0e6ae9",
-                      }}
-                    >
-                      <Typography color="#0e6ae9">JOINED</Typography>
-                    </Button>
-                  ) : (
-                    <>
-                      <Button
+                <>
+                {event.student_id === user.id ? (<>
+                  <Button
+                        disabled
                         sx={{
-                          backgroundColor: "#0e6ae9",
-                          color: "white",
+                          backgroundColor: "white",
                           margin: "1px",
-                          ":hover": {
-                            backgroundColor: "white",
-                            color: "#0e6ae9",
-                            border: "1px solid #0e6ae9",
-                            margin: "0px",
-                          },
-                        }}
-                        onClick={handleClickOpen}
-                        className={`${EventStyles.tournament_btn}`}
-                      >
-                        JOIN EVENT
-                      </Button>
-                    </>
-                  )}
-                  {/* Dialog */}
-                  <Dialog
-                    open={open}
-                    onClose={handleClose}
-                    aria-describedby="alert-dialog-slide-description"
-                  >
-                    <DialogTitle
-                      sx={{ backgroundColor: "#0e6ae9", fontSize: "20px", color: "white" }}
-                    >
-                      Do you want to join event {`${event.event_name}`}?
-                    </DialogTitle>
-                    <DialogContent>
-                      <DialogContentText sx={{ color: "black" }}>
-                        Clubs: {`${event.club_name}`}
-                      </DialogContentText>
-                      <DialogContentText sx={{ color: "black" }}>
-                        Organizer: {`${event.student_name}`}
-                      </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                      <Typography
-                        onClick={handleClose}
-                        sx={{
-                          marginRight: "12px",
-                          cursor: "pointer",
-                          ":hover": {
-                            textDecoration: "underline",
-                          },
+                          border: "1px solid #0e6ae9",
                         }}
                       >
-                        cancel
-                      </Typography>
+                        <Typography color="#0e6ae9">ORGANIZER</Typography>
+                      </Button></>) : (
+                    <div className={`${EventStyles.content}`}>
+                    {joinEventList.find((thisUser) => thisUser.student_id == user.id) ? (
                       <Button
-                        onClick={handleClick}
+                        disabled
                         sx={{
-                          backgroundColor: "#0e6ae9",
-                          color: "white",
+                          backgroundColor: "white",
                           margin: "1px",
-                          ":hover": {
-                            backgroundColor: "white",
-                            color: "#0e6ae9",
-                            border: "1px solid #0e6ae9",
-                            margin: "0px",
-                          },
+                          border: "1px solid #0e6ae9",
                         }}
                       >
-                        Confirm
+                        <Typography color="#0e6ae9">JOINED</Typography>
                       </Button>
-                    </DialogActions>
-                  </Dialog>
-                </div>
+                    ) : (
+                      <>
+                        <Button
+                          sx={{
+                            backgroundColor: "#0e6ae9",
+                            color: "white",
+                            margin: "1px",
+                            ":hover": {
+                              backgroundColor: "white",
+                              color: "#0e6ae9",
+                              border: "1px solid #0e6ae9",
+                              margin: "0px",
+                            },
+                          }}
+                          onClick={handleClickOpen}
+                          className={`${EventStyles.tournament_btn}`}
+                        >
+                          JOIN EVENT
+                        </Button>
+                      </>
+                    )}
+                    {/* Dialog */}
+                    <Dialog
+                      open={open}
+                      onClose={handleClose}
+                      aria-describedby="alert-dialog-slide-description"
+                    >
+                      <DialogTitle
+                        sx={{ backgroundColor: "#0e6ae9", fontSize: "20px", color: "white" }}
+                      >
+                        Do you want to join event {`${event.event_name}`}?
+                      </DialogTitle>
+                      <DialogContent>
+                        <DialogContentText sx={{ color: "black" }}>
+                          Clubs: {`${event.club_name}`}
+                        </DialogContentText>
+                        <DialogContentText sx={{ color: "black" }}>
+                          Organizer: {`${event.student_name}`}
+                        </DialogContentText>
+                      </DialogContent>
+                      <DialogActions>
+                        <Typography
+                          onClick={handleClose}
+                          sx={{
+                            marginRight: "12px",
+                            cursor: "pointer",
+                            ":hover": {
+                              textDecoration: "underline",
+                            },
+                          }}
+                        >
+                          cancel
+                        </Typography>
+                        <Button
+                          onClick={handleClick}
+                          sx={{
+                            backgroundColor: "#0e6ae9",
+                            color: "white",
+                            margin: "1px",
+                            ":hover": {
+                              backgroundColor: "white",
+                              color: "#0e6ae9",
+                              border: "1px solid #0e6ae9",
+                              margin: "0px",
+                            },
+                          }}
+                        >
+                          Confirm
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
+                  </div>
+                )}
+                
+                </>
+
               )}
             </div>
           </Box>
@@ -260,12 +276,12 @@ export const Events = ({ event }) => {
                   <Typography color="#ffc44c" fontSize='30px'>Location:</Typography>
                   <Typography color='white' className={`${EventStyles.time}`}>{`${event.location}`}</Typography>
                   {event.description !== undefined ? (
-                  <></>
+                    <></>
                   ) : (
                     <>
-                    <Typography color="#ffc44c" fontSize='30px'>Description:</Typography>
-                    <Typography color='white' className={`${EventStyles.time}`}>{`${event.description}`}</Typography>
-                  </>
+                      <Typography color="#ffc44c" fontSize='30px'>Description:</Typography>
+                      <Typography color='white' className={`${EventStyles.time}`}>{`${event.description}`}</Typography>
+                    </>
                   )}
                 </div>
               </div>

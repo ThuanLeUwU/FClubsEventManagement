@@ -44,6 +44,8 @@ const items = [
 const Home = () => {
   const { user } = useAuthContext();
   const [event, SetEvent] = useState([]);
+  const [studentHighestScore, SetStudentHighestScore] = useState([]);
+  console.log(studentHighestScore);
   console.log(event);
 
   useEffect(() => {
@@ -52,11 +54,19 @@ const Home = () => {
         `https://event-project.herokuapp.com/api/event/?status=0&is_approved=1`
       );
       SetEvent(responseEvent?.data);
+      
+      const responseStudent = await axios.get(
+        `https://event-project.herokuapp.com/api/student/point?campus_id=3`
+      )
+
+      SetStudentHighestScore(responseStudent?.data)
 
       // console.log("qr", checkinInfo);
     };
     fetchData();
   }, []);
+
+
 
   return (
     <>
@@ -111,7 +121,7 @@ const Home = () => {
           </div>
         </div>
         <div className="row-content">
-          <h1>Events On-going </h1>
+          <h1 className="title-eve">Events On-going </h1>
 
           {/* <h1>Top 10 students with the highest point </h1> */}
           <Carousel autoplay slidesToShow={3} className="carousel" >
@@ -164,6 +174,10 @@ const Home = () => {
             })}
           </Carousel>
         </div>
+            <div className="row-content">
+              <h1 className="title-eve">Top 3 students có số điểm cao nhất của FPT Spring2023</h1>
+              {/* {console.log("name" , studentHighestScore.result)} */}
+            </div>
       </div>
     </>
   );

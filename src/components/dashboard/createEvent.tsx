@@ -42,10 +42,10 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const [selected, setSelected] = useState();
-  const [selectedPoint,setSelectedPoint] = useState('10');
+  const [selectedPoint, setSelectedPoint] = useState('10');
   const [club, setClubs] = useState([]);
   const { Option } = Select;
-  
+
   const point = [
     {
       id: 1, name: '10', value: '10'
@@ -64,10 +64,10 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
       );
       setClubs(response?.data);
       console.log(response?.data);
-      if(response?.data.length !== 0){
+      if (response?.data.length !== 0) {
         setSelected(response?.data[0].club_id)
       };
-      
+
     };
     fetchData();
   }, []);
@@ -168,7 +168,7 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
     setSelectedPoint(value);
   }
 
-  
+
 
 
 
@@ -310,9 +310,14 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
           <Form.Item className="mb-0">
             <Space>
               <Button onClick={onCancel}>Cancel</Button>
-              <Button htmlType="submit" type="primary">
+              {club.length === 0 ? (
+                <Button htmlType="submit" type="primary" disabled>
+                  {isEdit ? "Update" : "Create"}
+                </Button>
+              ) : (<Button htmlType="submit" type="primary">
                 {isEdit ? "Update" : "Create"}
-              </Button>
+              </Button>)}
+
             </Space>
           </Form.Item>
         </Space>

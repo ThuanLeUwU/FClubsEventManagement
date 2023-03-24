@@ -38,7 +38,7 @@
  }
  
  .carousel {
-   height: 400px;
+   height: 200px;
    display: flex;
    align-items: center;
    margin-left: 10px;
@@ -61,8 +61,10 @@
    height: 50px;
  }
 
+ .h1 {}
+
  .title{
-   height: 75px;
+   height: 65px;
  }
  .address {
     font-size: 80%;
@@ -126,8 +128,9 @@
     border-radius: 30%;
  }
  
- .text-title {
+ .title-eve {
     /* color: #FFCCFF; */
+    background-color: linear-gradient(to right, #ffffff, aqua);
  }
  
  /* .card-img{

@@ -29,7 +29,7 @@ const Page = () => {
           'Authorization': 'Bearer ' + getCookie('accessToken')
         }
 
-        const responseAllCampus = await axios.get(`https://event-project.herokuapp.com/api/campus`, {
+        const responseAllCampus = await axios.get(`https://evenu.herokuapp.com/api/campus`, {
           headers
         })
 
@@ -61,7 +61,7 @@ const Page = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const responseEvent = await axios.get(`https://event-project.herokuapp.com/api/event/${selected}?status=1&is_approved=1`)
+        const responseEvent = await axios.get(`https://evenu.herokuapp.com/api/event/${selected}?status=1&is_approved=1`)
         setEvents(responseEvent?.data)
        
       } catch (error) {

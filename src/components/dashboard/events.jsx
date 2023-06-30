@@ -37,7 +37,7 @@ export const Events = ({ event }) => {
   useEffect(() => {
     const fetchData = async () => {
       const responseAllStudentJoinThisEvent = await axios.get(
-        `https://event-project.herokuapp.com/api/event/join/${event.event_id}`
+        `https://evenu.herokuapp.com/api/event/join/${event.event_id}`
       );
       setJohnEventList(responseAllStudentJoinThisEvent?.data);
     };
@@ -47,7 +47,7 @@ export const Events = ({ event }) => {
   useEffect(() => {
     const fetchData = async () => {
       const responseAllStudentJoinThisEvent = await axios.get(
-        `https://event-project.herokuapp.com/api/event/join/${event.event_id}`
+        `https://evenu.herokuapp.com/api/event/join/${event.event_id}`
       );
       setJohnEventList(responseAllStudentJoinThisEvent?.data);
     };
@@ -73,10 +73,10 @@ export const Events = ({ event }) => {
           student_id: user.id,
           registration_date: currentTime.toISOString(),
         };
-        await axios.post("https://event-project.herokuapp.com/api/event/join", requestBody);
+        await axios.post("https://evenu.herokuapp.com/api/event/join", requestBody);
 
         const responseAllStudentJoinThisEvent = await axios.get(
-          `https://event-project.herokuapp.com/api/event/join/${event.event_id}`
+          `https://evenu.herokuapp.com/api/event/join/${event.event_id}`
         );
         setJohnEventList(responseAllStudentJoinThisEvent?.data);
         setOpen(false);

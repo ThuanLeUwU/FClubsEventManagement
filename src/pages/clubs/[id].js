@@ -29,10 +29,10 @@ function Club() {
     useEffect(() => {
         const fetchData = async () => {
             const id = router.query.id
-            const responseGetAllUserJoinClub = await axios.get(`https://event-project.herokuapp.com/api/club/member?club_id=${id}`)
+            const responseGetAllUserJoinClub = await axios.get(`https://evenu.herokuapp.com/api/club/member?club_id=${id}`)
             setAllUserJoin(responseGetAllUserJoinClub?.data)
             setUserChoice(responseGetAllUserJoinClub?.data[0])
-            const responseGetClubInfor = await axios.get(`https://event-project.herokuapp.com/api/club/detail/${id}`)
+            const responseGetClubInfor = await axios.get(`https://evenu.herokuapp.com/api/club/detail/${id}`)
             setClubInfor(responseGetClubInfor?.data)
         }
         fetchData()
@@ -40,10 +40,10 @@ function Club() {
 
     const handleDelete = async () => {
         try {
-            await axios.delete(`https://event-project.herokuapp.com/api/club/member/${userChoice.student_id}?club_id=${router.query.id}`)
+            await axios.delete(`https://evenu.herokuapp.com/api/club/member/${userChoice.student_id}?club_id=${router.query.id}`)
             const id = router.query.id
 
-            const responseGetAllUserJoinClub = await axios.get(`https://event-project.herokuapp.com/api/club/member?club_id=${id}`)
+            const responseGetAllUserJoinClub = await axios.get(`https://evenu.herokuapp.com/api/club/member?club_id=${id}`)
             setAllUserJoin(responseGetAllUserJoinClub?.data)
             setUserChoice(responseGetAllUserJoinClub?.data[0])
 

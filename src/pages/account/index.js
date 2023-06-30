@@ -15,7 +15,7 @@ const Page = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios(`https://event-project.herokuapp.com/api/student/${user.id}`)
+        const response = await axios(`https://evenu.herokuapp.com/api/student/${user.id}`)
         setUserInf(response?.data)
        
       } catch (error) {

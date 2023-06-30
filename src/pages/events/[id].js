@@ -33,11 +33,11 @@ function Event() {
         const fetchData = async () => {
             try {
                 const id = router.query.id
-                const responseGetAllUserJoinEvent = await axios.get(`https://event-project.herokuapp.com/api/event/join/${id}`)
+                const responseGetAllUserJoinEvent = await axios.get(`https://evenu.herokuapp.com/api/event/join/${id}`)
 
                 setAllUserJoin(responseGetAllUserJoinEvent?.data)
 
-                const responseGetClubInfor = await axios.get(`https://event-project.herokuapp.com/api/event/detail/${id}`)
+                const responseGetClubInfor = await axios.get(`https://evenu.herokuapp.com/api/event/detail/${id}`)
                 setEventInfor(responseGetClubInfor?.data)
             } catch (error) {
                 console.log(error);
@@ -86,7 +86,7 @@ function Event() {
         try {
             if (statusQR === true) {
                 const responseCheckinEvent = await axios.get(
-                    `https://event-project.herokuapp.com/imagesQrCodeCheckin/event/${eventInfor.event_id}?status=0`
+                    `https://evenu.herokuapp.com/imagesQrCodeCheckin/event/${eventInfor.event_id}?status=0`
                 )
                 setCheckinInfo(null);
                 setCheckinInfo(responseCheckinEvent?.data);
@@ -94,7 +94,7 @@ function Event() {
                 setStatusQR(false)
             } else if (statusQR === false) {
                 const responseCheckoutEvent = await axios.get(
-                    `https://event-project.herokuapp.com/imagesQrCodeCheckin/event/${eventInfor.event_id}?status=1`
+                    `https://evenu.herokuapp.com/imagesQrCodeCheckin/event/${eventInfor.event_id}?status=1`
                 );
                 setCheckoutInfo(null);
                 setCheckoutInfo(responseCheckoutEvent?.data);
@@ -111,7 +111,7 @@ function Event() {
     const handleDelete = async () => {
         // const fetchData3 = async () => {
         try {
-            await axios.delete(`https://event-project.herokuapp.com/api/event/${eventInfor.event_id}`);
+            await axios.delete(`https://evenu.herokuapp.com/api/event/${eventInfor.event_id}`);
 
             // //Noti
             const bodyRequestNoti = {
@@ -121,7 +121,7 @@ function Event() {
                 content: "Something bad happened, so we decided to cancel the event"
             };
 
-            await axios.post("https://event-project.herokuapp.com/notifications", bodyRequestNoti);
+            await axios.post("https://evenu.herokuapp.com/notifications", bodyRequestNoti);
         } catch (error) {
             console.log(error);
         }

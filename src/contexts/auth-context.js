@@ -32,7 +32,7 @@ export const AuthProvider = (props) => {
       'Authorization': 'Bearer ' + getCookie('accessToken')
     }
 
-    const responseAllCampus = await axios.get(`https://event-project.herokuapp.com/api/campus`, {
+    const responseAllCampus = await axios.get(`https://evenu.herokuapp.com/api/campus`, {
       headers
     })
 
@@ -53,7 +53,7 @@ export const AuthProvider = (props) => {
       }
 
       const response = await axios.post(
-        'https://event-project.herokuapp.com/api/login', condition
+        'https://evenu.herokuapp.com/api/login', condition
       )
       setCookie('accessToken', response?.data?.access_token)
 

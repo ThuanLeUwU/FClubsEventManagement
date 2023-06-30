@@ -40,7 +40,7 @@ const Page = () => {
   const fetchEvent = async () => {
     try {
       const responseGetAll = await axios.get(
-        "https://event-project.herokuapp.com/api/event/?status=1&is_approved=0"
+        "https://evenu.herokuapp.com/api/event/?status=1&is_approved=0"
       );
       setEvents(responseGetAll?.data);
     } catch (error) {
@@ -76,7 +76,7 @@ const Page = () => {
   const handleConfirm = (event) => {
     const fetchData = async () => {
 
-      await axios.put(`https://event-project.herokuapp.com/api/event/${eventChoose.event_id}`)
+      await axios.put(`https://evenu.herokuapp.com/api/event/${eventChoose.event_id}`)
       const bodyRequestNoti = {
         send_option: "device",
         topic: "my-topic",
@@ -84,7 +84,7 @@ const Page = () => {
         content: "Location:" + eventChoose.location + " From: " + eventChoose.start_date + " To: " + eventChoose.end_date,
       };
 
-      await axios.post("https://event-project.herokuapp.com/notifications", bodyRequestNoti);
+      await axios.post("https://evenu.herokuapp.com/notifications", bodyRequestNoti);
 
       setCount(count + 1);
     };

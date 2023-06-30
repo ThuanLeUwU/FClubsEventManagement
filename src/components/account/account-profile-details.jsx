@@ -62,7 +62,7 @@ export const AccountProfileDetails = ({ userInf }) => {
         address: address,
         birthday: date.format('YYYY-MM-DD'),
       }
-      await axios.put(`https://event-project.herokuapp.com/api/student/${userInf.student_id}`, bodyRequest)
+      await axios.put(`https://evenu.herokuapp.com/api/student/${userInf.student_id}`, bodyRequest)
 
       alert("Update successfully!!")
     }

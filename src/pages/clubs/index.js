@@ -32,14 +32,14 @@ const Page = () => {
           'Authorization': 'Bearer ' + getCookie('accessToken')
         }
 
-        const responseAllCampus = await axios.get(`https://event-project.herokuapp.com/api/campus`, {
+        const responseAllCampus = await axios.get(`https://evenu.herokuapp.com/api/campus`, {
           headers
         })
 
         setCampus(responseAllCampus?.data)
 
         if (user.role == 'members') {
-          const responseGetAllClubThatUserJoin = await axios.get(`https://event-project.herokuapp.com/api/club/student/${user.id}`)
+          const responseGetAllClubThatUserJoin = await axios.get(`https://evenu.herokuapp.com/api/club/student/${user.id}`)
           setAllClubThatUserJoin(responseGetAllClubThatUserJoin?.data)
         }
 
@@ -54,7 +54,7 @@ const Page = () => {
   useEffect(() => {
     console.log('select');
     const fetchData = async () => {
-      const response = await axios.get(`https://event-project.herokuapp.com/api/club/campus/${selected}`)
+      const response = await axios.get(`https://evenu.herokuapp.com/api/club/campus/${selected}`)
       setClubs(response?.data)
     }
     fetchData()
@@ -71,12 +71,12 @@ const Page = () => {
         role: 'MEMBER',
         join_date: currentTime.toISOString()
       }
-      await axios.post('https://event-project.herokuapp.com/api/club/member', requestBody)
+      await axios.post('https://evenu.herokuapp.com/api/club/member', requestBody)
 
-      const response = await axios.get(`https://event-project.herokuapp.com/api/club/campus/${selected}`)
+      const response = await axios.get(`https://evenu.herokuapp.com/api/club/campus/${selected}`)
       setClubs(response?.data)
 
-      const responseGetAllClubThatUserJoin = await axios.get(`https://event-project.herokuapp.com/api/club/student/${user.id}`);
+      const responseGetAllClubThatUserJoin = await axios.get(`https://evenu.herokuapp.com/api/club/student/${user.id}`);
       setAllClubThatUserJoin(responseGetAllClubThatUserJoin?.data);
       setOpen(false);
     } catch (error) {

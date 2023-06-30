@@ -46,7 +46,7 @@ const Page = () => {
       const headers = {
         'Authorization': 'Bearer ' + getCookie('accessToken')
       }
-      const response = await axios.get(`https://event-project.herokuapp.com/api/students`, {
+      const response = await axios.get(`https://evenu.herokuapp.com/api/students`, {
         headers
       })
       setAllUser(response?.data)

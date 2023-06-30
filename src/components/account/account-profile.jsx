@@ -56,7 +56,7 @@ export const AccountProfile = ({ userInf }) => {
     formData.append("file", imageDataUrl);
     try {
       // axios
-      //   .get("https://event-project.herokuapp.com/images", {
+      //   .get("https://evenu.herokuapp.com/images", {
       //     withCredentials: true,
       //     headers: {
       //       "Access-Control-Allow-Origin": "*",
@@ -71,7 +71,7 @@ export const AccountProfile = ({ userInf }) => {
       //   });
 
       const response = await axios.post(
-        "https://event-project.herokuapp.com/images",
+        "https://evenu.herokuapp.com/images",
         formData
         // withCredentials: true,
         // headers: {

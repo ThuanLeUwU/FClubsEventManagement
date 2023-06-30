@@ -30,7 +30,7 @@ export const DashboardNavbar = (props) => {
   useEffect(() => {
     try {
       const fetchData = async () => {
-        const response = await axios.get(`https://event-project.herokuapp.com/api/student/${user.id}/point`)
+        const response = await axios.get(`https://evenu.herokuapp.com/api/student/${user.id}/point`)
         setPoint(response?.data)
         console.log(response?.data);
       }

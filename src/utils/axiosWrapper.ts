@@ -5,7 +5,7 @@ import { authFirebase } from '../firebase/firebase'
 
 const defaultOptions = {
   
-  baseURL: 'https://event-project.herokuapp.com/api/',
+  baseURL: 'https://evenu.herokuapp.com/api/',
   headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',

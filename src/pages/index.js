@@ -50,33 +50,33 @@ const Page = () => {
       const headers = {
         'Authorization': 'Bearer ' + getCookie('accessToken')
       }
-      const responseAllCampus = await axios.get(`https://event-project.herokuapp.com/api/campus`, {
+      const responseAllCampus = await axios.get(`https://evenu.herokuapp.com/api/campus`, {
         headers
       })
       setCampus(responseAllCampus?.data)
 
 
       if (user.role !== 'admin') {
-        const responseInfor = await axios.get(`https://event-project.herokuapp.com/api/student/${user.id}/point`)
+        const responseInfor = await axios.get(`https://evenu.herokuapp.com/api/student/${user.id}/point`)
         setPoint(responseInfor?.data)
 
-        const responseGetAllEventThatUserJoin = await axios.get(`https://event-project.herokuapp.com/api/event/join/student/${user.id}`)
+        const responseGetAllEventThatUserJoin = await axios.get(`https://evenu.herokuapp.com/api/event/join/student/${user.id}`)
         setAllEventThatUserJoin(responseGetAllEventThatUserJoin?.data)
 
-        const responseGetAllClub = await axios.get(`https://event-project.herokuapp.com/api/club/campus/${user.campus}`)
+        const responseGetAllClub = await axios.get(`https://evenu.herokuapp.com/api/club/campus/${user.campus}`)
         setAllClubInCampus(responseGetAllClub?.data)
 
-        const responseGetAllClubThatUserJoin = await axios.get(`https://event-project.herokuapp.com/api/club/student/${user.id}`)
+        const responseGetAllClubThatUserJoin = await axios.get(`https://evenu.herokuapp.com/api/club/student/${user.id}`)
         setAllClubThatUserJoin(responseGetAllClubThatUserJoin?.data)
       } else {
-        const responseAllStudent = await axios.get(`https://event-project.herokuapp.com/api/students`, {
+        const responseAllStudent = await axios.get(`https://evenu.herokuapp.com/api/students`, {
           headers
         })
         setAllStudent(responseAllStudent?.data)
       }
 
 
-      const responseGetAll = await axios.get('https://event-project.herokuapp.com/api/event/?status=0&is_approved=1')
+      const responseGetAll = await axios.get('https://evenu.herokuapp.com/api/event/?status=0&is_approved=1')
       setAllEvent(responseGetAll?.data)
 
 
@@ -89,7 +89,7 @@ const Page = () => {
 
   useEffect(() => {
     const fetchCampus = async () => {
-      const response = await axios.get(`https://event-project.herokuapp.com/api/student/point?campus_id=${selectedCampusForPoint}`)
+      const response = await axios.get(`https://evenu.herokuapp.com/api/student/point?campus_id=${selectedCampusForPoint}`)
       setTopUser(response?.data)
     }
     fetchCampus()
@@ -97,7 +97,7 @@ const Page = () => {
 
   useEffect(() => {
     const fetchCampus = async () => {
-      const response = await axios.get(`https://event-project.herokuapp.com/api/club/topEvent?campus_id=${selectedCampusForClub}`)
+      const response = await axios.get(`https://evenu.herokuapp.com/api/club/topEvent?campus_id=${selectedCampusForClub}`)
       setTopClubs(response?.data)
     }
     fetchCampus()
@@ -105,7 +105,7 @@ const Page = () => {
 
   useEffect(() => {
     const fetchCampus = async () => {
-      const response = await axios.get(`https://event-project.herokuapp.com/api/event/${selectedCampusForChart}?status=1&is_approved=0`)
+      const response = await axios.get(`https://evenu.herokuapp.com/api/event/${selectedCampusForChart}?status=1&is_approved=0`)
       setEventNotApproved(response?.data)
     }
     fetchCampus()

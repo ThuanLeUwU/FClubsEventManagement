@@ -60,7 +60,7 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(
-        `https://event-project.herokuapp.com/api/club/student/${user.id}`
+        `https://evenu.herokuapp.com/api/club/student/${user.id}`
       );
       setClubs(response?.data);
       console.log(response?.data);
@@ -86,7 +86,7 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
     formData.append("description", data.description);
     try {
       await axios.post(
-        "https://event-project.herokuapp.com/api/event/insert",
+        "https://evenu.herokuapp.com/api/event/insert",
         // bodyRequest
         formData,
         {
@@ -206,7 +206,7 @@ export const CreateEvent = ({ onCancel, visible, isEdit }: IProps) => {
             onChange={handleChange}
             beforeUpload={beforeUpload}
             // headers={{ Authorization: authorization }}
-            action="https://event-project.herokuapp.com/images"
+            action="https://evenu.herokuapp.com/images"
           >
             <Button icon={<UploadFileOutlined />}>Upload</Button>
           </Upload>

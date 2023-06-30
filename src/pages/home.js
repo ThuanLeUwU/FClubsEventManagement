@@ -51,12 +51,12 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       const responseEvent = await axios.get(
-        `https://event-project.herokuapp.com/api/event/?status=0&is_approved=1`
+        `https://evenu.herokuapp.com/api/event/?status=0&is_approved=1`
       );
       SetEvent(responseEvent?.data);
       
       const responseStudent = await axios.get(
-        `https://event-project.herokuapp.com/api/student/point?campus_id=3`
+        `https://evenu.herokuapp.com/api/student/point?campus_id=3`
       )
 
       SetStudentHighestScore(responseStudent?.data)

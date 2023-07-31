@@ -20,6 +20,7 @@ const Page = () => {
   const [page, setPage] = useState(1);
   const [selectItemsPerPage, setSelectItemPerPage] = useState(5);
   const router = useRouter();
+  // console.log("event", events)
 
   useEffect(() => {
     const fetchData = async () => {

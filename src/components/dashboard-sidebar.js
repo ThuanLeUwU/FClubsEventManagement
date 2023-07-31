@@ -19,6 +19,9 @@ import { useAuthContext } from '../contexts/auth-context';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import EventIcon from '@mui/icons-material/Event';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import { Image } from '@mui/icons-material';
+import Link from 'next/link';
+// import { Image } from 'antd';
 const items = [
   {
     href: '/',
@@ -50,6 +53,11 @@ const items = [
     icon: (<ChartBarIcon fontSize="small" />),
     title: 'Plan'
   }
+  // {
+  //   href: '/payment',
+  //   icon: (<ChartBarIcon fontSize="small" />),
+  //   title: 'Payment'
+  // }
 ];
 
 export const DashboardSidebar = (props) => {
@@ -112,7 +120,7 @@ export const DashboardSidebar = (props) => {
         <Box sx={{ flexGrow: 1 }}>
           {items.map((item,index) => (
             <div key={index}>
-              {item.title == 'Admin ' || item.title == 'Plan' ? (
+              {item.title == 'Admin ' || item.title == 'Plan' || item.title == "Payment" ? (
                 <>
                   {user.role == 'admin' ? (
                     <NavItem
@@ -136,6 +144,11 @@ export const DashboardSidebar = (props) => {
         </Box>
         <Divider sx={{ borderColor: '#2D3748' }} />
       </Box>
+
+      <Button href='/'>
+              <img src="https://fap.fpt.edu.vn/images/play-store.png" 
+              width={200}  /> 
+      </Button>
     </>
   );
 

@@ -34,6 +34,8 @@ export const Events = ({ event }) => {
   const [joinEventList, setJohnEventList] = useState([]);
   const [deleteEvent, setDeleteEvent] = useState();
   const [count, setCount] = useState(0);
+  
+  // console.log("event", joinEventList)
   useEffect(() => {
     const fetchData = async () => {
       const responseAllStudentJoinThisEvent = await axios.get(
@@ -42,7 +44,7 @@ export const Events = ({ event }) => {
       setJohnEventList(responseAllStudentJoinThisEvent?.data);
     };
     fetchData();
-  }, []);
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -290,11 +292,11 @@ export const Events = ({ event }) => {
           <Box className={`${EventStyles.right_area}`} width='80%' display='flex' alignItems='start' justifyContent='center'>
             <Box sx={{ backgroundColor: 'white', color: '#ffc44c', width: '150px', height: '150px', borderRadius: '30px' }} >
               <Typography display='flex' alignItems='center' variant="h3" width='150px' justifyContent='center' >
-                <StarsIcon fontSize='large' /> Point
+                <StarsIcon fontSize='large' /> Price
               </Typography>
               <Typography sx={{ backgroundColor: '#ffc44c', height: '5px' }}></Typography>
               <Box mt={1}>
-                <Typography variant="h2" display='flex' justifyContent='center' alignItems='center'> {event.point}</Typography>
+                <Typography variant="h2" display='flex' justifyContent='center' alignItems='center'> {event.price}</Typography>
               </Box>
             </Box>
 

@@ -443,7 +443,7 @@ function Event() {
                           {user.student_name}
                         </TableCell>
                         <TableCell align="left">{user.email}</TableCell>
-                        <TableCell align="left">{user.student_id}</TableCell>
+                        <TableCell align="left">{user.dpm_name}</TableCell>
                         <TableCell align="left">{user.campus_name}</TableCell>
                         {user.registration_date === null ? (
                           <TableCell align="right">22/02/2023</TableCell>

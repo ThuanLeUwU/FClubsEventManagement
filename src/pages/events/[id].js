@@ -498,7 +498,7 @@ function Event() {
                               Price: {`${eventInfor.price}`}
                             </DialogContentText>
                             <DialogContentText sx={{ color: "black" }}>
-                              Organizer: {`${eventInfor.point}`}
+                              Point: {`${eventInfor.point}`}
                             </DialogContentText>
                           </DialogContent>
                           <DialogActions>

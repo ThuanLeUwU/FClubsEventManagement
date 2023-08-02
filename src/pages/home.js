@@ -54,19 +54,17 @@ const Home = () => {
         `https://evenu.herokuapp.com/api/event/?status=0&is_approved=1`
       );
       SetEvent(responseEvent?.data);
-      
+
       const responseStudent = await axios.get(
         `https://evenu.herokuapp.com/api/student/point?campus_id=3`
-      )
+      );
 
-      SetStudentHighestScore(responseStudent?.data)
+      SetStudentHighestScore(responseStudent?.data);
 
       // console.log("qr", checkinInfo);
     };
     fetchData();
   }, []);
-
-
 
   return (
     <>
@@ -113,6 +111,14 @@ const Home = () => {
         </Container>
       </AppBar> */}
       <div className="container">
+        <Button
+          href="https://drive.google.com/file/d/1b4WU8cQ8wv171K0K025BpAkz69FcWXRS"
+          style={{ display: "flex",
+                alignItems: "flex-end" 
+            }}
+        >
+          <img src="https://fap.fpt.edu.vn/images/play-store.png" width={200} />
+        </Button>
         <div className="jumbotron">
           <div className="container ">
             <div className="row row-header">
@@ -124,7 +130,7 @@ const Home = () => {
           <h1 className="title-eve">Events On-going </h1>
 
           {/* <h1>Top 10 students with the highest point </h1> */}
-          <Carousel autoplay slidesToShow={3} className="carousel" >
+          <Carousel autoplay slidesToShow={3} className="carousel">
             {/* {event.map((item) => {
                   <div>
                     <img src={item.img}/>
@@ -144,23 +150,22 @@ const Home = () => {
             </div> */}
             {event.map((item, key) => {
               return (
-                <Card key={key} 
-                className="card">
+                <Card key={key} className="card">
                   {/* {console.log(item.event_name)} */}
-                  <Grid container >
+                  <Grid container>
                     <Grid item xs={8} className="grid_item">
                       <div className="title">
-                      <h3>{item.event_name} </h3>
-                      <br />
+                        <h3>{item.event_name} </h3>
+                        <br />
                       </div>
                       <div>
-                      Check-in: {format(parseISO(item.start_date), "HH:mm:ss, dd/MM/yyyy")}
-                      <br />
-                      Check-out: {format(parseISO(item.end_date), "HH:mm:ss, dd/MM/yyyy")}
-                      <br /> 
-                      <Button className="link_button" >
-                        <Link href="/login">More Detail</Link>
-                      </Button>
+                        Check-in: {format(parseISO(item.start_date), "HH:mm:ss, dd/MM/yyyy")}
+                        <br />
+                        Check-out: {format(parseISO(item.end_date), "HH:mm:ss, dd/MM/yyyy")}
+                        <br />
+                        <Button className="link_button">
+                          <Link href="/login">More Detail</Link>
+                        </Button>
                       </div>
                     </Grid>
                     <Grid item xs={4}>
@@ -174,10 +179,10 @@ const Home = () => {
             })}
           </Carousel>
         </div>
-            <div className="row-content">
-              <h1 className="title-eve">Top 3 students có số điểm cao nhất của FPT Spring2023</h1>
-              {/* {console.log("name" , studentHighestScore.result)} */}
-            </div>
+        <div className="row-content">
+          <h1 className="title-eve">Top 3 students có số điểm cao nhất của FPT Spring2023</h1>
+          {/* {console.log("name" , studentHighestScore.result)} */}
+        </div>
       </div>
     </>
   );

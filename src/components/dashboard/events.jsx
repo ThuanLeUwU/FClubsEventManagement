@@ -290,8 +290,8 @@ export const Events = ({ event }) => {
             </div>
           </Box>
           <Box className={`${EventStyles.right_area}`} width='80%' display='flex' alignItems='start' justifyContent='center'>
-            <Box sx={{ backgroundColor: 'white', color: '#ffc44c', width: '150px', height: '150px', borderRadius: '30px' }} >
-              <Typography display='flex' alignItems='center' variant="h3" width='150px' justifyContent='center' >
+            <Box sx={{ backgroundColor: 'white', color: '#ffc44c', width: '200px', height: '150px', borderRadius: '30px' }} >
+              <Typography display='flex' alignItems='center' variant="h3" width='175px' justifyContent='center' >
                 <StarsIcon fontSize='large' /> Price
               </Typography>
               <Typography sx={{ backgroundColor: '#ffc44c', height: '5px' }}></Typography>

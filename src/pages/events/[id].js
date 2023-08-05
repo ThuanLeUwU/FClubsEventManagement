@@ -117,7 +117,7 @@ function Event() {
     setPage(0);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length + 1.49) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - allUserJoin.length + 1.49) : 0;
 
   if (allUserJoin == undefined || eventInfor == undefined) {
     return (
